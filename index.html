@@ -1,0 +1,3123 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تحقیقی پرامپٹ اسٹوڈیو | Master Prompt Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    :root {
+      --ink: #0c1f17;
+      --forest: #14532d;
+      --leaf: #1a6b3c;
+      --mist: #e8f0eb;
+      --sand: #f7f3ea;
+      --paper: #fffdf8;
+      --gold: #c4a035;
+      --gold-soft: #e8d59a;
+      --line: rgba(12, 31, 23, 0.12);
+      --muted: #5a6b62;
+      --shadow: 0 18px 40px rgba(12, 31, 23, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'IBM Plex Sans Arabic', 'Amiri', sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(196, 160, 53, 0.18), transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, rgba(26, 107, 60, 0.12), transparent 50%),
+        linear-gradient(180deg, #f3efe4 0%, var(--sand) 40%, #eef4f0 100%);
+      min-height: 100vh;
+      padding-bottom: 0;
+    }
+
+    .urdu { font-family: 'Noto Nastaliq Urdu', 'Amiri', serif; line-height: 1.9; }
+
+    /* App shell */
+    .top-nav {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(12, 31, 23, 0.94);
+      color: #fff;
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--gold);
+      padding: 0.7rem 1.25rem;
+    }
+
+    .top-nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.6;
+      white-space: nowrap;
+    }
+
+    .brand small {
+      display: block;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.72rem;
+      opacity: 0.75;
+      font-weight: 500;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      border: 1px solid rgba(255,255,255,0.18);
+      background: transparent;
+      color: #fff;
+      font: inherit;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.5rem 0.95rem;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .nav-tab:hover { background: rgba(255,255,255,0.08); }
+    .nav-tab.active {
+      background: var(--gold);
+      color: var(--ink);
+      border-color: var(--gold);
+    }
+
+    .app-bar {
+      display: block;
+      padding: 1rem 1.1rem 0.85rem;
+      background: linear-gradient(135deg, #0c1f17, #14532d);
+      color: #fff;
+      border-bottom: 2px solid var(--gold);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .app-bar h1 {
+      margin: 0;
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+      font-size: 1.25rem;
+      line-height: 1.7;
+    }
+
+    .app-bar p {
+      margin: 0.2rem 0 0;
+      opacity: 0.85;
+      font-size: 0.85rem;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.1rem 1.1rem 6.5rem;
+    }
+
+    .app-view { display: none; animation: rise 0.3s ease both; }
+    .app-view.active { display: block; }
+
+    .bottom-tabs {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 60;
+      background: rgba(255, 253, 248, 0.96);
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -8px 24px rgba(12, 31, 23, 0.08);
+      padding: 0.35rem 0.4rem calc(0.35rem + env(safe-area-inset-bottom));
+      backdrop-filter: blur(12px);
+    }
+
+    .bottom-tab {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.45rem 0.25rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15rem;
+      border-radius: 12px;
+    }
+
+    .bottom-tab i { font-size: 1.15rem; }
+    .bottom-tab span { font-size: 0.68rem; }
+    .bottom-tab.active {
+      color: var(--forest);
+      background: var(--mist);
+    }
+
+    .view-next {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-next {
+      border: none;
+      background: var(--forest);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      padding: 0.7rem 1.2rem;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .btn-next:hover { background: var(--leaf); }
+
+    @media (min-width: 901px) {
+      .top-nav { display: block; }
+      .app-bar { display: none; }
+      .bottom-tabs { display: none; }
+      .wrap { padding: 1.5rem 1.25rem 3rem; }
+    }
+
+    /* Layout remainder */
+
+    .step {
+      margin-bottom: 1.5rem;
+      animation: rise 0.45s ease both;
+    }
+
+    .step:nth-child(2) { animation-delay: 0.05s; }
+    .step:nth-child(3) { animation-delay: 0.1s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: calc(var(--radius) + 4px);
+      box-shadow: var(--shadow);
+      padding: 1.35rem 1.35rem 1.5rem;
+    }
+
+    .step-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      margin-bottom: 1.15rem;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 2.1rem;
+      height: 2.1rem;
+      border-radius: 50%;
+      background: var(--forest);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .step-head h2 {
+      margin: 0;
+      font-size: 1.15rem;
+      color: var(--ink);
+    }
+
+    .step-head p {
+      margin: 0.25rem 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    /* Tool cards */
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.9rem;
+    }
+
+    @media (max-width: 800px) {
+      .tool-grid { grid-template-columns: 1fr; }
+    }
+
+    .tool-card {
+      cursor: pointer;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.15rem 1rem;
+      background: linear-gradient(180deg, #fff, var(--mist));
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      text-align: center;
+      position: relative;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(26, 107, 60, 0.35);
+    }
+
+    .tool-card.active {
+      border-color: var(--leaf);
+      background: linear-gradient(180deg, #f3faf5, #e7f3eb);
+      box-shadow: 0 10px 28px rgba(20, 83, 45, 0.14);
+    }
+
+    .tool-card.active::before {
+      content: "✓";
+      position: absolute;
+      top: 0.65rem;
+      left: 0.75rem;
+      width: 1.4rem;
+      height: 1.4rem;
+      border-radius: 50%;
+      background: var(--leaf);
+      color: #fff;
+      font-size: 0.75rem;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+    }
+
+    .tool-icon {
+      width: 3.2rem;
+      height: 3.2rem;
+      margin: 0 auto 0.7rem;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      background: rgba(20, 83, 45, 0.08);
+    }
+
+    .tool-card h3 {
+      margin: 0 0 0.35rem;
+      font-size: 1rem;
+    }
+
+    .tool-card small {
+      color: var(--muted);
+      display: block;
+      line-height: 1.55;
+      font-size: 0.85rem;
+    }
+
+    /* Category search + cards */
+    .cat-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 220px;
+      position: relative;
+    }
+
+    .search-box i {
+      position: absolute;
+      right: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+    }
+
+    .search-box input {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 0.75rem 2.4rem 0.75rem 0.9rem;
+      font: inherit;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--leaf);
+      box-shadow: 0 0 0 3px rgba(26, 107, 60, 0.15);
+    }
+
+    .cat-count {
+      background: var(--mist);
+      color: var(--forest);
+      border-radius: 999px;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+      max-height: 420px;
+      overflow-y: auto;
+      padding: 0.15rem 0.25rem 0.15rem 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--leaf) transparent;
+    }
+
+    .cat-card {
+      cursor: pointer;
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem 0.9rem;
+      background: #fff;
+      transition: transform 0.18s, border-color 0.18s, background 0.18s, box-shadow 0.18s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      min-height: 88px;
+      text-align: right;
+      position: relative;
+    }
+
+    .cat-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(196, 160, 53, 0.55);
+      box-shadow: 0 8px 20px rgba(12, 31, 23, 0.06);
+    }
+
+    .cat-card.active {
+      border-color: var(--gold);
+      background: linear-gradient(160deg, #fffaf0, #f4f9f4);
+      box-shadow: 0 10px 24px rgba(196, 160, 53, 0.18);
+    }
+
+    .cat-card.active::after {
+      content: "";
+      position: absolute;
+      inset-inline-start: 0;
+      top: 12%;
+      bottom: 12%;
+      width: 4px;
+      border-radius: 0 4px 4px 0;
+      background: var(--gold);
+    }
+
+    .cat-emoji {
+      font-size: 1.45rem;
+      line-height: 1;
+    }
+
+    .cat-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+
+    .cat-prompt-count {
+      margin-top: auto;
+      align-self: flex-start;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--forest);
+      background: var(--mist);
+      border: 1px solid rgba(26, 107, 60, 0.18);
+      border-radius: 999px;
+      padding: 0.2rem 0.65rem;
+    }
+
+    .cat-card.active .cat-prompt-count {
+      background: rgba(196, 160, 53, 0.18);
+      color: #7a5d10;
+      border-color: rgba(196, 160, 53, 0.4);
+    }
+
+    .cat-card.hidden { display: none; }
+
+    .stats-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: center;
+    }
+
+    .stats-pills .cat-count {
+      margin: 0;
+    }
+
+    .stats-pills .total-prompts {
+      background: var(--forest);
+      color: #fff;
+    }
+
+    /* Prompts section */
+    .prompts-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0.25rem 0 1rem;
+    }
+
+    .prompts-bar h3 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .prompts-bar h3 span {
+      color: var(--leaf);
+    }
+
+    .mode-chip {
+      background: var(--ink);
+      color: #fff;
+      border-radius: 999px;
+      padding: 0.4rem 0.95rem;
+      font-size: 0.85rem;
+    }
+
+    .prompts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      transition: opacity 0.15s;
+    }
+
+    .prompt-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .prompt-card.open {
+      border-color: rgba(26, 107, 60, 0.35);
+      box-shadow: 0 12px 28px rgba(20, 83, 45, 0.1);
+    }
+
+    .prompt-top {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 1rem 1.15rem;
+      background: linear-gradient(90deg, rgba(20,83,45,0.06), transparent);
+      border: none;
+      border-bottom: 1px solid transparent;
+      cursor: pointer;
+      text-align: right;
+      font: inherit;
+      color: inherit;
+      transition: background 0.2s;
+    }
+
+    .prompt-card.open .prompt-top {
+      border-bottom-color: var(--line);
+      background: linear-gradient(90deg, rgba(20,83,45,0.1), transparent);
+    }
+
+    .prompt-top:hover {
+      background: linear-gradient(90deg, rgba(20,83,45,0.12), transparent);
+    }
+
+    .prompt-top h4 {
+      margin: 0;
+      color: var(--forest);
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex: 1;
+    }
+
+    .acc-chevron {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--mist);
+      color: var(--forest);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: transform 0.25s ease, background 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .prompt-card.open .acc-chevron {
+      transform: rotate(180deg);
+      background: var(--leaf);
+      color: #fff;
+    }
+
+    .prompt-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 0.9rem;
+    }
+
+    .btn-copy {
+      border: none;
+      cursor: pointer;
+      background: var(--leaf);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      padding: 0.55rem 1.15rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-copy:hover {
+      background: var(--forest);
+      transform: translateY(-1px);
+    }
+
+    .prompt-body {
+      display: none;
+      padding: 1.2rem 1.25rem 1.35rem;
+      font-family: 'Amiri', serif;
+      font-size: 1.12rem;
+      line-height: 2.05;
+      background:
+        linear-gradient(180deg, rgba(255,253,248,0.9), #fff),
+        repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(12,31,23,0.04) 32px);
+    }
+
+    .prompt-card.open .prompt-body {
+      display: block;
+    }
+
+    .intro-line {
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 0.85rem;
+    }
+
+    .focus-block {
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--ink);
+      color: #fff;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.78rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 8px;
+      margin-bottom: 0.35rem;
+    }
+
+    .topic-box {
+      background: #fff;
+      border: 2px solid var(--leaf);
+      border-radius: 14px;
+      padding: 0.9rem 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 6px 16px rgba(26, 107, 60, 0.08);
+    }
+
+    .topic-box .topic-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.65rem;
+      margin-bottom: 0.45rem;
+      flex-wrap: nowrap;
+    }
+
+    .topic-box label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-weight: 700;
+      color: var(--leaf);
+      margin: 0;
+      font-size: 0.95rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .btn-clear-topic {
+      border: 1.5px solid rgba(192, 57, 43, 0.4);
+      background: #fff5f5;
+      color: #c0392b;
+      font: inherit;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex !important;
+      align-items: center;
+      gap: 0.3rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    .btn-clear-topic:hover {
+      background: #c0392b;
+      color: #fff;
+    }
+
+    .topic-clear-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 0.45rem;
+    }
+
+    .topic-clear-row .btn-clear-topic {
+      font-size: 0.85rem;
+      padding: 0.45rem 1rem;
+    }
+
+    @media (min-width: 901px) {
+      .btn-clear-topic {
+        font-size: 0.9rem;
+        padding: 0.5rem 1.05rem;
+      }
+    }
+
+    .topic-box textarea {
+      width: 100%;
+      border: none;
+      resize: vertical;
+      min-height: 72px;
+      font-family: 'Amiri', serif;
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: var(--forest);
+      background: transparent;
+      line-height: 1.8;
+    }
+
+    .topic-box textarea:focus { outline: none; }
+
+    .topic-box .hint {
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+    }
+
+    .master-box {
+      background: linear-gradient(180deg, #fff8e8, #fff);
+      border: 1.5px solid rgba(196, 160, 53, 0.45);
+      border-radius: 14px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+    }
+
+    .master-box .conds-title {
+      color: #7a5d10;
+      border-bottom-color: rgba(196, 160, 53, 0.35);
+    }
+
+    .master-box .conds-list li {
+      font-family: 'Amiri', serif;
+      font-size: 1.05rem;
+    }
+
+    .master-tag {
+      background: var(--gold);
+      color: var(--ink);
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      margin-inline-start: 0.35rem;
+    }
+
+    .conds-title {
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-weight: 700;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 0.35rem;
+      margin-bottom: 0.55rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .conds-list {
+      margin: 0 0 0.9rem;
+      padding-inline-start: 1.3rem;
+    }
+
+    .conds-list li { margin-bottom: 0.35rem; }
+
+    .extra-cond {
+      color: var(--leaf);
+      font-weight: 700;
+    }
+
+    .remove-cond {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.15rem;
+      background: #c0392b;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 0.1rem 0.55rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      margin-inline-start: 0.35rem;
+    }
+
+    .add-cond {
+      background: var(--mist);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.75rem;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+    }
+
+    .add-cond label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .add-row {
+      display: flex;
+      gap: 0.45rem;
+    }
+
+    .add-row input {
+      flex: 1;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.55rem 0.75rem;
+      font: inherit;
+      font-size: 0.9rem;
+    }
+
+    .add-row input:focus {
+      outline: none;
+      border-color: var(--leaf);
+    }
+
+    .add-row button {
+      border: 1.5px solid var(--leaf);
+      background: #fff;
+      color: var(--leaf);
+      font: inherit;
+      font-weight: 700;
+      border-radius: 10px;
+      padding: 0.5rem 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .add-row button:hover {
+      background: var(--leaf);
+      color: #fff;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 1.4rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: var(--ink);
+      color: #fff;
+      padding: 0.85rem 1.25rem;
+      border-radius: 999px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      transition: transform 0.3s, opacity 0.3s;
+      font-size: 0.95rem;
+      max-width: 92vw;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast i { color: #6ee7a0; }
+
+
+    .nb-links-panel {
+      display: none;
+      margin: 0 -1.1rem 1rem;
+      background: linear-gradient(180deg, #0f2419 0%, #14532d 100%);
+      border: none;
+      border-radius: 0;
+      padding: 0.65rem 0 0.75rem;
+      box-shadow: 0 8px 20px rgba(12, 31, 23, 0.12);
+      color: #fff;
+      position: sticky;
+      top: 56px;
+      z-index: 30;
+    }
+
+    .nb-links-panel.visible { display: block; }
+
+    .nb-links-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0 1rem 0.55rem;
+    }
+
+    .nb-links-head h4 {
+      margin: 0;
+      font-size: 0.88rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-weight: 700;
+    }
+
+    .nb-links-head h4 .nb-scroll-hint {
+      font-size: 0.72rem;
+      font-weight: 500;
+      opacity: 0.85;
+      margin-inline-start: 0.25rem;
+      background: rgba(255,255,255,0.12);
+      border-radius: 999px;
+      padding: 0.1rem 0.45rem;
+    }
+
+    .nb-head-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-shrink: 0;
+    }
+
+    .nb-scroll-btn {
+      display: none;
+    }
+
+    .nb-hub-btn {
+      text-decoration: none;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      white-space: nowrap;
+    }
+
+    .nb-scroll-wrap {
+      position: relative;
+    }
+
+    .nb-links-grid {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      gap: 0.55rem;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      padding: 0.15rem 1rem 0.7rem;
+      scrollbar-width: auto;
+      scrollbar-color: #e8d59a rgba(255,255,255,0.22);
+    }
+
+    .nb-links-grid::-webkit-scrollbar {
+      height: 8px;
+      display: block;
+      -webkit-appearance: none;
+    }
+
+    .nb-links-grid::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.22);
+      border-radius: 999px;
+      margin: 0 1rem;
+    }
+
+    .nb-links-grid::-webkit-scrollbar-thumb {
+      background: #e8d59a;
+      border-radius: 999px;
+      border: 1px solid rgba(12, 31, 23, 0.15);
+    }
+
+    .nb-link-card {
+      flex: 0 0 auto;
+      width: min(72vw, 220px);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.35rem;
+      text-decoration: none;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 16px;
+      padding: 0.75rem 0.85rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+      min-height: 0;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+
+    .nb-link-card:active { transform: scale(0.98); }
+
+    .nb-link-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.16);
+    }
+
+    .nb-link-card .nb-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 0.4rem;
+    }
+
+    .nb-link-card .nb-ico { font-size: 1.25rem; line-height: 1; }
+    .nb-link-card .nb-title {
+      font-size: 0.84rem;
+      font-weight: 700;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 2.4em;
+    }
+    .nb-link-card .nb-open {
+      font-size: 0.72rem;
+      color: var(--leaf);
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .nb-books {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--forest);
+      background: var(--mist);
+      border-radius: 999px;
+      padding: 0.15rem 0.5rem;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 901px) {
+      .nb-links-panel {
+        margin: 0 0 1rem;
+        border-radius: 16px;
+        position: static;
+        top: auto;
+        padding: 0.85rem 0 0.95rem;
+      }
+
+      .nb-links-head {
+        padding: 0 1.1rem 0.6rem;
+      }
+
+      .nb-links-head h4 { font-size: 0.95rem; }
+
+      .nb-scroll-btn {
+        display: grid;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.35);
+        background: rgba(255,255,255,0.14);
+        color: #fff;
+        place-items: center;
+        cursor: pointer;
+        padding: 0;
+        font-size: 1rem;
+      }
+
+      .nb-scroll-btn:hover {
+        background: rgba(255,255,255,0.28);
+      }
+
+      .nb-scroll-btn:disabled {
+        opacity: 0.35;
+        cursor: default;
+      }
+
+      .nb-links-grid {
+        padding: 0.1rem 1.1rem 0.65rem;
+        gap: 0.65rem;
+      }
+
+      .nb-link-card {
+        width: 240px;
+      }
+    }
+
+    
+    .prompt-actions.bottom {
+      margin-top: 1rem;
+      margin-bottom: 0;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--line);
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .custom-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      background: #fff3cd;
+      color: #7a5d10;
+      border: 1px solid rgba(196,160,53,.45);
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 0.12rem 0.5rem;
+      margin-inline-start: 0.35rem;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+    }
+
+    .btn-del-custom {
+      border: 1.5px solid #c0392b;
+      background: #fff;
+      color: #c0392b;
+      font: inherit;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .btn-del-custom:hover {
+      background: #c0392b;
+      color: #fff;
+    }
+
+    .custom-prompt-panel {
+      background: var(--paper);
+      border: 1.5px dashed rgba(26, 107, 60, 0.35);
+      border-radius: 16px;
+      padding: 0;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .custom-prompt-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 0.95rem 1.1rem;
+      text-align: right;
+      font: inherit;
+      color: var(--forest);
+    }
+
+    .custom-prompt-toggle:hover {
+      background: rgba(26, 107, 60, 0.05);
+    }
+
+    .custom-prompt-toggle h4 {
+      margin: 0;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--forest);
+    }
+
+    .custom-prompt-toggle .acc-chevron {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--mist);
+      color: var(--forest);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: transform 0.25s ease, background 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .custom-prompt-panel.open .custom-prompt-toggle .acc-chevron {
+      transform: rotate(180deg);
+      background: var(--leaf);
+      color: #fff;
+    }
+
+    .custom-prompt-body {
+      display: none;
+      padding: 0 1.1rem 1.15rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .custom-prompt-panel.open .custom-prompt-body {
+      display: block;
+      padding-top: 0.9rem;
+    }
+
+    .custom-prompt-panel .sub {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .custom-form {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .custom-form input,
+    .custom-form textarea {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 0.65rem 0.8rem;
+      font: inherit;
+      font-size: 0.95rem;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .custom-form input:focus,
+    .custom-form textarea:focus {
+      outline: none;
+      border-color: var(--leaf);
+      box-shadow: 0 0 0 3px rgba(26, 107, 60, 0.12);
+    }
+
+    .custom-form .row-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .btn-save-custom {
+      border: none;
+      cursor: pointer;
+      background: var(--forest);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+    }
+
+    .btn-save-custom:hover { background: var(--leaf); }
+
+    .save-hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .nb-empty {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    
+    .thesis-banner {
+      background: linear-gradient(135deg, #0c1f17, #1a4d2e 55%, #2d6a4f);
+      color: #fff;
+      border-radius: 16px;
+      padding: 1.1rem 1.15rem 1.2rem;
+      margin-bottom: 1rem;
+      border-bottom: 3px solid var(--gold);
+    }
+
+    .thesis-banner .badge-pill {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--ink);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 0.55rem;
+    }
+
+    .thesis-banner h2 {
+      margin: 0 0 0.4rem;
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+      font-size: 1.25rem;
+      line-height: 1.7;
+    }
+
+    .thesis-banner p {
+      margin: 0 0 0.7rem;
+      opacity: 0.9;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .thesis-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .thesis-chips span {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 999px;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.78rem;
+    }
+
+    .thesis-mode-block {
+      margin-top: 0.95rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .thesis-mode-block .tm-label {
+      font-size: 0.8rem;
+      opacity: 0.85;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .thesis-mode-seg {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.45rem;
+      background: rgba(0,0,0,0.18);
+      border-radius: 14px;
+      padding: 0.35rem;
+    }
+
+    .thesis-mode-btn {
+      border: none;
+      cursor: pointer;
+      background: transparent;
+      color: rgba(255,255,255,0.78);
+      border-radius: 11px;
+      padding: 0.65rem 0.4rem;
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      line-height: 1.35;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      text-align: center;
+    }
+
+    .thesis-mode-btn .tm-ico { font-size: 1.15rem; line-height: 1; }
+    .thesis-mode-btn small {
+      font-size: 0.68rem;
+      font-weight: 500;
+      opacity: 0.75;
+      display: none;
+    }
+
+    .thesis-mode-btn.active {
+      background: #fff;
+      color: var(--forest);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+    }
+
+    .thesis-mode-btn.active small {
+      display: block;
+      color: var(--muted);
+      opacity: 1;
+    }
+
+    @media (min-width: 700px) {
+      .thesis-mode-btn {
+        font-size: 0.85rem;
+        padding: 0.75rem 0.5rem;
+      }
+      .thesis-mode-btn small { display: block; }
+    }
+
+    .thesis-step-card {
+      cursor: pointer;
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 0.95rem 0.9rem;
+      background: #fff;
+      text-align: right;
+      transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .thesis-step-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(196, 160, 53, 0.55);
+    }
+
+    .thesis-step-card.active {
+      border-color: var(--gold);
+      background: linear-gradient(160deg, #fffaf0, #f4f9f4);
+      box-shadow: 0 10px 24px rgba(196, 160, 53, 0.16);
+    }
+
+    .thesis-step-card .tag {
+      align-self: flex-start;
+      background: var(--mist);
+      color: var(--forest);
+      margin: 0;
+    }
+
+    .thesis-step-card .st-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+
+    .thesis-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+      align-items: center;
+    }
+
+    .empty-search {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--muted);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Desktop top nav -->
+  <nav class="top-nav" aria-label="مینو">
+    <div class="top-nav-inner">
+      <div class="brand">تحقیقی پرامپٹ اسٹوڈیو<small>Master Research Prompt Studio</small></div>
+      <div class="nav-tabs">
+        <button type="button" class="nav-tab active" data-view="mode"><i class="bi bi-cpu"></i> موڈ</button>
+        <button type="button" class="nav-tab" data-view="categories"><i class="bi bi-grid"></i> زمرے</button>
+        <button type="button" class="nav-tab" data-view="prompts"><i class="bi bi-journal-text"></i> پرامپٹس</button>
+        <button type="button" class="nav-tab" data-view="thesis"><i class="bi bi-mortarboard"></i> مقالہ</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile app bar -->
+  <header class="app-bar">
+    <h1>تحقیقی پرامپٹ اسٹوڈیو</h1>
+    <p>پہلے موڈ چنیں، پھر زمرہ، پھر پرامپٹ کاپی کریں</p>
+  </header>
+
+  <main class="wrap">
+
+    <!-- View 1: Mode -->
+    <section class="app-view active" id="view-mode" data-view="mode">
+      <div class="panel">
+        <div class="step-head">
+          <div class="step-num">1</div>
+          <div>
+            <h2>AI ٹول / موڈ منتخب کریں</h2>
+            <p>پہلا قدم: جس پلیٹ فارم پر پرامپٹ چلانا ہے اسے چنیں</p>
+          </div>
+        </div>
+        <div class="tool-grid" id="toolSelectionArea">
+          <div class="tool-card active" data-mode="notebooklm" role="button" tabindex="0">
+            <div class="tool-icon">📓</div>
+            <h3>NotebookLM</h3>
+            <small>سورسز اور کتابوں سے براہِ راست مستند استخراج</small>
+          </div>
+          <div class="tool-card" data-mode="chatgpt_shamela" role="button" tabindex="0">
+            <div class="tool-icon">🟢</div>
+            <h3>Claude + ChatGPT + Shamela.link</h3>
+            <small>موبائل و ویب کے ذریعے شاملہ ویب سائٹ سے حوالہ</small>
+          </div>
+          <div class="tool-card" data-mode="claude_mcp" role="button" tabindex="0">
+            <div class="tool-icon">🟣</div>
+            <h3>Claude Desktop + Shamela MCP</h3>
+            <small>کمپیوٹر ایپ اور لوکل شاملہ ڈیٹا بیس سے تلاش</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- View 2: Categories -->
+    <section class="app-view" id="view-categories" data-view="categories">
+      <div class="panel">
+        <div class="step-head">
+          <div class="step-num">2</div>
+          <div>
+            <h2>اسلامی علوم کا زمرہ منتخب کریں</h2>
+            <p>کارڈ سے زمرہ چنیں — تلاش بھی دستیاب ہے</p>
+          </div>
+        </div>
+
+        <div class="cat-toolbar">
+          <div class="search-box">
+            <i class="bi bi-search"></i>
+            <input type="search" id="categorySearch" placeholder="زمرہ تلاش کریں... مثلاً فقہ، حدیث، سیرت" autocomplete="off">
+          </div>
+          <div class="stats-pills">
+            <div class="cat-count" id="catCount">26 زمرے</div>
+            <div class="cat-count total-prompts" id="totalPromptsCount">کل پرامپٹس</div>
+          </div>
+        </div>
+
+        <div class="category-grid" id="categoryGrid" role="listbox" aria-label="اسلامی زمرے"></div>
+        <div class="empty-search" id="emptySearch">کوئی زمرہ نہیں ملا — دوسری کلید تلاش کریں</div>
+      </div>
+    </section>
+
+    <!-- View 3: Prompts -->
+    <section class="app-view" id="view-prompts" data-view="prompts">
+      <div class="prompts-bar">
+        <h3 class="urdu">پرامپٹس برائے: <span id="activeCategoryName">القرآن الكريم</span></h3>
+        <span class="mode-chip" id="activeModeBadge">موڈ: NotebookLM</span>
+      </div>
+      <div class="nb-links-panel" id="notebookLinksPanel">
+        <div class="nb-links-head">
+          <h4>
+            <i class="bi bi-journal-bookmark-fill"></i>
+            NotebookLM لنکس
+            <span class="nb-scroll-hint">سکرول ← →</span>
+          </h4>
+          <div class="nb-head-actions">
+            <button type="button" class="nb-scroll-btn" id="nbScrollPrev" aria-label="پچھلے نوٹ بکس" title="بائیں / دائیں سکرول">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+            <button type="button" class="nb-scroll-btn" id="nbScrollNext" aria-label="اگلے نوٹ بکس" title="بائیں / دائیں سکرول">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <a class="nb-hub-btn" href="https://sajidzbi.github.io/Al-Turath-Notebook-LMs-Hub/" target="_blank" rel="noopener">
+              <i class="bi bi-box-arrow-up-right"></i> Hub
+            </a>
+          </div>
+        </div>
+        <div class="nb-scroll-wrap">
+          <div class="nb-links-grid" id="notebookLinksGrid" role="list" aria-label="اس زمرے کے NotebookLM لنکس"></div>
+        </div>
+      </div>
+      <div class="custom-prompt-panel" id="customPromptPanel">
+        <button type="button" class="custom-prompt-toggle" onclick="toggleCustomPromptPanel()" aria-expanded="false">
+          <h4><i class="bi bi-plus-square-dotted"></i> اس زمرے میں اپنا کسٹم پرامپٹ محفوظ کریں</h4>
+          <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+        </button>
+        <div class="custom-prompt-body">
+          <p class="sub">عنوان، تحقیقی رخ، اور ڈیفالٹ موضوع لکھیں — براؤزر میں محفوظ رہے گا (اگلی بار بھی دستیاب)</p>
+          <div class="custom-form">
+            <input type="text" id="customPromptTitle" placeholder="پرامپٹ کا عنوان... مثلاً: معاصر مالیاتی مسائل کا حنفی حل">
+            <input type="text" id="customPromptFocus" placeholder="تحقیقی رخ / ہدف...">
+            <textarea id="customPromptTopic" rows="2" placeholder="ڈیفالٹ موضوع / سوال (اختیاری)"></textarea>
+            <div class="row-actions">
+              <button type="button" class="btn-save-custom" onclick="addCustomPrompt()">
+                <i class="bi bi-save2"></i> کسٹم پرامپٹ محفوظ کریں
+              </button>
+              <span class="save-hint"><i class="bi bi-hdd"></i> شرائط اور موضوعات بھی براؤزر میں خودکار محفوظ ہوتے ہیں</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="promptsList" class="prompts-list"></div>
+    </section>
+
+
+    <!-- View 4: Thesis / Research Article -->
+    <section class="app-view" id="view-thesis" data-view="thesis">
+      <div class="thesis-banner">
+        <div class="badge-pill">تحقیقی مقالہ، تھیسز اور ریسرچ آرٹیکل رائٹنگ پورٹل</div>
+        <h2>مقالہ و ریسرچ پرامپٹ ماسٹر حب</h2>
+        <p>سائناپسز، لٹریچر ریویو، کوالیٹیٹو/کوانٹیٹیٹو ڈیٹا، ابوابِ خمسہ اور آرٹیکل ہیڈنگز کے لیے خصوصی تیار شدہ پرامپٹس</p>
+        <div class="thesis-chips">
+          <span><i class="bi bi-mortarboard-fill"></i> ایم فل / پی ایچ ڈی ریسرچ فریم ورک</span>
+          <span><i class="bi bi-journal-check"></i> شکاگو مینوئل اسٹائل و اسکوپس کوالٹی</span>
+        </div>
+        <div class="thesis-mode-block">
+          <div class="tm-label"><i class="bi bi-sliders"></i> مقالہ کے لیے AI پلیٹ فارم</div>
+          <div class="thesis-mode-seg" id="thesisModeSeg" role="tablist" aria-label="مقالہ موڈ">
+            <button type="button" class="thesis-mode-btn active" data-thesis-mode="notebooklm" role="tab" aria-selected="true">
+              <span class="tm-ico">📓</span>
+              NotebookLM
+              <small>اپلوڈ شدہ پیپرز</small>
+            </button>
+            <button type="button" class="thesis-mode-btn" data-thesis-mode="chatgpt_web" role="tab" aria-selected="false">
+              <span class="tm-ico">💬</span>
+              ChatGPT / Claude
+              <small>ویب ریسرچ</small>
+            </button>
+            <button type="button" class="thesis-mode-btn" data-thesis-mode="claude_mcp" role="tab" aria-selected="false">
+              <span class="tm-ico">🗂️</span>
+              Claude MCP
+              <small>لوکل فائلز</small>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:1rem">
+        <div class="step-head">
+          <div class="step-num">م</div>
+          <div>
+            <h2>مقالے کا مخصوص مرحلہ منتخب کریں</h2>
+            <p>10 تحقیقی مراحل — کارڈ پر کلک کریں</p>
+          </div>
+        </div>
+        <div class="thesis-toolbar">
+          <div class="cat-count" id="thesisStepCount">10 مراحل</div>
+          <button type="button" class="btn-copy" style="padding:0.4rem 0.9rem;font-size:0.85rem" onclick="selectThesisStep('all')">
+            تمام مراحل دیکھیں
+          </button>
+        </div>
+        <div class="category-grid" id="thesisStepsGrid"></div>
+      </div>
+
+      <div class="prompts-bar">
+        <h3 class="urdu">مرحلہ: <span id="thesisActiveName">تمام تحقیقی مراحل</span></h3>
+        <span class="mode-chip" id="thesisModeBadge">📓 NotebookLM</span>
+      </div>
+      <div id="thesisPromptsList" class="prompts-list"></div>
+    </section>
+
+  </main>
+
+  <!-- Mobile bottom tabs -->
+  <nav class="bottom-tabs" aria-label="نیچے مینو">
+    <button type="button" class="bottom-tab active" data-view="mode">
+      <i class="bi bi-cpu"></i>
+      <span>موڈ</span>
+    </button>
+    <button type="button" class="bottom-tab" data-view="categories">
+      <i class="bi bi-grid"></i>
+      <span>زمرے</span>
+    </button>
+    <button type="button" class="bottom-tab" data-view="prompts">
+      <i class="bi bi-journal-text"></i>
+      <span>پرامپٹس</span>
+    </button>
+    <button type="button" class="bottom-tab" data-view="thesis">
+      <i class="bi bi-mortarboard"></i>
+      <span>مقالہ</span>
+    </button>
+  </nav>
+
+  <div class="toast" id="copyToast" role="status">
+    <i class="bi bi-check-circle-fill"></i>
+    <span>مکمل پرامپٹ تمام شرائط سمیت کلپ بورڈ پر کاپی ہو گیا ہے!</span>
+  </div>
+
+  <script>
+    const notebookLinksByCategory = {"quran":[{"title":"التجويد والقراءات Tajweed and Qur’anic Recitations","icon":"📖","link":"https://notebook.google.com/notebook/addc6a0b-155d-4d0d-a67b-273726386c5d","books":150},{"title":"علوم القرآن وأصول التفسير - 1 Quranic Sciences and Principles of Exegesis","icon":"📖","link":"https://notebook.google.com/notebook/79517b87-b2cc-4a96-ab5b-39c5396091d1","books":299},{"title":"علوم القرآن وأصول التفسير - 2 Quranic Sciences and Principles of Exegesis","icon":"📖","link":"https://notebook.google.com/notebook/8d2b31d2-c714-4fdf-b0a6-7b9834109c0d","books":24},{"title":"التفسير - 1  Qur’anic Exegesis -1","icon":"📖","link":"https://notebook.google.com/notebook/aff211d8-26c7-4d2d-80fb-d8f0a30cc034","books":294},{"title":"التفسير - 2  Qur’anic Exegesis -2","icon":"📖","link":"https://notebook.google.com/notebook/8abe842f-42f3-465a-99fd-0401fed5fc65","books":304},{"title":"الحاوي في تفسير القرآن - 1000 أجزاء Al-Hāwī fī Tafsīr al-Qurʾān al-Karīm","icon":"📖","link":"https://notebook.google.com/notebook/9cfdcb78-d1c2-4d54-8ea9-8c714b86afa8","books":234},{"title":"لطائف القرآن وأسراره Subtleties and Secrets of the Qur’an","icon":"📖","link":"https://notebook.google.com/notebook/973faf37-2c8b-41fe-9f29-8216a12ed85f","books":126}],"hadith":[{"title":"كتب الحديث - 1 Hadith Books - 1","icon":"📜","link":"https://notebook.google.com/notebook/16e44731-f624-4d59-95da-6417cdfa2e22","books":299},{"title":"كتب الحديث - 2 (Hadith Books - 2)","icon":"📜","link":"https://notebook.google.com/notebook/e87ce6eb-bc14-4507-a877-b346194b9885","books":299},{"title":"كتب الحديث - 3 (Hadith Books - 3)","icon":"📜","link":"https://notebook.google.com/notebook/dc8efef5-f0d3-4860-935c-de5a07357b57","books":299},{"title":"كتب الحديث - 4 (Hadith Books - 4)","icon":"📜","link":"https://notebook.google.com/notebook/d79c1608-ffdd-4a04-b48e-8e456aaed78f","books":299},{"title":"كتب الحديث - 5 (Hadith Books - 5)","icon":"📜","link":"https://notebook.google.com/notebook/89ed4d64-1d3a-4792-b933-af36751926be","books":287},{"title":"التخريج والأطراف Hadith Referencing and Aṭrāf","icon":"📜","link":"https://notebook.google.com/notebook/95b0610a-b1e4-453c-a58b-d2667ce8173a","books":201},{"title":"علوم الحديث - 1 Hadith Sciences - 1","icon":"📜","link":"https://notebook.google.com/notebook/461559f6-6508-4b74-b7cd-cfecbe2b1b4c","books":299},{"title":"علوم الحديث - 2 Hadith Sciences - 2","icon":"📜","link":"https://notebook.google.com/notebook/16c46dfa-8a94-4523-a526-ed58ecb73058","books":21},{"title":"شروح الحديث - الكتب الستة Commentaries on Hadith - The Six Canonical Books","icon":"📜","link":"https://notebook.google.com/notebook/6f59bce2-80a4-4953-84f0-8c172528854d","books":286},{"title":"شروح الحديث - الأخرى  Other Hadith Commentaries","icon":"📜","link":"https://notebook.google.com/notebook/1c9f5988-e9cb-434a-b5aa-72c5e66ff645","books":268},{"title":"العلل والسؤالات الحديثية Hadith Defects and Scholarly Questions","icon":"📜","link":"https://notebook.google.com/notebook/105c66cc-8838-4cbd-847e-82df994b39ec","books":84}],"aqeedah":[{"title":"العقيدة - 1 Islamic Creed - 1","icon":"⭐","link":"https://notebook.google.com/notebook/d14be3bc-ecba-42cd-8661-f8bbcc3124b3","books":299},{"title":"العقيدة - 2 Islamic Creed - 2","icon":"⭐","link":"https://notebook.google.com/notebook/5eac20e4-5ed9-40cf-b7d5-996d27320897","books":299},{"title":"العقيدة - 3 Islamic Creed - 3","icon":"⭐","link":"https://notebook.google.com/notebook/ff1c537c-6b95-4009-adb7-81e8ec8183e4","books":226},{"title":"الفرق والردود Sects and Refutations","icon":"⭐","link":"https://notebook.google.com/notebook/7d25ce4e-9ad8-44a4-aa5d-0b989f8d2886","books":156}],"seerah":[{"title":"السيرة النبوية Prophetic Biography","icon":"🕋","link":"https://notebook.google.com/notebook/7d5355aa-becc-451e-a927-d33a396a031f","books":218},{"title":"فقه السيرة Fiqh al-Sirah","icon":"🕋","link":"https://notebook.google.com/notebook/c4dade6c-5735-4b4f-b880-c58de4f615aa","books":107}],"fiqh":[{"title":"الفقه الحنفي Hanafi Jurisprudence","icon":"⚖️","link":"https://notebook.google.com/notebook/f86d5f52-59c7-4792-876c-dad399ebe10d","books":153},{"title":"الفقه المالكي Maliki Jurisprudence","icon":"⚖️","link":"https://notebook.google.com/notebook/7a39359c-fc75-474f-96dc-dab4980524c0","books":162},{"title":"الفقه الشافعي Shafi'i Jurisprudence","icon":"⚖️","link":"https://notebook.google.com/notebook/474d980d-00a6-4da6-a56e-646cc23593fa","books":188},{"title":"الفقه الحنبلي Hanbali Jurisprudence","icon":"⚖️","link":"https://notebook.google.com/notebook/de49c3a0-e9d6-41dd-8acc-c982ef6bbcca","books":223},{"title":"الفقه العام General Islamic Jurisprudence","icon":"⚖️","link":"https://notebook.google.com/notebook/878b285c-815f-40e2-99ad-a1ceec3aaeae","books":300},{"title":"الفقه المعاصر Contemporary Fiqh","icon":"⚖️","link":"https://notebook.google.com/notebook/edb49f94-46a4-4566-84de-e3e596945ef5","books":187},{"title":"مسائل فقهية - 1 Jurisprudential Issues - 1","icon":"⚖️","link":"https://notebook.google.com/notebook/ff50e78e-ff62-4071-b55c-2bd764a9031c","books":299},{"title":"مسائل فقهية - 2 Jurisprudential Issues - 2","icon":"⚖️","link":"https://notebook.google.com/notebook/051b4b97-a49a-4b41-a32f-b7786a8dfe85","books":130},{"title":"الفتاوى Fatwa Collections","icon":"⚖️","link":"https://notebook.google.com/notebook/7d7b3a4e-5519-42ac-a9c0-bd7ba6ddb721","books":191},{"title":"الفرائض والوصايا Al-Fara'id and Wills","icon":"⚖️","link":"https://notebook.google.com/notebook/eacfff29-6495-40a9-a4e9-329670cc3b42","books":28},{"title":"أصول الفقه Principles of Islamic Jurisprudence","icon":"⚖️","link":"https://notebook.google.com/notebook/dc596b6d-ebf9-411d-ae19-79bf9c770dce","books":269},{"title":"علوم الفقه والقواعد الفقهية Islamic Jurisprudence and Legal Maxims","icon":"⚖️","link":"https://notebook.google.com/notebook/d63ad0d2-11b9-4723-95cf-65ca01a50c64","books":104}],"fiqh_hanafi":[{"title":"الفقه الحنفي Hanafi Jurisprudence","icon":"⚖️","link":"https://notebook.google.com/notebook/f86d5f52-59c7-4792-876c-dad399ebe10d","books":153},{"title":"الفقه المالكي Maliki Jurisprudence","icon":"⚖️","link":"https://notebook.google.com/notebook/7a39359c-fc75-474f-96dc-dab4980524c0","books":162},{"title":"الفقه الشافعي Shafi'i Jurisprudence","icon":"⚖️","link":"https://notebook.google.com/notebook/474d980d-00a6-4da6-a56e-646cc23593fa","books":188},{"title":"الفقه الحنبلي Hanbali Jurisprudence","icon":"⚖️","link":"https://notebook.google.com/notebook/de49c3a0-e9d6-41dd-8acc-c982ef6bbcca","books":223},{"title":"الفقه العام General Islamic Jurisprudence","icon":"⚖️","link":"https://notebook.google.com/notebook/878b285c-815f-40e2-99ad-a1ceec3aaeae","books":300},{"title":"الفقه المعاصر Contemporary Fiqh","icon":"⚖️","link":"https://notebook.google.com/notebook/edb49f94-46a4-4566-84de-e3e596945ef5","books":187},{"title":"مسائل فقهية - 1 Jurisprudential Issues - 1","icon":"⚖️","link":"https://notebook.google.com/notebook/ff50e78e-ff62-4071-b55c-2bd764a9031c","books":299},{"title":"مسائل فقهية - 2 Jurisprudential Issues - 2","icon":"⚖️","link":"https://notebook.google.com/notebook/051b4b97-a49a-4b41-a32f-b7786a8dfe85","books":130},{"title":"الفتاوى Fatwa Collections","icon":"⚖️","link":"https://notebook.google.com/notebook/7d7b3a4e-5519-42ac-a9c0-bd7ba6ddb721","books":191},{"title":"الفرائض والوصايا Al-Fara'id and Wills","icon":"⚖️","link":"https://notebook.google.com/notebook/eacfff29-6495-40a9-a4e9-329670cc3b42","books":28},{"title":"أصول الفقه Principles of Islamic Jurisprudence","icon":"⚖️","link":"https://notebook.google.com/notebook/dc596b6d-ebf9-411d-ae19-79bf9c770dce","books":269},{"title":"علوم الفقه والقواعد الفقهية Islamic Jurisprudence and Legal Maxims","icon":"⚖️","link":"https://notebook.google.com/notebook/d63ad0d2-11b9-4723-95cf-65ca01a50c64","books":104}],"tarikh":[{"title":"التاريخ - 1 History - 1","icon":"✍️","link":"https://notebook.google.com/notebook/1e066856-e0e8-4cb7-a12a-303bfc3e6f17","books":299},{"title":"التاريخ - 2 History - 2","icon":"✍️","link":"https://notebook.google.com/notebook/8f5e2a5e-863b-4a27-8687-f8f1e35fb878","books":13}],"siyasah":[{"title":"السياسة الشرعية والقضاء Islamic Governance and Judiciary","icon":"🏛️","link":"https://notebook.google.com/notebook/6db79907-137e-4820-aabd-3d2e89e603f1","books":101}],"kalam":[{"title":"علم الكلام والفلسفة Ilm-ul-Kalam & Philosophy","icon":"✨","link":"https://notebook.google.com/notebook/4f2279df-2526-4f60-bac0-cbccf3ee61d6","books":84}],"ilhad":[{"title":"الإلحاد والشبهات الفكرية المعاصرة Atheism & Contemporary Challenges","icon":"🛡️","link":"https://notebook.google.com/notebook/8131eba0-57d8-4d8e-b49e-65c18daa90c5","books":136}],"adab":[{"title":"النحو والصرف Arabic Syntax and Morphology","icon":"📝","link":"https://notebook.google.com/notebook/99535422-1096-48b2-bd2f-2ddf05bdc0ac","books":230},{"title":"البلاغة Arabic Rhetoric","icon":"📝","link":"https://notebook.google.com/notebook/31b64430-4090-4e77-8084-03597c99ec47","books":45},{"title":"الأدب العربي - 1 Arabic Literature - 1","icon":"📝","link":"https://notebook.google.com/notebook/215eb5ab-0ba4-48dc-a336-2efe7a4c9c3b","books":299},{"title":"الأدب العربي - 2 Arabic Literature - 2","icon":"📝","link":"https://notebook.google.com/notebook/cd01c685-40d0-4ff9-aecd-63cba63c42a3","books":170},{"title":"كتب اللغة Arabic Linguistics","icon":"📝","link":"https://notebook.google.com/notebook/348f4d73-17fa-4571-920e-a862e051d294","books":79},{"title":"الشعر ودواوينه Arabic Poetry and Collections","icon":"📝","link":"https://notebook.google.com/notebook/dc65e13d-51e7-4cbb-9ee2-d893ec8f460e","books":25},{"title":"العروض والقوافي Prosody and Rhyme","icon":"📝","link":"https://notebook.google.com/notebook/e4bf0580-8059-4182-90ff-519d87bdb0b3","books":8},{"title":"الغريب والمعاجم Al-Gharib and Lexicons","icon":"📝","link":"https://notebook.google.com/notebook/176d19fc-ab07-4ef7-97d4-dfd481e7ea22","books":184}],"raqaiaq":[{"title":"الرقائق والآداب والأذكار - 1 Spirituality, Ethics and Adhkar - 1","icon":"💎","link":"https://notebook.google.com/notebook/0c2c0291-ba84-4c02-8a01-304452151049","books":299},{"title":"الرقائق والآداب والأذكار - 2 Spirituality, Ethics and Adhkar - 2","icon":"💎","link":"https://notebook.google.com/notebook/154ed221-c167-4b76-95ad-091eb7fbfba4","books":299},{"title":"الرقائق والآداب والأذكار - 3 Spirituality, Ethics and Adhkar - 3","icon":"💎","link":"https://notebook.google.com/notebook/0f97da59-f6dd-4f61-ae8c-b00d1b7b2430","books":44}],"adyan":[{"title":"مقارنة الأديان Comparative Religion","icon":"🌐","link":"https://notebook.google.com/notebook/6250b14f-ed53-48d5-acb5-4c36ea92b3a3","books":46}],"istishraq":[{"title":"المستشرقون والقرآن Orientalists and Qur’an","icon":"🌍","link":"https://notebook.google.com/notebook/7e7d999a-b655-4dc4-a1df-f3f554eebd7f","books":174},{"title":"المستشرقون والحديث Orientalists and Hadith","icon":"🌍","link":"https://notebook.google.com/notebook/87a6bf8f-2a96-4371-b3a4-1a1f44ed4ad5","books":45},{"title":"المستشرقون والسيرة النبوية Orientalists and Prophetic Biography","icon":"🌍","link":"https://notebook.google.com/notebook/e32f976c-aba0-45ea-b2ff-b2f2b579c7ae","books":93},{"title":"دراسات الاستشراق Orientalism Studies","icon":"🌍","link":"https://notebook.google.com/notebook/00a17b72-3d64-430e-8b29-5a9fcd97fce3","books":28}],"tarajim":[{"title":"تراجم الأعلام والرواة - 1 Biographies of Scholars and Narrators - 1","icon":"👥","link":"https://notebook.google.com/notebook/6d97f911-aaa9-4bc5-8105-1c17458a95e4","books":299},{"title":"تراجم الأعلام والرواة - 2 Biographies of Scholars and Narrators - 2","icon":"👥","link":"https://notebook.google.com/notebook/905df2b8-f54b-406b-8b16-7b4f32bf724b","books":299},{"title":"تراجم الأعلام والرواة - 3 Biographies of Scholars and Narrators - 3","icon":"👥","link":"https://notebook.google.com/notebook/dcfe6fd2-e2af-465f-a5e7-fed99c47c4bc","books":153}],"ansab":[{"title":"الأنساب Genealogy","icon":"🌳","link":"https://notebook.google.com/notebook/a10feeac-1df0-44f6-94e6-cad1beae4552","books":69}],"mantiq":[{"title":"المنطق Logic","icon":"🧠","link":"https://notebook.google.com/notebook/a5c0833b-324c-454c-9e59-e5c190b902a7","books":30}],"tibb":[{"title":"الطب Medicine","icon":"🩺","link":"https://notebook.google.com/notebook/c98da0b7-a586-4727-b82f-030d9350dc41","books":18}],"jawame":[{"title":"الجوامع Comprehensive Works","icon":"🗂️","link":"https://notebook.google.com/notebook/428fd481-7282-4d57-8bdd-386f0d294844","books":264}],"buldan":[{"title":"البلدان والرحلات Geography and Travel","icon":"🗺️","link":"https://notebook.google.com/notebook/bc3b4333-fce1-42f9-85d5-34c71d9940ed","books":115}],"dars_nizami":[{"title":"الأولى - الكتب والشروحات — 1st Year - Books and Commentaries","icon":"🕌","link":"https://notebook.google.com/notebook/fa0eaffa-b786-44c5-9ad9-52071cac5557","books":101},{"title":"الثانية - الكتب والشروحات — 2nd Year - Books and Commentaries","icon":"🕌","link":"https://notebook.google.com/notebook/2baa58a2-c1c1-47ea-a568-48c955fe30a7","books":107},{"title":"الثالثة - الكتب والشروحات — 3rd Year - Books and Commentaries","icon":"🕌","link":"https://notebook.google.com/notebook/5193f9c1-2b2b-45ed-be5e-cb64ebb98b3d","books":95},{"title":"الرابعة - الكتب والشروحات — 4th Year - Books and Commentaries","icon":"🕌","link":"https://notebook.google.com/notebook/bb160c55-587a-4a48-80e0-47c857d88748","books":94},{"title":"الخامسة - الكتب والشروحات — 5th Year - Books and Commentaries","icon":"🕌","link":"https://notebook.google.com/notebook/6c58fbd4-7258-4775-9a0b-0e703a1549e3","books":94},{"title":"السادسة - الكتب والشروحات — 6th Year - Books and Commentaries","icon":"🕌","link":"https://notebook.google.com/notebook/fd9d23de-602d-41f4-89c4-e996999689c5","books":141},{"title":"السابعة - الكتب والشروحات — 7th Year - Books and Commentaries","icon":"🕌","link":"https://notebook.google.com/notebook/06deddce-7cb7-40d0-9179-657c7f4cfca0","books":198},{"title":"الثامنة - الكتب والشروحات 1 — 8th Year - Books and Commentaries 1","icon":"🕌","link":"https://notebook.google.com/notebook/e64ee895-88fe-4e5a-a61b-61f6f3ea6018","books":222},{"title":"الثامنة - الكتب والشروحات 2 — 8th Year - Books and Commentaries 2","icon":"🕌","link":"https://notebook.google.com/notebook/497881a6-31d4-4b2e-a4d4-e6cf20717a9b","books":286}],"tahqiq":[{"title":"مناهج البحث العلمي Research Methods","icon":"🎓","link":"https://notebook.google.com/notebook/738c98ea-8fe2-4e4c-bef7-fd2540b967c7","books":227},{"title":"كشَّاف الموضوعات Research Topics Explorer","icon":"🎓","link":"https://notebook.google.com/notebook/07fb6a5d-6f8a-4d94-ad50-9a8b90143f93","books":124},{"title":"فهارس المخطوطات - 1 Manuscript Catalogues 1","icon":"🎓","link":"https://notebook.google.com/notebook/b008d80e-7ee9-41f5-890b-134189efa33f","books":299},{"title":"فهارس المخطوطات - 2 Manuscript Catalogues 2","icon":"🎓","link":"https://notebook.google.com/notebook/b863b3c1-1329-45ad-9957-d196a2fe3c0a","books":89},{"title":"الأعلام والأماكن والمصطلحات Figures, Places and Terms","icon":"🎓","link":"https://notebook.google.com/notebook/d6b609fc-691e-4030-a40b-1f7eff1e1248","books":299}],"faharis":[{"title":"فهارس الكتب والأدلة Book Indexes and Bibliographic Guides","icon":"📇","link":"https://notebook.google.com/notebook/f222ee58-b17f-4337-a6f1-c2991c961842","books":112}],"islam_science":[{"title":"الإسلام والعلوم الحديثة Islam and Modern Sciences","icon":"⚛️","link":"https://notebook.google.com/notebook/276ca598-d914-4a5f-a249-ca091b880362","books":67}],"oloom_ukhra":[{"title":"علوم أخرى Other Sciences","icon":"🌿","link":"https://notebook.google.com/notebook/832b7017-f1e1-499a-84f8-cc196eb87cb2","books":26}],"kutub_amma":[{"title":"كتب عامة - 1 General Books - 1","icon":"📚","link":"https://notebook.google.com/notebook/1910b74e-8df4-40d0-913b-f6af498afa56","books":299},{"title":"كتب عامة - 2 General Books - 2","icon":"📚","link":"https://notebook.google.com/notebook/4ad3f7d3-0e63-4b7b-888a-7ed098605220","books":65}]};
+
+    const categoriesData = [
+      {
+        id: "quran",
+        name: "📖 القرآن الكريم وعلومه (7 Notebooks)",
+        defaultTopic: "إمالہ کے قراءتی وجوہ اور اصول / سورۃ الحجرات آیت نمبر 6 کا سببِ نزول اور فقہی اصول",
+        prompts: [
+          { title: "1. تفسیری اقوال اور اسبابِ نزول کا تفصیلی استخراج", focus: "اسبابِ نزول اور سلف صالحین (صحابہ و تابعین) کے تفسیری اقوال مع مراجع" },
+          { title: "2. توجیہ القراءات و احکامِ تجوید", focus: "قراء عشرہ کے مختلف طرق، وجوہِ اعراب اور صوتی توجیہات" },
+          { title: "3. نصوص التفسير المقارن (مختلف تفاسیر کا تقابل)", focus: "امام طبری، قرطبی اور ابن کثیر کے مابین ترجیحی اقوال کا موازنہ" },
+          { title: "4. بلاغتِ قرآنی اور لطائف و اسرار", focus: "نظمِ قرآن، بلاغی نکتہ سنجیاں اور اعجازی اسالیب کی توضیح" },
+          { title: "5. تمام تفاسیر میں آیت کے مقامات کی مکمل اسکیننگ", focus: "اس نوٹ بک کے تمام تفاسیری اجزاء میں آیت کے تمام وقوعات کا انڈیکس" },
+          { title: "6. احکامِ قرآنیہ کا فقہی استخراج", focus: "آیاتِ احکام سے فقہی مسائل کا استنباط مع دلائل اور اختلافِ اقوال" },
+          { title: "7. ناسخ و منسوخ اور جمع بین الآیات", focus: "نسخ، تخصیص، اور بظاہر متعارض آیات میں تطبیق کے مناہج" },
+          { title: "8. غریب القرآن اور لغوی تحقیق", focus: "مفرداتِ قرآن، اشتقاق، اور قدیم معاجم سے لغوی معانی کا اثبات" }
+        ]
+      },
+      {
+        id: "hadith",
+        name: "📜 الحديث النبوي وعلومه (11 Notebooks)",
+        defaultTopic: "حدیث «من احتجم لسبع عشرة...» یا روایت افعال الصلاة",
+        prompts: [
+          { title: "1. تخریج الحدیث و جمع الطرق المرویہ", focus: "بنیادی کتبِ حدیث سے تمام اسانید و ابواب مع رقم الحدیث و متون" },
+          { title: "2. کتبِ علل اور سوالات کی روشنی میں باریک جانچ", focus: "ارسالِ خفی، انقطاع، وقف بنام رفع اور زیادتِ ثقہ کی تحقیق" },
+          { title: "3. شروحِ کتبِ ستہ سے تشریح و فقہ الحدیث", focus: "فتح الباری، عمدۃ القاری اور شرح النووی سے اصل فقہی و لغوی مباحث" },
+          { title: "4. نصوصِ ائمہ متقدمین فی الحکم علی الحدیث", focus: "امام احمد، ترمذی، دارقطنی اور عقیلی کے صریح احکام مع حوالہ" },
+          { title: "5. تخریج الاطراف اور متابعات و شواہد کا تقابل", focus: "روایت کے قوی اور ضعیف متابعات و شواہد کی مفصل فہرست" },
+          { title: "6. رجالِ اسناد کا تفصیلی جائزہ", focus: "ہر راوی کا طبقہ، جرح و تعدیل، اور اسناد کی مجموعی قوت/ضعف" },
+          { title: "7. مختلف الحدیث اور تعارضِ روایات", focus: "بظاہر متعارض احادیث میں جمع، ترجیح، یا نسخ کا علمی حل" },
+          { title: "8. غریب الحدیث اور فقہی معانی", focus: "مشکل الفاظ کی شرح اور حدیث سے مستنبط احکام کی توضیح" }
+        ]
+      },
+      {
+        id: "aqeedah",
+        name: "🌟 العقيدة والفرق (4 Notebooks)",
+        defaultTopic: "مسئلہ افعال العباد / اسماء و صفات کے شرعی ضوابط / خوارج و معتزلہ کا رد",
+        prompts: [
+          { title: "1. نصوصِ عقیدہ اہل السنہ والجماعہ کا اثبات", focus: "ائمہ سلف (طحاوی، ابن تیمیہ، اشعری) کی اصل عبارات مع دلائل" },
+          { title: "2. تقابلِ فرق (مذاہب الفرق والمقالات)", focus: "اشاعرہ، ماتریدیہ اور معتزلہ کے مابین فکری فروق کی نشاندہی" },
+          { title: "3. کتبِ ردود سے شبہات کا استقصاء", focus: "باطل افکار اور بدعات پر ائمہ کے ٹھوس نقلی و عقلی براہین" },
+          { title: "4. تحریر مصطلحاتِ کلامیہ و عقدیہ", focus: "توحید، ایمان و کفر، اور تقدیر کی اصطلاحی حدود و تعریفات" },
+          { title: "5. عقائدی کتب کا انڈیکس اور تقابلی خلاصہ", focus: "اس مسئلے کا بنیادی عقائدی مصادر میں تاریخی ارتقاء" },
+          { title: "6. توحیدِ عبادت و شرک کے دلائل", focus: "توحید اور شرک کی حدود، اقسام، اور نصوصِ کتاب و سنت مع توضیحات" },
+          { title: "7. ایمان و کفر اور تکفیر کے ضوابط", focus: "ایمان کی حقیقت، نواقضِ اسلام، اور تکفیر کے شرعی قیود مع نصوص" }
+        ]
+      },
+      {
+        id: "seerah",
+        name: "🕋 السيرة النبوية وفقهها (2 Notebooks)",
+        defaultTopic: "صلح حدیبیہ کے فقہی احکام / میثاقِ مدینہ کی شرائط و دفعات",
+        prompts: [
+          { title: "1. تاریخی روایات کی اسنادی صحت کی پڑتال", focus: "ابن اسحاق، ابن ہشام اور واقدی کی روایات کا تنقیدی موازنہ" },
+          { title: "2. فقہ السیرہ اور استنباطِ احکام", focus: "واقعاتِ سیرت سے تربیتی، سیاسی اور فقہی احکام کا استخراج" },
+          { title: "3. غزوات و سرایا کی تاریخ اور تفاصیل", focus: "غزوہ بدر و احد کے تفصیلی مراحل مع جغرافیائی و تاریخی نصوص" },
+          { title: "4. شمائل و خصائصِ نبویہ ﷺ", focus: "اخلاقِ کریمہ، عادات اور عبادات کی مستند نصوص مع کتب" },
+          { title: "5. معاصر دعوتی اسلوب کے لیے سیرت سے رہنمائی", focus: "سیرتِ طیبہ سے جدید دور میں دعوت و حکمت کے اساسی اصول" },
+          { title: "6. ہجرت و ریاستِ مدینہ کے سیاسی اصول", focus: "میثاقِ مدینہ، اخوت، اور ریاستی نظم کے بنیادی نصوص" },
+          { title: "7. اخلاقِ نبوی ﷺ کا عملی اطلاق", focus: "معاملات، عائلی زندگی، اور معاشرتی اخلاق کی مستند روایات" }
+        ]
+      },
+      {
+        id: "fiqh",
+        name: "⚖️ الفقه الإسلامي ومذاهبه (12 Notebooks)",
+        defaultTopic: "بیع الصرف میں آن لائن بینکنگ اور قبضہ حکمی / تورق و مرابحہ",
+        prompts: [
+          { title: "1. کتبِ ظاہر الروایہ و متونِ معتمدہ سے استخراج", focus: "اصل متون و شروح سے صریح عربی عبارات مع جلد و صفحہ" },
+          { title: "2. فتاویٰ و متاخرین کی ترجیحات (رسم المفتی)", focus: "ابن عابدین شامی، ابن نجیم وغیرہ کے مفتیٰ بہ اقوال و فتاویٰ" },
+          { title: "3. تطبیق القواعد الفقہیہ علی الفروع", focus: "مسئلے پر لاگو ہونے والے کلی و فرعی قواعد کا فقہی انطباق" },
+          { title: "4. تقابلِ مذاہبِ اربعہ (الفقه المقارن)", focus: "چاروں ائمہ کے دلائل اور وجہِ ترجیح کا تقابلی و علمی جائزہ" },
+          { title: "5. معاصر جدید مسائل پر قدیم جزئیات کا انطباق", focus: "جدید مالیاتی و طبی مسائل کے لیے قدیم کتب سے ہم مثل نظائر" },
+          { title: "6. ادلة الاحكام اور مناطِ حکم", focus: "آیت، حدیث، اجماع، قیاس اور دیگر ادلہ سے حکم کا استخراج" },
+          { title: "7. فروق فقہیہ اور نظائر", focus: "مشابہ مسائل میں فرق کی وجہ اور فقہی نظائر کی فہرست" },
+          { title: "8. خلاصۂ فتویٰ برائے عام فہم", focus: "راجح قول، شرائط، مستثنیات، اور عملی تطبیق کا واضح خلاصہ" }
+        ]
+      },
+      {
+        id: "fiqh_hanafi",
+        name: "🟢 الفقه الحنفي (مذهب الإمام أبي حنيفة)",
+        defaultTopic: "وضو میں شک / بیعِ سلم کی شرائط / طلاقِ ثلاثہ / زکوٰۃِ نقدین کے معاصر مسائل",
+        masterRules: [
+          "جواب صرف مذہبِ حنفی کے معتبر مصادر سے دیں؛ دوسرے مذاہب صرف مختصر تقابل کے لیے اگر ضروری ہو۔",
+          "پہلے ظاہر الروایہ / متونِ معتمدہ (قدوری، کنز، ہدایہ، رد المحتار وغیرہ) سے قول نقل کریں، پھر متاخرین کی ترجیح۔",
+          "امام ابو حنیفہ، ابو یوسف، اور محمد کے اقوال میں امتیاز رکھیں؛ اختلاف ہو تو مفتی بہ قول واضح کریں۔",
+          "رسم المفتی کے بغیر متاخر قول کو راجح نہ ٹھہرائیں؛ ابن عابدین وغیرہ کی تصریح ہو تو حوالہ دیں۔",
+          "حنفی اصطلاحات (فرض، واجب، سنت مؤکدہ، مستحب، مکروہ تنزیہی/تحریمی، حرام) درست استعمال کریں۔"
+        ],
+        prompts: [
+          { title: "1. ظاہر الروایہ سے مسئلہ کا اصل حکم", focus: "مبسوط، جامع صغیر/کبیر، اور متونِ معتمدہ سے حنفی حکم مع عبارت" },
+          { title: "2. مفتی بہ قول اور رسم المفتی", focus: "ابن عابدین، ابن نجیم، اور حنفی فتاویٰ سے راجح/مفتی بہ تعیین" },
+          { title: "3. اختلافِ روایات داخل المذهب", focus: "امام اعظم، صاحبین، اور زفر کے اقوال کا موازنہ مع وجہِ ترجیح" },
+          { title: "4. اصولِ فقہ حنفی کا اطلاق", focus: "استحسان، عرف، عمل اہلِ کوفہ، اور نصوص پر حنفی منہج کا انطباق" },
+          { title: "5. قواعد فقہیہ علی المذهب الحنفی", focus: "اشباہ و نظائر اور حنفی قواعد سے مسئلہ کا حل" },
+          { title: "6. عبادات میں حنفی فروعات", focus: "طہارت، صلاة، زکوٰۃ، صوم، حج کے دقیق حنفی احکام مع شرائط" },
+          { title: "7. معاملات و مالیات پر حنفی تطبیق", focus: "بیع، اجارہ، ربا، صرف، مرابحہ و جدید مالیاتی مسائل کا حنفی حل" },
+          { title: "8. احوالِ شخصیہ (نکاح، طلاق، عدت)", focus: "حنفی مذہب کے عائلی احکام مع دلائل اور عملی ضوابط" },
+          { title: "9. معاصر نوازل کا حنفی تخریج", focus: "جدید مسائل پر قدیم حنفی جزئیات سے تخریج مع الضوابط" },
+          { title: "10. حنفی فتویٰ کارڈ (عملی خلاصہ)", focus: "حکم، دلیل، شرائط، مکروہات/مفسدات، اور عام فہم خلاصہ" }
+        ]
+      },
+      {
+        id: "tarikh",
+        name: "✍️ التاريخ الإسلامي (2 Notebooks)",
+        defaultTopic: "خلافت راشدہ کا نظامِ خلافت / واقعہ صفین کی تاریخی روایات",
+        prompts: [
+          { title: "1. طبری اور ابن اثیر کی روایات کا موازنہ", focus: "تاریخی واقعات کے متضاد اسانید و متون کا تنقیدی جائزہ" },
+          { title: "2. تمدن و تہذیب اور انتظامی امور کی تفصیل", focus: "بیت المال، خراج اور عدالتی نظام کے تاریخی دستاویزات" },
+          { title: "3. سوانحِ سلاطین و خلفاء مع کارنامے", focus: "عہدِ بنی امیہ و عباسیہ کے اہم ادوار کی عادلانہ تحقیق" },
+          { title: "4. زوال و سقوط کے تاریخی اسباب کا تجزیہ", focus: "تاریخی مراجع کے نصوص کی روشنی میں زوال کے محرکات" },
+          { title: "5. واقعات کا تاریخی ٹائم لائن جدول", focus: "سنین و اعوام کے اعتبار سے واقعات کی ترتیب مع مراجع" },
+          { title: "6. مصادرِ تاریخیہ کا تنقیدی معیار", focus: "روایت کی قوت، راوی، اور مورخین کے مناہج کا موازنہ" },
+          { title: "7. خلفاء راشدین کے اداروں کا مطالعہ", focus: "شوریٰ، بیت المال، اور عدل کے عملی نظائر مع نصوص" }
+        ]
+      },
+      {
+        id: "siyasah",
+        name: "🏛️ السياسة الشرعية والقضاء (1 Notebook)",
+        defaultTopic: "امام و حاکم کے اختیارات / تعزیر بالمال / قاضی کی شرائط",
+        prompts: [
+          { title: "1. الاحکام السلطانیہ سے حکومتی اختیارات", focus: "ماوردی اور ابو یعلیٰ کی کتب سے اصل حکومتی احکام" },
+          { title: "2. طرق الحکم و آداب القضاء", focus: "ابن قیم کی 'الطرق الحکمیۃ' سے قضاء و شہادت کے اصول" },
+          { title: "3. مصالحِ مرسلہ اور سیاستِ عادلہ کا دائرہ", focus: "ریاست کے انتظامی اور معاشی قوانین کی شرعی حیثیت" },
+          { title: "4. تعزیر اور سزاؤں کے حدود و ضوابط", focus: "سیاست شرعیہ میں سزاؤں کے اطلاق کے شرعی ضوابط" },
+          { title: "5. عدالتی نظائر اور فیصلوں کا خلاصہ", focus: "تاریخی مقدمات کے قضاء پر مبنی فیصلوں کے نصوص" }
+        ]
+      },
+      {
+        id: "kalam",
+        name: "✨ علم الكلام والفلسفة (1 Notebook)",
+        defaultTopic: "مسئلہ حدوثِ عالم / جوہر و عرض / علت و معلول کی حقیقت",
+        prompts: [
+          { title: "1. متکلمین کے بنیادی براہین کا اثبات", focus: "شرح المواقف اور شرح المقاصد سے عقلی و نقلی استدلال" },
+          { title: "2. فلسفہ مشائیہ کا اسلامی متکلمین کی طرف سے رد", focus: "تہافت الفلاسفہ للغزالی سے ابطالِ فلاسفہ کے دلائل" },
+          { title: "3. نظریۂ معرفت (Epistemology)", focus: "حواسِ خمسہ، خبرِ صادق اور عقل کے دائرہ کار کی بحث" },
+          { title: "4. نصوصِ کلامیہ مع اصطلاحات کا خلاصہ", focus: "کلامی اصطلاحات کی دقیق تعریفات اور ماخذ" },
+          { title: "5. عقل و شریعت کی تطبیق پر ائمہ کا منہج", focus: "فصل المقال لابن رشد کی روشنی میں عقل و نقل کا ربط" }
+        ]
+      },
+      {
+        id: "ilhad",
+        name: "🛡️ الإلحاد والشبهات الفكرية المعاصرة (1 Notebook)",
+        defaultTopic: "شبہۂ وجودِ باری تعالیٰ / سائنسی مادیت کا رد / مسئلہ شر (Problem of Evil)",
+        prompts: [
+          { title: "1. برہانِ نظم اور برہانِ علیت پر تراثی دلائل", focus: "روایتی اور جدید عقلی استدلال کے مضبوط نصوص" },
+          { title: "2. مسئلہ شر اور عدلِ الٰہی پر شبہات کا ازالہ", focus: "حکمتِ بالغہ اور مصائب کے فلسفے پر مفصل رد" },
+          { title: "3. اخلاقیات کا مادی نظریہ اور اس کا بطلان", focus: "معروضی اخلاق (Objective Morality) پر نقلی و عقلی نصوص" },
+          { title: "4. معجزات اور مافوق الفطرت امور پر عقلی محاکمہ", focus: "قوانینِ فطرت اور خرقِ عادات کی کلامی توجیہ" },
+          { title: "5. معاصر ملحدین کے مشہور اعتراضات کا جدول", focus: "اعتراض، اصولی جواب اور متعلقہ کتب کے صفحات" }
+        ]
+      },
+      {
+        id: "adab",
+        name: "📝 اللغة العربية والأدب (8 Notebooks)",
+        defaultTopic: "افعالِ مقاربہ کے احکام / استعارہ و مجاز / معلقات کے اشعار کا اعراب",
+        prompts: [
+          { title: "1. نحوی و صرفی ضوابط مع شواہدِ شعریہ", focus: "سیبویہ، ابن عقیل اور مغنی اللبیب سے اصل عبارات" },
+          { title: "2. بلاغی نکات (معانی، بیان، و بدیع)", focus: "دلائل الاعجاز اور مفتاح العلوم سے باریک نکتہ سنجیاں" },
+          { title: "3. غریب الالفاظ اور معاجم کی اصل عبارات", focus: "لسان العرب اور تاج العروس سے لغوی اشتقاق" },
+          { title: "4. خلاف بصریین و کوفیین کا دقیق موازنہ", focus: "الانصاف فی مسائل الخلاف لابن الانباری سے موازنہ" },
+          { title: "5. عروض، قوافی اور اوزان کی تقطیع", focus: "بحرِ شعر اور زحافات و علل کی نشاندہی" }
+        ]
+      },
+      {
+        id: "raqaiaq",
+        name: "💎 الرقائق والآداب والأذكار (3 Notebooks)",
+        defaultTopic: "حقیقتِ اخلاص و توبہ / امراضِ قلب (حسد و کبر) کا علاج",
+        prompts: [
+          { title: "1. احیاء علوم الدین و مدارج السالکین سے علاجِ امراض", focus: "باطنی امراض کی تشخیص اور صوفیاء و محدثین کے نصوص" },
+          { title: "2. فضائلِ اذکار اور ادعیہ ماثورہ کی تحقیق", focus: "کتاب الاذکار للنووی اور الکلم الطیب سے نصوص" },
+          { title: "3. آدابِ معاشرت اور حقوق العباد", focus: "کتبِ ادب و اخلاق سے باہمی معاملات کی اخلاقی تعلیمات" },
+          { title: "4. احوالِ سلف فی العبادہ و الزہد", focus: "حلیۃ الاولیاء سے ائمہ و صلحاء کے عملی معمولات" },
+          { title: "5. تصوفِ سنی اور بدعاتِ صوفیہ میں تمییز", focus: "شریعت و طریقت کی باہمی مطابقت پر ائمہ کے فتاویٰ" }
+        ]
+      },
+      {
+        id: "adyan",
+        name: "🌐 مقارنة الأديان (1 Notebook)",
+        defaultTopic: "عقیدہ تثلیث کی تاریخ / کتبِ مقدسہ کے متون میں تحریف کے شواہد",
+        prompts: [
+          { title: "1. الملل والنحل للشہرستانی سے بنیادی عقائد", focus: "قدیم ادیان و مذاہب کی اصل تاریخی حیثیت" },
+          { title: "2. ابن حزم (الفصل) کی کتبِ مقدسہ پر تنقید", focus: "تورات و اناجیل کے تناقضات پر دلائل مع نصوص" },
+          { title: "3. الجواب الصحیح لابن تیمیہ سے عیسائیت کا رد", focus: "عقلی و نقلی دلائل سے دینِ مسیح کی حقیقت" },
+          { title: "4. اصطلاحاتِ ادیان کا مفہوم و تقابل", focus: "نجات، قربانی اور گناہِ ازلی کے تقابلی تصورات" },
+          { title: "5. تقابلی مطالعہ ادیان کا وضاحتی جدول", focus: "عقیدہ، کتاب اور عبادات کا موازنہ" }
+        ]
+      },
+      {
+        id: "istishraq",
+        name: "🌍 الاستشراق والمستشرقون (4 Notebooks)",
+        defaultTopic: "گولڈزیہر اور شاخت کے شبہات برائے اسنادِ حدیث / جمعِ قرآن پر اعتراضات",
+        prompts: [
+          { title: "1. شبہاتِ مستشرقین حول الحدیث و الاسناد", focus: "شاخت و گولڈزیہر کے اعتراضات کا دفاعی علمی رد" },
+          { title: "2. جمع و تدوینِ قرآن پر اعتراضات کا ازالہ", focus: "مستشرقین کے مصاحف اور قراءات پر اٹھائے گئے سوالات کے جوابات" },
+          { title: "3. سیرتِ نبوی پر استشراقی تعصبات کی نشاندہی", focus: "غزوات اور کثرتِ ازواج پر معاندانہ روایات کا ابطال" },
+          { title: "4. منہجِ نقدِ استشراقی کا جائزہ", focus: "تاریخی تنقید (Historical-Critical Method) کا اسلامی رد" },
+          { title: "5. معاصر محققین (ڈاکٹر مصطفی اعظمی وغیرہ) کے نصوص", focus: "استشراق کے رد پر مستند معاصر کتب کے دلائل" }
+        ]
+      },
+      {
+        id: "tarajim",
+        name: "👥 تراجم الأعلام والرواة (3 Notebooks)",
+        defaultTopic: "راوی: عاصم بن بہدلہ / احمد بن بشیر الکوفی / امام ابو حنیفہ",
+        prompts: [
+          { title: "1. راوی کا مکمل ترجمہ، شیوخ و تلامذہ", focus: "تہذیب الکمال اور سیر اعلام النبلاء سے تاریخِ ولادت و وفات" },
+          { title: "2. اقوالِ جرح و تعدیل مع اصل عبارات", focus: "ابن معین، احمد، ابو حاتم، نسائی کے اقوال بحوالہ جلد و صفحہ" },
+          { title: "3. ائمہ کے متضاد اقوال میں تطبیق و ترجیح", focus: "متشدد و معتدل نقاد کے عرف کی روشنی میں راوی کا حتمی رتبہ" },
+          { title: "4. راوی کی خصوصیات (تفرد، تدلیس، بدعت)", focus: "کیا راوی مدلس ہے یا اپنے شیوخ میں ثقہ اور دوسروں میں ضعیف؟" },
+          { title: "5. ترجمہ کا وضاحتی انڈیکس کارڈ", focus: "نام، رتبہ، طبقات، ائمہ کا کلام اور راجح حکم کا خلاصہ" }
+        ]
+      },
+      {
+        id: "ansab",
+        name: "🌳 الأنساب (1 Notebook)",
+        defaultTopic: "قریش اور بنو ہاشم کے قبائل / عربِ عاربہ اور مستعربہ کا سلسلہ",
+        prompts: [
+          { title: "1. کتبِ انساب (السمعانی، ابن حزم) سے نسب کا ثبوت", focus: "جمہرۃ انساب العرب سے اصل شجرہ نسب" },
+          { title: "2. قبائلِ عرب کے بطون اور فروع کی تقسیم", focus: "قبیلہ کے مختلف شاخوں کی مستند تفاصیل" },
+          { title: "3. صحابہ و رواۃ کے قبائلی انتساب کی تصدیق", focus: "راویوں کی کنیت اور قبائل کا درست تعین" },
+          { title: "4. انسابِ ہند و عجم کی تاریخی حیثیت", focus: "عرب قبائل کے ہجرت کے بعد کے مساکن" },
+          { title: "5. شجرہ نسب کا جدول یا ٹری اسٹرکچر", focus: "پشت بہ پشت ناموں کی ترتیب مع حوالہ" }
+        ]
+      },
+      {
+        id: "mantiq",
+        name: "🧠 المنطق الصوري والإسلامي (1 Notebook)",
+        defaultTopic: "قیاسِ اقترانی و استثنائی / تصدیقات و تصورات / کلیاتِ خمسہ",
+        prompts: [
+          { title: "1. کلیاتِ خمسہ اور معرفات کی دقیق تعریفات", focus: "ایساغوجی، قطبی اور سلم العلوم سے اصل عبارات" },
+          { title: "2. اشکالِ اربعہ کے شرائطِ انتاج", focus: "شکلِ اول اور ثانی کے نتیجہ خیز ہونے کے قواعد" },
+          { title: "3. مغالطاتِ منطقیہ اور ان کی نشان دہی", focus: "مناظرہ اور بحث میں واقع ہونے والے غلط استدلال کے اصول" },
+          { title: "4. ابن تیمیہ کا یونانی منطق پر نقد", focus: "حد اور قیاس پر سلف کے تنقیدی براہین" },
+          { title: "5. منطق کے بنیادی قواعد کا خلاصہ جدول", focus: "قواعدِ قیاس اور تناقض کا عملی چارٹ" }
+        ]
+      },
+      {
+        id: "tibb",
+        name: "🩺 الطب الإسلامي والنبوي (1 Notebook)",
+        defaultTopic: "حجامت کے شرعی و طبی اوقات / کلونجی اور شہد کے فوائد",
+        prompts: [
+          { title: "1. طبِ نبوی اور روایات کی اسنادی صحت", focus: "ابن قیم اور ذہبی کی 'الطب النبوی' سے احادیث کی تحقیق" },
+          { title: "2. مفردات و مرکباتِ ادویہ کے خواص", focus: "قدیم اطِباء (ابن سینا، رازی) کے بیان کردہ مزاج و خواص" },
+          { title: "3. علاج بالحجامة، الفصد والکی کے ضوابط", focus: "طبی نصوص کی روشنی میں مناسب ایام و شرائط" },
+          { title: "4. حفظانِ صحت اور وبائی امراض کا اسلامی طریقہ", focus: "طاعون اور قرنطینہ سے متعلق قدیم کتب کی ہدایات" },
+          { title: "5. نبوی ادویہ کی تفصیلی فہرست اور جدید تحقیق", focus: "قدیم نصوص اور جدید علم الادویہ کی مطابقت" }
+        ]
+      },
+      {
+        id: "jawame",
+        name: "🗂️ الجوامع والموسوعات (1 Notebook)",
+        defaultTopic: "جامع الاصول / مجمع الزوائد / کنز العمال کی روایات",
+        prompts: [
+          { title: "1. تمام کتبِ حدیثیہ کے متون کا استیعاب", focus: "موسوعات سے ایک ہی موضوع پر وارد تمام متون کا احاطہ" },
+          { title: "2. زوائدِ روایات اور ان کی اسنادی حیثیت", focus: "مجمع الزوائد للہیثمی سے رجال اور اسناد کا حکم" },
+          { title: "3. ابوابِ فقہیہ کے تحت احادیث کا اجتماع", focus: "جامع الاحادیث سے احکام کی احادیث کا استخراج" },
+          { title: "4. کتبِ غریب و معاجم کا انسائیکلوپیڈک خلاصہ", focus: "النہایہ فی غریب الحدیث لابن الاثیر سے شرح" },
+          { title: "5. تمام جوامع سے روایت کی تلاش کا تقابلی جدول", focus: "مصنفین، کتب اور اسناد کی جامع فہرست" }
+        ]
+      },
+      {
+        id: "buldan",
+        name: "🗺️ البلدان والرحلات والجغرافيا (1 Notebook)",
+        defaultTopic: "مکہ و مدینہ کے قدیم تاریخی مقامات / معجم البلدان میں بصرہ و کوفہ",
+        prompts: [
+          { title: "1. یاقوت حموی (معجم البلدان) سے مقام کا جغرافیہ", focus: "شہر یا وادی کا تلفظ، محل وقوع اور تاریخی پس منظر" },
+          { title: "2. مسالک و ممالک اور قدیم تجارتی راستے", focus: "ابن بطوطہ و ابن جبیر کے سفرناموں سے عینی مشاہدات" },
+          { title: "3. احادیث میں وارد مقامات کی معاصر تعیین", focus: "میقات، وادیِ محسر، جبلِ احد وغیرہ کی جغرافیائی حدود" },
+          { title: "4. کتبِ رحلات سے اسلامی تہذیب کا مشاہدہ", focus: "مختلف اسلامی شہروں کی تہذیبی اور اخلاقی حالت" },
+          { title: "5. مقامات کا جغرافیائی جدول", focus: "قدیم نام، موجودہ ملک، اور تاریخی اہمیت" }
+        ]
+      },
+      {
+        id: "dars_nizami",
+        name: "🕌 الدرس النظامي - الكتب والشروحات (9 Notebooks)",
+        defaultTopic: "قدوری / ہدایہ / جلالین / اصول الشاشی / قطبی / بیضاوی کی عبارات",
+        prompts: [
+          { title: "1. حلِ عبارت اور حلِ ترکیب (نحوی و فقہی)", focus: "شروحات و حواشی سے دقیق عبارات کا مفصل حل" },
+          { title: "2. اعتراض اور جواب (ان قلت / قلنا)", focus: "متن پر وارد ہونے والے چبھتے ہوئے اشکالات اور ان کے صائب جوابات" },
+          { title: "3. حواشیِ درسِ نظامی کا باہمی موازنہ", focus: "عمدۃ الرعایہ، حاشیہ لکھنوی اور شامی کے حواشی کی تحقیق" },
+          { title: "4. اصولِ فقہ و اصولِ تفسیر کے قواعد کی تطبیق", focus: "نور الانوار اور حسامی سے اصول کا جزئیہ پر انطباق" },
+          { title: "5. خلاصۂ سبق اور تدریسی نکات (Teacher's Guide)", focus: "طلبہ و طالبات کے لیے آسان پوائنٹس میں سبق کی تلخیص" },
+          { title: "6. امتحانی سوالات و مشقیں", focus: "سبق پر مبنی مختصر/تفصیلی سوالات مع نمونے کے جوابات کی سمت" },
+          { title: "7. مشکل مقامات کی فہرست", focus: "متن کے مشکل مقامات، اصطلاحات، اور حل کے کلیدی نکات" }
+        ]
+      },
+      {
+        id: "tahqiq",
+        name: "🎓 أصول التحقيق ومناهج البحث (5 Notebooks)",
+        defaultTopic: "مخطوطات کی تحقیق کے قواعد / نسخوں کا تقابل اور سقط کی درستی",
+        prompts: [
+          { title: "1. قواعدِ تحقیقِ مخطوطات و تصحیحِ نصوص", focus: "عبد السلام ہارون اور درویش کی کتب سے اصولِ تحقیق" },
+          { title: "2. فہارس المخطوطات سے نسخوں کا کھوج", focus: "دنیا کی بڑی لائبریریوں میں موجود نسخوں کا انڈیکس" },
+          { title: "3. منہجِ تخریج اور حواشی نگاری کے اصول", focus: "معیاری اکادمی حواشی اور رموزِ تحقیق کا ضابطہ" },
+          { title: "4. مقابلہ نسخ اور علاماتِ ترقیم", focus: "نسخۂ اصل، نسخۂ ثانیہ اور غلطیوں کے ازالے کا طریقہ" },
+          { title: "5. مقالے کا خطۂ بحث (Synopsis) بنانے کا فارمیٹ", focus: "ابواب، فصول، اور تحقیقی اسلوب کی باقاعدہ تشکیل" },
+          { title: "6. حوالہ نویسی کا معیاری اسلوب", focus: "کتاب، مصنف، جلد، صفحہ، اور مطبوعہ نسخے کی درست دستاویزی شکل" },
+          { title: "7. تحقیق میں عام غلطیوں سے اجتناب", focus: "سقط، تصحیف، غلط نسبت، اور غیر مستند نقول کی نشاندہی کے اصول" }
+        ]
+      },
+      {
+        id: "faharis",
+        name: "📇 فهارس الكتب والأدلة (1 Notebook)",
+        defaultTopic: "کشف الظنون / ہدیۃ العارفین / معجم المصنفین",
+        prompts: [
+          { title: "1. کتاب کا تعارف، مصنف اور اس کی شروحات", focus: "کشف الظنون عن اسامی الکتب والفنون سے اصل عبارت" },
+          { title: "2. مختلف ادوار میں لکھی گئی کتب کی فہرست", focus: "کسی ایک موضوع پر تمام مصنفات کا تاریخی احاطہ" },
+          { title: "3. نایاب و گمشدہ کتب کا سراغ", focus: "قدیم کتب خانوں میں مذکور کتب کی تفصیل" },
+          { title: "4. طبعات اور ایڈیشنز کی توثیق", focus: "پہلی اور معتبر طباعت کا علمی سراغ" },
+          { title: "5. مصادر کا بیبلوگرافک کارڈ", focus: "کتاب، مؤلف، سنِ وفات، اور شروحات کا جدول" }
+        ]
+      },
+      {
+        id: "islam_science",
+        name: "⚛️ الإسلام والعلوم الحديثة (1 Notebook)",
+        defaultTopic: "تخلیقِ جنین کے مراحل اور قرآن / فلکیات اور رویتِ ہلال",
+        prompts: [
+          { title: "1. قرآنی آیات اور سائنسی حقائق کی معتدل تطبیق", focus: "تفسیرِ علمی کے حدود و ضوابط اور افراط و تفریط سے اجتناب" },
+          { title: "2. رویتِ ہلال اور فلکیاتی حسابات کا شرعی حکم", focus: "جدید فلکیات اور فقہی احکام کے مابین جمع و ترجیح" },
+          { title: "3. علم الجنین (Embryology) کی تفسیری توجیہ", focus: "نطفہ، علقہ، مضغہ کے مراحل پر جدید و قدیم کتب کا کلام" },
+          { title: "4. نظریہ ارتقاء اور اسلامی عقیدہ تخلیق", focus: "ڈارونزم پر شرعی اور سائنسی نقد کے نصوص" },
+          { title: "5. سائنسی نظریات اور شرعی نصوص کا تقابلی جدول", focus: "مفروضات، حقائق اور نصوص کا منصفانہ جائزہ" }
+        ]
+      },
+      {
+        id: "oloom_ukhra",
+        name: "🌿 علوم أخرى وتراث إسلامي (1 Notebook)",
+        defaultTopic: "علم التعمير / الفلاحة والزراعة / الفروسية",
+        prompts: [
+          { title: "1. علم الفلاحت و زراعت پر قدیم اسلامی کتب", focus: "الفلاحۃ النبطیہ اور دیگر کتب سے زراعت کے اصول" },
+          { title: "2. فنِ فروسیہ، جہاد اور عسکری علوم", focus: "الفروسیہ لابن قیم سے تیر اندازی اور گھڑ سواری کے اصول" },
+          { title: "3. علمِ اوقات اور آلاتِ رصد", focus: "قبلہ اور نماز کے اوقات کی تعیین کے قدیم تراثی آلات" },
+          { title: "4. ماحولیات اور پانی کی حفاظت کا تراثی تصور", focus: "اسلامی فقہ میں چراگاہوں اور پانی کے تحفظ کے قوانین" },
+          { title: "5. متفرق فنون کا انسائیکلوپیڈک خلاصہ", focus: "علم کی تعریف، موضوع اور ثمرہ" }
+        ]
+      },
+      {
+        id: "kutub_amma",
+        name: "📚 كتب عامة وثقافة إسلامية (2 Notebooks)",
+        defaultTopic: "فکری مضامین / اسلامی تمدن اور عصری تقاضے",
+        prompts: [
+          { title: "1. فکری مضامین اور عمومی اسلامی ثقافت کا خلاصہ", focus: "کتبِ عامہ سے جدید مسلم معاشرے کے لیے حل" },
+          { title: "2. اسلامی اخوت اور اتحادِ امت کے اسالیب", focus: "معاشرتی ہم آہنگی پر قدیم و جدید کتب کے اسباق" },
+          { title: "3. وقت کی اہمیت اور تنظیمِ حیات", focus: "قیمۃ الزمن عند العلماء سے سلف کی زندگی کے نمونے" },
+          { title: "4. مطالعہ کتب کا طریقہ اور فہمِ دین", focus: "کتاب خوانی کے اصول اور گمراہی سے بچاؤ" },
+          { title: "5. عمومی موضوعات کے اقتباسات کا ذخیرہ", focus: "خطبات اور بیانات کے لیے بہترین تراثی اقوال" }
+        ]
+      }
+    ];
+
+
+    const researchSteps = [
+      {
+        id: "literature_proposal",
+        title: "پرامپٹ برائے لٹریچر ریویو (سابقہ تحقیق کا جائزہ) - برائے پروپوزل",
+        defaultTopic: "پاکستانی تعلیمی نظام میں الحاد کے بڑھتے ہوئے رجحانات اور اسباب",
+        tag: "پروپوزل / سائناپسز",
+        baseTemplate: `اب میں نے اپنے اس سائناپسز میں اپنے ٹاپک سے متعلقہ سابقہ تحقیق کا جائزہ لینا ہے۔ جیسا کہ آپ کو معلوم ہے کہ سابقہ تحقیق کا جائزہ یعنی لٹریچر ریویو کسی بھی ریسرچ کے اندر بہت ہی اہمیت کا حامل ہوتا ہے۔ لہٰذا میرے موضوع کو دیکھتے ہوئے اس پر پاکستان میں اردو زبان میں بالخصوص اور بالعموم پوری دنیا میں اسکوپس (Scopus) لیول کا جو بھی کام ہوا ہے مجھے ان سب کی نشاندہی کرنی ہے اور پھر میں اپنے اس عنوان کو ایک گیپ (Research Gap) کے طور پر ثابت کروں گا کہ میری یہ ریسرچ اس سابقہ ساری تحقیق سے منفرد کیسے ہے؟
+
+اس کے لیے مجھے کم از کم ٹاپ کے 10 ریسرچ آرٹیکلز کا ایک ایک پیراگراف میں مختصر خلاصہ دینا ہے اور پھر ہر ایک کے اس خلاصے کے ساتھ آخر میں اپنا جو گیپ ہوگا اس کو بھی بیان کرنا ہے۔ جب ایک ریسرچ آرٹیکل کے بارے میں پیراگراف لکھا جائے گا تو اس کے اندر حوالہ اس کے کلک ایبل لنک کے ساتھ شکاگو مینوئل اسٹائل کے اندر فٹ نوٹ کے لیے اور آخر میں ببلیوگرافی کے لیے اردو میں ضرور دیا جائے گا۔
+
+ابھی آپ سب سے پہلے ٹاپ کے دو آرٹیکلز دیے گئے سورسز اور اپنی تحقیق سے حاصل کریں اور ان کے بارے میں دو الگ الگ پیراگراف کے اندر ان کی سمری دیں اور اسی سمری میں ہی آخر میں مختصر سا میرا گیپ بھی دے دیں کہ اس نے اس طرح سے ریسرچ کی ہے اور میرا جو مقالہ ہوگا وہ اس سے اس طرح سے مختلف اور منفرد ریسرچ کرے گا۔ ہم سب سے پہلے دو کے اوپر کام کریں گے اس کے بعد پھر دو دو کو لے کر آگے چلیں گے۔`
+      },
+      {
+        id: "qualitative_collection",
+        title: "پرامپٹ برائے کوالیٹیٹو ڈیٹا کلیکشن (Qualitative Interviews)",
+        defaultTopic: "پاکستانی تعلیمی نظام میں الحاد کے بڑھتے ہوئے رجحانات",
+        tag: "طریقہ کار / ڈیٹا کلیکشن",
+        baseTemplate: `یہ میرا ایم فل / پی ایچ ڈی کا ریسرچ پروپوزل ہے جس میں میں نے qualitative research methodology اختیار کی ہے۔ اس تحقیق کے لیے مجھے data collection کرنا ہے، جس کے تحت میں interviews conduct کرنا چاہتا ہوں۔
+
+لہٰذا میری درخواست ہے کہ میرے دیئے گئے ریسرچ ٹاپک اور research questions کو مدنظر رکھتے ہوئے:
+1. ایک comprehensive semi-structured interview questionnaire تیار کیا جائے جو موضوع کے تمام پہلوؤں کا احاطہ کرے۔
+2. یہ واضح کیا جائے کہ اس تحقیق کے لیے کن مخصوص افراد (participants) کا انتخاب کیا جائے اور ان کا کیا معیار (inclusion/exclusion criteria) ہو۔
+3. کن طبقات (مثلاً اساتذہ، طلبہ، ماہرینِ تعلیم، علمائے کرام، نفسیات دان) سے انٹرویوز لینے زیادہ مؤثر اور نتائج خیز رہیں گے؟ ان کا تناسب بھی تجویز کریں۔`
+      },
+      {
+        id: "data_analysis_tools",
+        title: "پرامپٹ برائے ڈیٹا انیلسز (Data Analysis & Software Guidance)",
+        defaultTopic: "مخلوط طریقۂ تحقیق (Mixed-Method Approach) پر مبنی تحقیقی ڈیٹا",
+        tag: "تجزیۂ مواد / ٹولز",
+        baseTemplate: `میری تحقیق میں qualitative اور quantitative دونوں طرح کا ڈیٹا شامل ہے۔ جب میں یہ ڈیٹا collect کر لوں، تو اس کے بعد مجھے اس کا مؤثر انداز میں analysis اور interpretation کرنا ہے۔
+
+لہٰذا تفصیلی رہنمائی فراہم کی جائے کہ:
+1. Qualitative data (انٹرویوز کی ٹرانسکرپٹس) اور Quantitative data (سروے فارمز) کے analysis کے لیے کون سے AI tools مستند اور مفید ہیں؟
+2. کون سے روایتی سافٹ ویئر (جیسے Atlas.ti, NVivo برائے qualitative اور SPSS, Jamovi برائے quantitative) استعمال کیے جانے چاہیئں؟
+3. ان tools کو استعمال کرنے کا بنیادی مرحلہ وار طریقہ کار کیا ہے؟ (جیسے ڈیٹا امپورٹ، اوپن کوڈنگ، تھیمز بنانا، اور کراس ٹیبولیشن) تاکہ میں اپنے مقالے کے لیے درست اور قابلِ اعتماد نتائج (findings) حاصل کر سکوں؟`
+      },
+      {
+        id: "quantitative_collection",
+        title: "پرامپٹ برائے کوانٹیٹیٹو ڈیٹا کلیکشن (Survey Questionnaire)",
+        defaultTopic: "پاکستانی تعلیمی نظام میں الحاد کے بڑھتے ہوئے رجحانات",
+        tag: "کوانٹیٹیٹو سروے",
+        baseTemplate: `میری تحقیق چونکہ mixed-method approach (qualitative + quantitative) پر مبنی ہے، اس لیے qualitative interviews کے ساتھ ساتھ مجھے quantitative data collection بھی کرنا ہے۔
+
+لہٰذا میری درخواست ہے کہ میرے ریسرچ ٹاپک اور research questions کو مدنظر رکھتے ہوئے:
+1. ایک مکمل اور جامع survey questionnaire تیار کیا جائے (بشمول ڈیموگرافک معلومات اور 5-Point Likert Scale سوالات) جسے میں respondents سے fill کروا سکوں۔
+2. سوالنامہ اس پیشہ ورانہ انداز میں مرتب ہو کہ اسے آسانی سے Google Form یا printed survey form دونوں صورتوں میں استعمال کیا جا سکے۔
+3. مزید یہ رہنمائی فراہم کی جائے کہ میرے اس مخصوص موضوع کے لیے Google Form زیادہ مؤثر ہے یا printed physical forms، اور کن حالات اور طبقات کے لیے کون سا طریقہ زیادہ مستند ڈیٹا فراہم کرے گا؟`
+      },
+      {
+        id: "chapter_two",
+        title: "پرامپٹ برائے لکھائی باب دوم (سابقہ لٹریچر کا تفصیلی جائزہ)",
+        defaultTopic: "پاکستانی تعلیمی نظام میں الحاد کے بڑھتے ہوئے رجحانات اور اسباب",
+        tag: "باب دوم (تھیسز رائٹنگ)",
+        baseTemplate: `میں اپنے مقالے کے دوسرے باب، یعنی سابقہ لٹریچر کے جائزے، کی تحریر کا باقاعدہ آغاز کر چکا ہوں، جس میں مجھے 20 سے زائد معیاری ریسرچ پیپرز، کتب اور متعلقہ علمی مواد کا نہ صرف تجزیاتی مطالعہ پیش کرنا ہے بلکہ ان میں سے اہم اقتباسات کو اپنے تھیسز میں شامل کرنا، ہر ماخذ کا جامع مگر مختصر خلاصہ بیان کرنا، اور آخر میں اپنی تحقیق سے متعلق واضح تحقیقی خلا (research gap) کی نشاندہی بھی کرنی ہے۔
+
+اس مقصد کے لیے ہم مرحلہ وار آگے بڑھیں گے:
+1. آپ سب سے پہلے دستیاب سورسز میں سے کسی ایک قدیم، مستند اور اعلیٰ معیار کے ماخذ (ریسرچ پیپر یا کتاب) کا انتخاب کریں۔
+2. پہلے پیراگراف میں اس کا مدلل، مربوط اور تنقیدی خلاصہ پیش کریں۔
+3. دوسرے پیراگراف میں اسی ماخذ سے میری تحقیق سے براہِ راست متعلق ایک اہم اقتباس اصل الفاظ میں درج کریں۔
+4. تیسرے پیراگراف میں اس تحقیق میں موجود وہ خلا واضح کریں جسے میرا مقالہ پُر کرنے کی کوشش کرے گا۔
+5. منتخب ماخذ کا حوالہ شکاگو مینوئل آف اسٹائل کے مطابق، پاکستانی جامعات میں اردو مقالات کے رائج طریقے کے مطابق، پہلے فٹ نوٹ اور پھر مکمل ببلیوگرافی کی صورت میں فراہم کریں۔
+تحریر کا مجموعی اسلوب فطری، مربوط، اور ایک سنجیدہ پی ایچ ڈی اسکالر کی علمی تحریر کے معیار کے مطابق ہو۔`
+      },
+      {
+        id: "chapter_three",
+        title: "پرامپٹ برائے لکھائی باب سوم: طریقہ تحقیق (Research Methodology)",
+        defaultTopic: "پاکستانی تعلیمی نظام میں الحاد کے بڑھتے ہوئے رجحانات پر کوالیٹیٹو مطالعہ",
+        tag: "باب سوم (میتھڈولوجی)",
+        baseTemplate: `میں اپنے مقالے کے تیسرے باب، یعنی طریقہ تحقیق (ریسرچ میتھڈولوجی)، کی تفصیلی تحریر تیار کر رہا ہوں، جس کی بنیاد میرے ریسرچ پروپوزل میں بیان کردہ میتھڈولوجی اور متعین کردہ تھیوریٹیکل فریم ورک پر ہے۔
+
+اس باب میں مجھے اپنی کوالیٹیٹو ریسرچ کے پورے عمل کو منظم اور علمی انداز میں پیش کرنا ہے:
+1. منتخب شخصیات کے انٹرویوز کی منصوبہ بندی، مراحل، طریقہ کار، اور ان شخصیات کا تفصیلی تعارف (بشمول ان کے عہدے اور علمی پس منظر)۔
+2. ڈیٹا اکٹھا کرنے کے ذرائع، انٹرویو گائیڈ/کویسچن ایئر کی تشکیل، سوالات کی نوعیت، اور فیلڈ ورک کے اخلاقی تقاضے۔
+3. ڈیٹا کے تجزیے (analysis) کے عمل کی وضاحت، سافٹ ویئر (خصوصاً Atlas.ti) کی سیٹنگ، اوپن و ایکسیل کوڈنگ، تھیمز کی تشکیل، ہر تھیم کے انتخاب کی علمی توجیہ، اور متعلقہ کوڈز کی تشریح۔
+4. حاصل شدہ ڈیٹا کو سافٹ ویئر کے ذریعے بصری خاکوں (diagrams/networks) اور نتائج میں تبدیل کرنے کا طریقہ کار۔
+
+براہِ کرم اس باب کو اس طرح منظم کرنے کے لیے جامع، منطقی اور ذیلی ہیڈنگز کا ڈھانچہ تجویز کریں کہ مکمل باب 30 تا 40 صفحات پر مشتمل ہو سکے اور ہر ہیڈنگ کے تحت اہم نکات واضح ہوں۔`
+      },
+      {
+        id: "chapter_four",
+        title: "پرامپٹ برائے لکھائی باب نمبر چار (ڈیٹا کا تجزیہ اور نتائج)",
+        defaultTopic: "پاکستانی نظامِ تعلیم میں الحاد کے بڑھتے ہوئے رجحانات اور اسباب",
+        tag: "باب چہارم (نتائج و تجزیہ)",
+        baseTemplate: `یہ چوتھا باب میرے مقالے کا سب سے اہم باب ہے۔ اس باب میں میں نے جو بھی ڈیٹا اکٹھا کیا تھا اور اس کا تجزیہ (analysis) کیا تھا، اب اس تمام عمل کے حقائق اور نتائج کو اپنے تھیوریٹیکل فریم ورک اور ریسرچ میتھڈولوجی کے عین مطابق تحریر کرنا ہے، اور ساتھ ہی دورانِ تحریر مختلف ٹیبلز، گرافکس اور بیانیہ انداز میں پیش کرنا ہے۔
+
+میرے پاس 20 انٹرویوز اور 20 ڈاکومنٹس کا تجزیاتی ڈیٹا موجود ہے۔ اب مجھے اس چوتھے باب کو لکھتے وقت:
+1. مناسب ہیڈنگز متعین کرنی ہیں اور پھر انہی ہیڈنگز کے تحت اپنے ڈیٹا کے تجزیے اور نتائج کو اس طرح مرتب کرنا ہے کہ وہ میرے تھیوریٹیکل فریم ورک، ریسرچ میتھڈولوجی اور سابقہ ریسرچ کے ساتھ مربوط نظر آئیں۔
+2. انٹرویوز اور ڈاکومنٹس میں سے دو دو کو ساتھ رکھ کر ان کی گفتگو اور مواد کا تجزیہ کیا جائے، ان کی باتوں کو پہلے سے موجود ریسرچ و کتب سے جوڑا جائے، اور نتائج کو بتدریج تحریر کیا جائے۔
+3. ہر مین ہیڈنگ کے تحت مناسب مقام پر بحث کو ایک ٹیبل کی صورت میں سمویا جائے، اور جہاں ضرورت ہو وہاں بصری خاکے شامل کیے جائیں۔
+4. انٹرویو ڈیٹا میں سے براہِ راست مستند اقتباسات لازماً شامل کیے جائیں۔
+5. تمام حوالہ جات شکاگو اسٹائل کے مطابق فٹ نوٹس میں اور آخر میں ببلیوگرافی کی صورت میں اردو میں فراہم کیے جائیں۔`
+      },
+      {
+        id: "chapter_five_summary",
+        title: "پرامپٹ نمبر 1 برائے لکھائی باب نمبر پانچ: خلاصۂ تحقیق (Research Summary)",
+        defaultTopic: "پاکستانی تعلیمی نظام میں الحاد کے رجحانات، اسباب اور انسدادی حکمتِ عملی",
+        tag: "باب پنجم (خلاصہ)",
+        baseTemplate: `آپ ایک ماہر اکیڈمک رائٹر اور اسلامیات و تعلیمی تحقیق کے اسپیشلسٹ ہیں۔ میرا تحقیقی مقالہ مکمل ہو چکا ہے، جس کے پہلے چار ابواب تحریر کیے جا چکے ہیں۔ اب مجھے باب نمبر پانچ (آخری باب) کی پہلی ہیڈنگ “خلاصۂ تحقیق (Research Summary)” لکھنی ہے۔
+
+براہِ کرم 400 تا 500 الفاظ پر مشتمل ایک جامع، مربوط اور علمی خلاصہ تحریر کریں، جس میں:
+1. باب اول (تعارف) سے مسئلے کا تعارف، اہمیت، مقاصد، اور بنیادی تحقیقی سوالات۔
+2. باب دوم (ادبی جائزہ) سے سابقہ تحقیقات، نظریاتی مباحث، اور وہ علمی خلا جسے یہ مقالہ پُر کرتا ہے۔
+3. باب سوم (طریقۂ تحقیق) سے تحقیق کی نوعیت، طریقۂ کار، شرکاء، اور ڈیٹا کلیکشن و اینالیسس کا طریقہ۔
+4. باب چہارم (نتائجِ تحقیق) سے اخذ کردہ اہم نتائج کا جامع مگر مختصر بیان۔
+
+ہدایات: خلاصہ ایک مربوط پیراگرافی انداز میں ہو (محض بلٹس نہ ہوں)، زبان علمی و رواں ہو، مناسب جگہوں پر شکاگو اسٹائل فٹ نوٹس شامل ہوں، اور آؤٹ پٹ صرف “خلاصۂ تحقیق” کے متن کی صورت میں ہو بغیر تمہیدی گفتگو کے۔`
+      },
+      {
+        id: "chapter_five_discussion",
+        title: "پرامپٹ نمبر 2 برائے ہیڈنگ دوم باب نمبر پانچ: اہم نتائج پر علمی بحث (Critical Discussion)",
+        defaultTopic: "پاکستانی تعلیمی نظام میں الحاد کے رجحانات اور تھیوریٹیکل فریم ورک",
+        tag: "باب پنجم (علمی بحث)",
+        baseTemplate: `آپ ایک تجربہ کار اکیڈمک رائٹر اور تعلیمی و اسلامی تحقیق کے ماہر ہیں۔ میرا تحقیقی مقالہ مکمل ہو چکا ہے، اور باب چہارم میں ڈیٹا اینالیسس اور اس کے نتائج تفصیل سے بیان کیے جا چکے ہیں۔ اب باب نمبر پانچ کی دوسری ہیڈنگ “اہم نتائج پر علمی بحث (Critical Discussion of Findings)” تحریر کرنی ہے۔
+
+براہِ کرم اس ہیڈنگ کے تحت ایک منظم، گہری اور تحقیقی انداز کی تحریر پیش کریں جس میں:
+1. باب چہارم میں پیش کیے گئے اہم نتائج کی تفصیلی وضاحت ہو (کم از کم 500 الفاظ)، ہر نتیجے کو سیاق و سباق اور ممکنہ تشریحات کے ساتھ پیش کیا جائے۔
+2. حصہ دوم میں ایک واضح ذیلی ہیڈنگ “نتائجِ تحقیق اور تھیوریٹیکل فریم ورک کا تقابلی و توثیقی جائزہ” قائم کریں، جس میں تھیوریٹیکل فریم ورک کے بنیادی نکات کو مختصراً بیان کر کے متعلقہ اقتباسات باقاعدہ حوالہ کے ساتھ پیش کریں۔
+3. ہر اقتباس کے بعد واضح کریں کہ نتائج کس طرح اس نظریے کی تائید، توثیق یا توسیع کرتے ہیں، اور جہاں جزوی اختلاف یا نئی جہت ہو اس کا علمی ذکر کریں۔
+
+ہدایات: تحریر مکمل طور پر تنقیدی و تجزیاتی ہو، ان ٹیکسٹ سائیٹیشنز اور شکاگو فٹ نوٹس شامل ہوں، تسلسل اور استدلال کو یقینی بنایا جائے، اور غیر ضروری تکرار سے اجتناب کیا جائے۔`
+      },
+      {
+        id: "article_headings",
+        title: "پرامپٹ برائے آرٹیکل ہیڈنگز و ڈھانچہ (Research Article Structuring)",
+        defaultTopic: "پاکستانی تعلیمی نظام میں الحاد کے بڑھتے ہوئے رجحانات اور اسباب: ایک تجزیاتی مطالعہ",
+        tag: "ریسرچ آرٹیکل",
+        baseTemplate: `براہِ کرم درج بالا عنوان پر ایک اعلیٰ معیار کے ریسرچ آرٹیکل (HEC Y/X Category یا Scopus معیار) کی مکمل اسٹرکچرنگ فراہم کریں جس میں ابتدا سے آخر تک تمام مین ہیڈنگز اور ان کے تحت آنے والی ذیلی ہیڈنگز واضح طور پر بلٹس اور نکات کی صورت میں ترتیب دی جائیں تاکہ اسی فریم ورک کو سامنے رکھتے ہوئے پورا آرٹیکل لکھا جا سکے:
+
+1. ہر مین ہیڈنگ کے تحت کون سی ذیلی ہیڈنگز ہوں گی؟
+2. ہر سیکشن میں کتنے پیراگراف شامل ہونے چاہئیں اور ہر پیراگراف کا اندازاً لفظی حجم کیا ہونا چاہیے؟
+3. جہاں مناسب ہو وہاں ٹیبلز اور فگرز کے استعمال کی نشاندہی کی جائے۔
+4. خاص طور پر لٹریچر ریویو کے سیکشن میں وضاحت کی جائے کہ کتنے ریسرچ آرٹیکلز شامل کیے جائیں گے، ان کے حوالہ جات (citations) کیسے دیے جائیں گے، اور کن ذیلی عنوانات کے تحت تجزیہ ہوگا؟
+مقصد یہ ہے کہ ایک سائنسی، مربوط اور معیاری تحقیقی آرٹیکل کی تشکیل کے لیے قابلِ عمل فریم ورک مل سکے۔`
+      }
+    ];
+
+    let currentMode = "notebooklm";
+    let activeCategoryId = "quran";
+    let openPromptIdx = null;
+    let activeThesisStepId = "all";
+    let openThesisIdx = null;
+    let thesisStates = {};
+    let thesisMode = "notebooklm";
+    let promptStates = {};
+    let customPrompts = {};
+    let toastTimer = null;
+    let saveTimer = null;
+
+    const STORAGE_KEYS = {
+      states: "alturath_prompt_states_v1",
+      customs: "alturath_custom_prompts_v1",
+      mode: "alturath_mode_v1",
+      category: "alturath_category_v1",
+      thesisStates: "alturath_thesis_states_v1",
+      thesisStep: "alturath_thesis_step_v1",
+      thesisMode: "alturath_thesis_mode_v1"
+    };
+
+    function parseCategoryName(fullName) {
+      const emojiMatch = fullName.match(/^(\S+)\s+/);
+      const emoji = emojiMatch ? emojiMatch[1] : "📚";
+      const rest = fullName.replace(/^\S+\s+/, "");
+      const title = rest.replace(/\s*\([^)]+\)\s*$/, "").trim();
+      return { emoji, title };
+    }
+
+    function loadJSON(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return fallback;
+        return JSON.parse(raw);
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function saveJSON(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {}
+    }
+
+    function persistAll() {
+      saveJSON(STORAGE_KEYS.states, promptStates);
+      saveJSON(STORAGE_KEYS.customs, customPrompts);
+      saveJSON(STORAGE_KEYS.thesisStates, thesisStates);
+      try {
+        localStorage.setItem(STORAGE_KEYS.mode, currentMode);
+        localStorage.setItem(STORAGE_KEYS.category, activeCategoryId);
+        localStorage.setItem(STORAGE_KEYS.thesisStep, activeThesisStepId);
+        localStorage.setItem(STORAGE_KEYS.thesisMode, thesisMode);
+      } catch (e) {}
+      // lightweight cookie mirror for mode/category (compat)
+      try {
+        const maxAge = 60 * 60 * 24 * 365;
+        document.cookie = "alturath_mode=" + encodeURIComponent(currentMode) + ";path=/;max-age=" + maxAge;
+        document.cookie = "alturath_cat=" + encodeURIComponent(activeCategoryId) + ";path=/;max-age=" + maxAge;
+      } catch (e) {}
+    }
+
+    function schedulePersist() {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(persistAll, 200);
+    }
+
+    function getCustomList(catId) {
+      if (!Array.isArray(customPrompts[catId])) customPrompts[catId] = [];
+      return customPrompts[catId];
+    }
+
+    function getMergedPrompts(cat) {
+      const builtins = cat.prompts.map((p, i) => ({
+        ...p,
+        key: "b" + i,
+        isCustom: false,
+        customId: null
+      }));
+      const customs = getCustomList(cat.id).map(p => ({
+        title: p.title,
+        focus: p.focus,
+        key: "c_" + p.id,
+        isCustom: true,
+        customId: p.id,
+        defaultTopic: p.defaultTopic || cat.defaultTopic
+      }));
+      return builtins.concat(customs);
+    }
+
+    function ensureState(catId, key, defaultTopic) {
+      if (!promptStates[catId]) promptStates[catId] = {};
+      if (!promptStates[catId][key]) {
+        promptStates[catId][key] = {
+          customTopic: defaultTopic || "",
+          extraConditions: []
+        };
+      }
+      if (!Array.isArray(promptStates[catId][key].extraConditions)) {
+        promptStates[catId][key].extraConditions = [];
+      }
+      return promptStates[catId][key];
+    }
+
+    function initStates() {
+      customPrompts = loadJSON(STORAGE_KEYS.customs, {}) || {};
+      const savedStates = loadJSON(STORAGE_KEYS.states, {}) || {};
+      const savedMode = localStorage.getItem(STORAGE_KEYS.mode);
+      const savedCat = localStorage.getItem(STORAGE_KEYS.category);
+      if (savedMode) currentMode = savedMode;
+      if (savedCat && categoriesData.some(c => c.id === savedCat)) activeCategoryId = savedCat;
+
+      promptStates = {};
+      categoriesData.forEach(cat => {
+        promptStates[cat.id] = {};
+        getMergedPrompts(cat).forEach(p => {
+          const saved = savedStates[cat.id] && savedStates[cat.id][p.key];
+          const fallbackTopic = p.isCustom ? (p.defaultTopic || cat.defaultTopic) : cat.defaultTopic;
+          promptStates[cat.id][p.key] = {
+            customTopic: (saved && typeof saved.customTopic === "string") ? saved.customTopic : fallbackTopic,
+            extraConditions: (saved && Array.isArray(saved.extraConditions)) ? saved.extraConditions : []
+          };
+        });
+      });
+
+      // Thesis states
+      const savedThesis = loadJSON(STORAGE_KEYS.thesisStates, {}) || {};
+      const savedThesisStep = localStorage.getItem(STORAGE_KEYS.thesisStep);
+      if (savedThesisStep) activeThesisStepId = savedThesisStep;
+      const savedThesisMode = localStorage.getItem(STORAGE_KEYS.thesisMode);
+      if (savedThesisMode && ["notebooklm", "chatgpt_web", "claude_mcp"].includes(savedThesisMode)) {
+        thesisMode = savedThesisMode;
+      }
+      thesisStates = {};
+      researchSteps.forEach(step => {
+        const saved = savedThesis[step.id];
+        thesisStates[step.id] = {
+          customTopic: (saved && typeof saved.customTopic === "string") ? saved.customTopic : step.defaultTopic,
+          extraConditions: (saved && Array.isArray(saved.extraConditions)) ? saved.extraConditions : []
+        };
+      });
+
+    }
+
+    const categoryGrid = document.getElementById("categoryGrid");
+    const promptsList = document.getElementById("promptsList");
+    const activeCategoryName = document.getElementById("activeCategoryName");
+    const activeModeBadge = document.getElementById("activeModeBadge");
+    const categorySearch = document.getElementById("categorySearch");
+    const catCount = document.getElementById("catCount");
+    const emptySearch = document.getElementById("emptySearch");
+    const toolCards = document.querySelectorAll(".tool-card");
+
+    function getCategoryPromptCount(cat) {
+      return cat.prompts.length + getCustomList(cat.id).length;
+    }
+
+    function getTotalPromptsCount() {
+      return categoriesData.reduce((sum, cat) => sum + getCategoryPromptCount(cat), 0);
+    }
+
+    function updateTotalStats() {
+      const total = getTotalPromptsCount();
+      const cats = categoriesData.length;
+      const totalEl = document.getElementById("totalPromptsCount");
+      if (totalEl) totalEl.textContent = `${total} کل پرامپٹس`;
+      if (catCount) catCount.textContent = `${cats} زمرے`;
+    }
+
+    function renderCategoryCards() {
+      categoryGrid.innerHTML = categoriesData.map(cat => {
+        const { emoji, title } = parseCategoryName(cat.name);
+        const active = cat.id === activeCategoryId ? "active" : "";
+        const count = getCategoryPromptCount(cat);
+        return `
+          <div class="cat-card ${active}" data-id="${cat.id}" role="option" aria-selected="${!!active}" tabindex="0">
+            <span class="cat-emoji">${emoji}</span>
+            <span class="cat-title">${title}</span>
+            <span class="cat-prompt-count">${count} پرامپٹس</span>
+          </div>
+        `;
+      }).join("");
+
+      categoryGrid.querySelectorAll(".cat-card").forEach(card => {
+        const select = () => selectCategory(card.getAttribute("data-id"));
+        card.addEventListener("click", select);
+        card.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            select();
+          }
+        });
+      });
+
+      updateTotalStats();
+    }
+
+    function selectCategory(id) {
+      activeCategoryId = id;
+      openPromptIdx = null;
+      schedulePersist();
+      categoryGrid.querySelectorAll(".cat-card").forEach(c => {
+        const on = c.getAttribute("data-id") === id;
+        c.classList.toggle("active", on);
+        c.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      renderPrompts();
+      showView("prompts");
+    }
+
+    window.togglePrompt = function(idx) {
+      openPromptIdx = openPromptIdx === idx ? null : idx;
+      document.querySelectorAll(".prompt-card").forEach(card => {
+        const cardIdx = Number(card.getAttribute("data-idx"));
+        const isOpen = cardIdx === openPromptIdx;
+        card.classList.toggle("open", isOpen);
+        const btn = card.querySelector(".prompt-top");
+        if (btn) btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+    };
+
+    function filterCategories(query) {
+      const q = (query || "").trim().toLowerCase();
+      let visible = 0;
+      categoryGrid.querySelectorAll(".cat-card").forEach(card => {
+        const id = card.getAttribute("data-id");
+        const cat = categoriesData.find(c => c.id === id);
+        const hay = (cat.name + " " + cat.id).toLowerCase();
+        const show = !q || hay.includes(q);
+        card.classList.toggle("hidden", !show);
+        if (show) visible++;
+      });
+      const visiblePrompts = categoriesData
+        .filter(cat => {
+          const hay = (cat.name + " " + cat.id).toLowerCase();
+          return !q || hay.includes(q);
+        })
+        .reduce((sum, cat) => sum + getCategoryPromptCount(cat), 0);
+
+      catCount.textContent = q ? `${visible} نتائج` : `${categoriesData.length} زمرے`;
+      const totalEl = document.getElementById("totalPromptsCount");
+      if (totalEl) {
+        totalEl.textContent = q
+          ? `${visiblePrompts} پرامپٹس`
+          : `${getTotalPromptsCount()} کل پرامپٹس`;
+      }
+      emptySearch.style.display = visible === 0 ? "block" : "none";
+    }
+
+    function getIntroText(mode) {
+      if (mode === "notebooklm") {
+        return `بطورِ محقق، درج ذیل موضوع اور سوال کا تفصیلی تحقیقی جواب صرف اور صرف اس نوٹ بک میں موجود کتب (Notebook Sources) سے تلاش کر کے دیں۔ یہ ماسٹر تحقیقی پرامپٹ ہے؛ اس کی ہر شرط لازم ہے۔`;
+      } else if (mode === "chatgpt_shamela") {
+        return `بطورِ محققِ علومِ اسلامیہ، درج ذیل مسئلے کی تحقیق مکتبہ شاملہ (shamela.ws / shamela.link) کے اصل مطبوعہ مراجع کی روشنی میں پیش کریں۔ یہ ماسٹر پرامپٹ ہے؛ اندازے یا غیر مستند مواد منع ہے۔`;
+      } else if (mode === "claude_mcp") {
+        return `اپنے ساتھ مربوط مکتبہ شاملہ کے MCP ٹولز کا استعمال کرتے ہوئے ڈیٹا بیس سے درج ذیل مسئلے کی براہِ راست تحقیق پیش کریں۔ ماسٹر پرامپٹ کی تمام شرائط لازمی پابندی کے ساتھ لاگو کریں۔`;
+      }
+    }
+
+    function getMasterQualityRules() {
+      return [
+        "کبھی بھی فرضی، اندازے پر مبنی، یا غیر موجود کتاب/جلد/صفحہ کا حوالہ نہ لکھیں۔ شک ہو تو صراحتاً لکھیں: «اس سورس میں نہیں ملا»۔",
+        "مصنف، کتاب، یا قول کی غلط نسبت سخت ممنوع ہے۔ جس امام/مصنف کا قول ہو، صرف اسی کی طرف منسوب کریں۔",
+        "اصل عربی عبارت واوین («...») میں ہو بہو نقل کریں؛ کمی بیشی عبارت کے اندر نہ ملائيں۔ نیچے الگ سے اردو ترجمہ اور تشریح دیں۔",
+        "ہر اہم دعویٰ کے ساتھ مکمل حوالہ لازمی: کتاب کا علمی نام، مصنف، (اگر دستیاب ہو) مطبع/طبعہ، جلد، صفحہ/رقم۔",
+        "صحیح/حسن/ضعیف، راجح/مرجوح، اور مختلف اقوال میں واضح امتیاز رکھیں؛ کمزور روایت کو قطعی دلیل نہ بنائیں۔",
+        "ذاتی فتویٰ، جدید غیر مستند آراء، یا ویب کی عمومی معلومات کو مصادر کا بدل نہ بنائیں جب تک وہ مجاز سورسز میں نہ ہوں۔",
+        "جواب کی ترتیب یہ رکھیں: (1) مسئلہ کی تحدید (2) اصل نصوص مع حوالہ (3) ترجمہ (4) تحلیل (5) اختلاف و ترجیح (6) عملی خلاصہ (7) مصادر کی فہرست۔",
+        "آخر میں «مصادر و مراجع» کا مختصر جدول دیں۔ اگر مواد ناکافی ہو تو قیاس آرائی کی بجائے حدودِ دستیابی لکھ دیں۔"
+      ];
+    }
+
+    function getDefaultConditions(mode) {
+      if (mode === "notebooklm") {
+        return [
+          "جواب میں کوئی بھی بات اس نوٹ بک کی کتابوں کے علاوہ باہر سے ہرگز شامل نہ کی جائے۔ اگر مواد موجود نہ ہو تو واضح لکھیں کہ یہ نوٹ بک کے سورسز میں نہیں ملا۔",
+          "ہر قول اور موقف کے ساتھ کتاب کا اصل نام، مصنف کا نام، اور سورس میں موجود مطبوعہ نسخے کے مطابق جلد اور صفحہ نمبر لازمی درج کریں۔",
+          "ائمہ اور مصنفین کی اصل عربی عبارت کو واوین («...») کے اندر ہو بہو نقل کریں اور نیچے اس کا باوقار اردو ترجمہ و تشریح پیش کریں۔",
+          "اگر اس نوٹ بک کی مختلف کتابوں کے درمیان اس مسئلے پر کوئی اختلاف پایا جاتا ہے، تو دونوں آراء کا تقابلی جائزہ پیش کریں۔",
+          "NotebookLM میں جو اقتباس نظر آئے صرف اسی پر اعتماد کریں؛ باہر کی یادداشت سے جزئیات مت بھریں۔"
+        ];
+      } else if (mode === "chatgpt_shamela") {
+        return [
+          "مسئلے کی اصل عربی عبارت مکتبہ شاملہ کے مستند نسخے سے نقل کریں۔",
+          "کتاب کا نام، مصنف کا نام، مطبع، جلد اور صفحہ نمبر صراحتاً درج کریں تاکہ shamela.link پر براہِ راست تلاش کیا جا سکے۔",
+          "عربی عبارت نقل کرنے کے بعد اس کا سلیس اردو ترجمہ اور تخصصاتی خلاصہ لکھیں۔",
+          "کسی قسم کا غیر مستند یا فرضی حوالہ قبول نہیں ہوگا۔",
+          "اگر شاملہ پر متن نہ ملے تو صاف لکھیں اور متبادل اندازہ پیش نہ کریں۔"
+        ];
+      } else if (mode === "claude_mcp") {
+        return [
+          "شاملہ سرچ ٹول (MCP Tool) کو طلب کر کے بنیادی کتابوں سے تلاش کریں۔",
+          "ٹول سے نکلنے والی اصل عبارات مع کتاب، جلد اور صفحہ ہو بہو نقل کریں۔",
+          "استخراج شدہ عبارات کی بنیاد پر دقیق اردو تجزیہ اور شرعی مناط واضح کریں۔",
+          "صرف مصادرِ اصلیہ پر اعتماد کیا جائے۔",
+          "ٹول کے نتائج کے بغیر حافظے سے لمبی نقول مت گھڑیں۔"
+        ];
+      }
+    }
+
+    function getAllConditions(mode, cat, userExtras) {
+      const master = getMasterQualityRules();
+      const modeConds = getDefaultConditions(mode) || [];
+      const catRules = (cat && Array.isArray(cat.masterRules)) ? cat.masterRules : [];
+      const extras = Array.isArray(userExtras) ? userExtras : [];
+      return [...master, ...modeConds, ...catRules, ...extras];
+    }
+
+
+    function getNbScrollMetrics() {
+      const grid = document.getElementById("notebookLinksGrid");
+      if (!grid) return null;
+      const maxScroll = Math.max(0, grid.scrollWidth - grid.clientWidth);
+      const sl = grid.scrollLeft;
+      // Chrome RTL often uses negative scrollLeft; Firefox may use 0..max
+      const pos = sl < 0 ? -sl : sl;
+      return { grid, maxScroll, pos, sl };
+    }
+
+    function updateNbScrollButtons() {
+      const prevBtn = document.getElementById("nbScrollPrev");
+      const nextBtn = document.getElementById("nbScrollNext");
+      const m = getNbScrollMetrics();
+      if (!m || !prevBtn || !nextBtn) return;
+
+      if (m.maxScroll <= 4) {
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+      }
+
+      prevBtn.disabled = m.pos <= 4;
+      nextBtn.disabled = m.pos >= m.maxScroll - 4;
+    }
+
+    window.scrollNotebookLinks = function(dir) {
+      // dir: -1 = toward start (prev), +1 = toward end (next)
+      const m = getNbScrollMetrics();
+      if (!m) return;
+      const amount = Math.min(260, Math.max(180, m.grid.clientWidth * 0.8));
+      const rtl = getComputedStyle(m.grid).direction === "rtl";
+      // Negative scrollLeft RTL: moving toward end decreases scrollLeft further
+      const delta = rtl ? -(dir * amount) : (dir * amount);
+      m.grid.scrollBy({ left: delta, behavior: "smooth" });
+      setTimeout(updateNbScrollButtons, 300);
+    };
+
+    function bindNotebookScrollControls() {
+      const grid = document.getElementById("notebookLinksGrid");
+      const prevBtn = document.getElementById("nbScrollPrev");
+      const nextBtn = document.getElementById("nbScrollNext");
+      if (!grid || !prevBtn || !nextBtn) return;
+
+      if (!prevBtn.dataset.bound) {
+        prevBtn.dataset.bound = "1";
+        // dir=-1 / +1 mapped inside scrollNotebookLinks for RTL
+        prevBtn.addEventListener("click", () => scrollNotebookLinks(-1));
+        nextBtn.addEventListener("click", () => scrollNotebookLinks(1));
+        grid.addEventListener("scroll", () => updateNbScrollButtons(), { passive: true });
+      }
+      updateNbScrollButtons();
+    }
+
+    function renderNotebookLinks() {
+      const panel = document.getElementById("notebookLinksPanel");
+      const grid = document.getElementById("notebookLinksGrid");
+      if (!panel || !grid) return;
+
+      if (currentMode !== "notebooklm") {
+        panel.classList.remove("visible");
+        grid.innerHTML = "";
+        return;
+      }
+
+      const items = notebookLinksByCategory[activeCategoryId] || [];
+      panel.classList.add("visible");
+
+      if (!items.length) {
+        grid.innerHTML = '<p class="nb-empty">اس زمرے کے لیے NotebookLM لنک دستیاب نہیں۔ مکمل فہرست کے لیے Hub کھولیں۔</p>';
+        bindNotebookScrollControls();
+        return;
+      }
+
+      grid.innerHTML = items.map(nb => `
+        <a class="nb-link-card" href="${nb.link}" target="_blank" rel="noopener" role="listitem">
+          <span class="nb-top">
+            <span class="nb-ico">${nb.icon || "📓"}</span>
+            <span class="nb-books"><i class="bi bi-book"></i> ${Number(nb.books) || 0}</span>
+          </span>
+          <span class="nb-title">${escapeHtml(nb.title)}</span>
+          <span class="nb-open"><i class="bi bi-box-arrow-up-left"></i> کھولیں</span>
+        </a>
+      `).join("");
+
+      grid.scrollLeft = 0;
+      bindNotebookScrollControls();
+      requestAnimationFrame(updateNbScrollButtons);
+    }
+
+    function renderPrompts() {
+      promptsList.style.opacity = "0.35";
+
+      setTimeout(() => {
+        const cat = categoriesData.find(c => c.id === activeCategoryId);
+        if (!cat) return;
+
+        const { title } = parseCategoryName(cat.name);
+        activeCategoryName.textContent = title;
+
+        let modeBadgeText = "موڈ: NotebookLM";
+        if (currentMode === "chatgpt_shamela") modeBadgeText = "موڈ: ChatGPT + Shamela Web";
+        if (currentMode === "claude_mcp") modeBadgeText = "موڈ: Claude Desktop + Shamela MCP";
+        activeModeBadge.textContent = modeBadgeText;
+
+        renderNotebookLinks();
+
+        const defaultConds = getDefaultConditions(currentMode);
+        const masterRules = getMasterQualityRules();
+        const introText = getIntroText(currentMode);
+
+        const merged = getMergedPrompts(cat);
+        promptsList.innerHTML = merged.map((p, idx) => {
+          const state = ensureState(cat.id, p.key, p.isCustom ? p.defaultTopic : cat.defaultTopic);
+          const isOpen = openPromptIdx === idx;
+          const customBadge = p.isCustom ? '<span class="custom-badge"><i class="bi bi-person-fill"></i> کسٹم</span>' : '';
+          const delBtn = p.isCustom ? `<button type="button" class="btn-del-custom" onclick="deleteCustomPrompt('${p.customId}')"><i class="bi bi-trash"></i> کسٹم حذف</button>` : '';
+          return `
+            <article class="prompt-card ${isOpen ? "open" : ""}" data-idx="${idx}" data-key="${p.key}">
+              <button type="button" class="prompt-top" onclick="togglePrompt(${idx})" aria-expanded="${isOpen ? "true" : "false"}">
+                <h4><i class="bi bi-journal-text"></i> ${escapeHtml(p.title)}${customBadge}</h4>
+                <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+              </button>
+              <div class="prompt-body">
+                <div class="prompt-actions">
+                  <button class="btn-copy" type="button" onclick="copyFullPrompt(${idx})">
+                    <i class="bi bi-clipboard-check"></i> پورا پرامپٹ کاپی کریں
+                  </button>
+                  ${delBtn}
+                </div>
+                <div class="intro-line">${introText}</div>
+                <div class="focus-block">
+                  <span class="tag">تحقیقی رخ و ہدف</span>
+                  <div><strong>${escapeHtml(p.focus)}</strong></div>
+                </div>
+                <div class="topic-box">
+                  <div class="topic-label-row">
+                    <label for="topicInput_${idx}"><i class="bi bi-pencil-square"></i> مطلوبہ موضوع / سوال</label>
+                    <button type="button" class="btn-clear-topic" onclick="clearPromptTopic(${idx})" title="موضوع صاف کریں">
+                      <i class="bi bi-eraser"></i> صاف کریں
+                    </button>
+                  </div>
+                  <textarea id="topicInput_${idx}" rows="2" oninput="updatePromptTopic(${idx}, this.value)" placeholder="اپنا مخصوص سوال یا موضوع یہاں لکھیں...">${escapeHtml(state.customTopic)}</textarea>
+                  <div class="topic-clear-row">
+                    <button type="button" class="btn-clear-topic" onclick="clearPromptTopic(${idx})">
+                      <i class="bi bi-x-circle"></i> موضوع صاف کریں
+                    </button>
+                  </div>
+                  <div class="hint">موضوع اور اضافی شرائط براؤزر میں خودکار محفوظ ہوتے ہیں۔</div>
+                </div>
+                <div class="master-box">
+                  <div class="conds-title">
+                    <i class="bi bi-shield-check"></i> ماسٹر کوالٹی رولز
+                    <span class="master-tag">غلطی روک تھام</span>
+                  </div>
+                  <ol class="conds-list">
+                    ${masterRules.map(c => `<li>${c}</li>`).join("")}
+                    ${(cat.masterRules || []).map(c => `<li><strong>[زمرہ]</strong> ${c}</li>`).join("")}
+                  </ol>
+                </div>
+                <div class="conds-title"><i class="bi bi-card-checklist"></i> موڈ کی لازمی شرائط + آپ کی محفوظ شرائط</div>
+                <ol class="conds-list">
+                  ${defaultConds.map(c => `<li>${c}</li>`).join("")}
+                  ${state.extraConditions.map((ec, ecIdx) => `
+                    <li class="extra-cond">
+                      ${escapeHtml(ec)}
+                      <button type="button" class="remove-cond" onclick="removeExtraCondition(${idx},${ecIdx})">
+                        <i class="bi bi-x"></i> حذف
+                      </button>
+                    </li>
+                  `).join("")}
+                </ol>
+                <div class="add-cond">
+                  <label><i class="bi bi-plus-circle-fill"></i> اپنی مرضی کی اضافی شرط (براؤزر میں محفوظ)</label>
+                  <div class="add-row">
+                    <input type="text" id="newConditionInput_${idx}" placeholder="مثال: جواب دو صفحات میں ہو / صرف فلاں کتاب سے...">
+                    <button type="button" onclick="addExtraCondition(${idx})">+ شرط شامل کریں</button>
+                  </div>
+                </div>
+                <div class="prompt-actions bottom">
+                  <span class="save-hint"><i class="bi bi-check2-circle"></i> تبدیلیاں محفوظ</span>
+                  <button class="btn-copy" type="button" onclick="copyFullPrompt(${idx})">
+                    <i class="bi bi-clipboard-check"></i> پورا پرامپٹ کاپی کریں
+                  </button>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join("");
+
+        promptsList.style.opacity = "1";
+      }, 100);
+    }
+
+    function getPromptByIndex(promptIdx) {
+      const cat = categoriesData.find(c => c.id === activeCategoryId);
+      const merged = getMergedPrompts(cat);
+      return { cat, p: merged[promptIdx], merged };
+    }
+
+    window.updatePromptTopic = function(promptIdx, value) {
+      const { cat, p } = getPromptByIndex(promptIdx);
+      if (!p) return;
+      ensureState(cat.id, p.key, cat.defaultTopic).customTopic = value;
+      schedulePersist();
+    };
+
+    window.clearPromptTopic = function(promptIdx) {
+      const { cat, p } = getPromptByIndex(promptIdx);
+      if (!p) return;
+      ensureState(cat.id, p.key, cat.defaultTopic).customTopic = "";
+      const input = document.getElementById(`topicInput_${promptIdx}`);
+      if (input) {
+        input.value = "";
+        input.focus();
+      }
+      schedulePersist();
+    };
+
+    window.addExtraCondition = function(promptIdx) {
+      const input = document.getElementById(`newConditionInput_${promptIdx}`);
+      const val = input.value.trim();
+      if (val === "") return;
+      const { cat, p } = getPromptByIndex(promptIdx);
+      if (!p) return;
+      ensureState(cat.id, p.key, cat.defaultTopic).extraConditions.push(val);
+      schedulePersist();
+      renderPrompts();
+    };
+
+    window.removeExtraCondition = function(promptIdx, condIdx) {
+      const { cat, p } = getPromptByIndex(promptIdx);
+      if (!p) return;
+      ensureState(cat.id, p.key, cat.defaultTopic).extraConditions.splice(condIdx, 1);
+      schedulePersist();
+      renderPrompts();
+    };
+
+    window.toggleCustomPromptPanel = function() {
+      const panel = document.getElementById("customPromptPanel");
+      if (!panel) return;
+      const open = panel.classList.toggle("open");
+      const btn = panel.querySelector(".custom-prompt-toggle");
+      if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+
+    window.addCustomPrompt = function() {
+      const title = (document.getElementById("customPromptTitle").value || "").trim();
+      const focus = (document.getElementById("customPromptFocus").value || "").trim();
+      const topic = (document.getElementById("customPromptTopic").value || "").trim();
+      if (!title || !focus) {
+        alert("عنوان اور تحقیقی رخ دونوں لازم ہیں!");
+        return;
+      }
+      const cat = categoriesData.find(c => c.id === activeCategoryId);
+      const list = getCustomList(activeCategoryId);
+      const id = "cp_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 7);
+      list.push({
+        id,
+        title,
+        focus,
+        defaultTopic: topic || cat.defaultTopic
+      });
+      const key = "c_" + id;
+      ensureState(activeCategoryId, key, topic || cat.defaultTopic);
+      schedulePersist();
+      document.getElementById("customPromptTitle").value = "";
+      document.getElementById("customPromptFocus").value = "";
+      document.getElementById("customPromptTopic").value = "";
+      openPromptIdx = getMergedPrompts(cat).length - 1;
+      renderCategoryCards();
+      renderPrompts();
+      const toast = document.getElementById("copyToast");
+      toast.querySelector("span").textContent = "کسٹم پرامپٹ براؤزر میں محفوظ ہو گیا!";
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+        toast.querySelector("span").textContent = "مکمل پرامپٹ تمام شرائط سمیت کلپ بورڈ پر کاپی ہو گیا ہے!";
+      }, 2200);
+    };
+
+    window.deleteCustomPrompt = function(customId) {
+      if (!customId) return;
+      if (!confirm("یہ کسٹم پرامپٹ حذف کریں؟")) return;
+      customPrompts[activeCategoryId] = getCustomList(activeCategoryId).filter(p => p.id !== customId);
+      const key = "c_" + customId;
+      if (promptStates[activeCategoryId]) delete promptStates[activeCategoryId][key];
+      openPromptIdx = null;
+      schedulePersist();
+      renderCategoryCards();
+      renderPrompts();
+    };
+
+    window.copyFullPrompt = function(promptIdx) {
+      const { cat, p } = getPromptByIndex(promptIdx);
+      if (!p) return;
+      const state = ensureState(cat.id, p.key, cat.defaultTopic);
+      const intro = getIntroText(currentMode);
+      const allConditions = getAllConditions(currentMode, cat, state.extraConditions);
+      const conditionsFormatted = allConditions.map((c, i) => `${i + 1}. ${c}`).join("\n");
+
+      const fullPromptText = `${intro}
+
+【تحذیر】: یہ ماسٹر پرامپٹ ہے۔ کسی شرط کو نظرانداز کرنا یا فرضی حوالہ دینا ممنوع ہے۔
+
+【الموضوع / مطلوبہ مسئلہ】:
+«${state.customTopic}»
+
+【تحقیقی رخ و ہدف】:
+${p.focus}
+
+【ماسٹر و لازمی تحقیقی شرائط】:
+${conditionsFormatted}
+
+【مطلوبہ اخراجی شکل】:
+1) مسئلہ کی تحدید
+2) اصل نصوص مع حوالہ
+3) اردو ترجمہ
+4) تحلیل و ترجیح
+5) عملی خلاصہ
+6) مصادر کا جدول`;
+
+      navigator.clipboard.writeText(fullPromptText).then(() => {
+        const toast = document.getElementById("copyToast");
+        toast.querySelector("span").textContent = "مکمل پرامپٹ تمام شرائط سمیت کلپ بورڈ پر کاپی ہو گیا ہے!";
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+      });
+    };
+
+    function escapeHtml(text) {
+      return (text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    categorySearch.addEventListener("input", (e) => filterCategories(e.target.value));
+
+    toolCards.forEach(card => {
+      const activate = () => {
+        toolCards.forEach(c => c.classList.remove("active"));
+        card.classList.add("active");
+        currentMode = card.getAttribute("data-mode");
+        schedulePersist();
+        renderPrompts();
+        showView("categories");
+      };
+      card.addEventListener("click", activate);
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          activate();
+        }
+      });
+    });
+
+
+    function getThesisIntro(mode) {
+      if (mode === "notebooklm") {
+        return "بطورِ اکیڈمک رائٹر، درج ذیل مقالہ/ریسرچ مرحلے کا کام صرف دیے گئے سورسز (Notebook Sources / اپلوڈ شدہ پیپرز و کتب) کی روشنی میں مکمل کریں۔ فرضی حوالہ ممنوع ہے۔";
+      }
+      if (mode === "claude_mcp") {
+        return "Claude Desktop + MCP کے ذریعے لوکل فائلز، ڈیٹا سیٹس اور مراجع سے مربوط ہو کر درج ذیل مقالہ/ریسرچ مرحلے کو مستند علمی اسلوب میں مکمل کریں۔";
+      }
+      return "ChatGPT / Claude Web پر بطورِ اکیڈمک رائٹر، درج ذیل مقالہ/ریسرچ مرحلے کو شکاگو مینوئل اسٹائل اور جامعاتی (HEC/Scopus) معیار کے مطابق مکمل کریں۔";
+    }
+
+    function getThesisModeBadge() {
+      if (thesisMode === "chatgpt_web") return "💬 ChatGPT / Claude Web";
+      if (thesisMode === "claude_mcp") return "🗂️ Claude MCP";
+      return "📓 NotebookLM";
+    }
+
+    function syncThesisModeUI() {
+      document.querySelectorAll(".thesis-mode-btn").forEach(btn => {
+        const on = btn.getAttribute("data-thesis-mode") === thesisMode;
+        btn.classList.toggle("active", on);
+        btn.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      const badge = document.getElementById("thesisModeBadge");
+      if (badge) badge.textContent = getThesisModeBadge();
+    }
+
+    window.setThesisMode = function(mode) {
+      if (!["notebooklm", "chatgpt_web", "claude_mcp"].includes(mode)) return;
+      thesisMode = mode;
+      schedulePersist();
+      syncThesisModeUI();
+      renderThesisPrompts();
+    };
+
+    function getVisibleThesisSteps() {
+      if (activeThesisStepId === "all") return researchSteps;
+      return researchSteps.filter(s => s.id === activeThesisStepId);
+    }
+
+    function renderThesisSteps() {
+      const grid = document.getElementById("thesisStepsGrid");
+      const countEl = document.getElementById("thesisStepCount");
+      if (!grid) return;
+      if (countEl) countEl.textContent = researchSteps.length + " مراحل";
+      grid.innerHTML = researchSteps.map((s, i) => {
+        const active = activeThesisStepId === s.id || (activeThesisStepId === "all" && false);
+        const on = activeThesisStepId === s.id ? "active" : "";
+        return `
+          <div class="thesis-step-card ${on}" data-id="${s.id}" role="button" tabindex="0">
+            <span class="tag">${escapeHtml(s.tag)}</span>
+            <span class="st-title">${i + 1}. ${escapeHtml(s.title)}</span>
+          </div>
+        `;
+      }).join("");
+      grid.querySelectorAll(".thesis-step-card").forEach(card => {
+        const go = () => selectThesisStep(card.getAttribute("data-id"));
+        card.addEventListener("click", go);
+        card.addEventListener("keydown", e => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+        });
+      });
+    }
+
+    window.selectThesisStep = function(id) {
+      activeThesisStepId = id || "all";
+      openThesisIdx = (id === "all") ? null : 0;
+      schedulePersist();
+      renderThesisSteps();
+      renderThesisPrompts();
+      const list = document.getElementById("thesisPromptsList");
+      if (list) list.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    window.toggleThesisPrompt = function(idx) {
+      openThesisIdx = openThesisIdx === idx ? null : idx;
+      document.querySelectorAll("#thesisPromptsList .prompt-card").forEach(card => {
+        const cardIdx = Number(card.getAttribute("data-idx"));
+        const isOpen = cardIdx === openThesisIdx;
+        card.classList.toggle("open", isOpen);
+        const btn = card.querySelector(".prompt-top");
+        if (btn) btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+    };
+
+    function renderThesisPrompts() {
+      const list = document.getElementById("thesisPromptsList");
+      const nameEl = document.getElementById("thesisActiveName");
+      const badge = document.getElementById("thesisModeBadge");
+      if (!list) return;
+      if (badge) badge.textContent = getThesisModeBadge();
+
+      const steps = getVisibleThesisSteps();
+      if (activeThesisStepId === "all") {
+        if (nameEl) nameEl.textContent = "تمام تحقیقی مراحل";
+      } else {
+        const s = researchSteps.find(x => x.id === activeThesisStepId);
+        if (nameEl) nameEl.textContent = s ? s.title : "مرحلہ";
+      }
+
+      syncThesisModeUI();
+      const intro = getThesisIntro(thesisMode);
+      const master = getMasterQualityRules();
+
+      list.innerHTML = steps.map((step, idx) => {
+        if (!thesisStates[step.id]) {
+          thesisStates[step.id] = { customTopic: step.defaultTopic, extraConditions: [] };
+        }
+        const state = thesisStates[step.id];
+        const isOpen = openThesisIdx === idx || (steps.length === 1);
+        return `
+          <article class="prompt-card ${isOpen ? "open" : ""}" data-idx="${idx}">
+            <button type="button" class="prompt-top" onclick="toggleThesisPrompt(${idx})" aria-expanded="${isOpen ? "true" : "false"}">
+              <h4><i class="bi bi-mortarboard"></i> ${escapeHtml(step.title)}</h4>
+              <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+            </button>
+            <div class="prompt-body">
+              <div class="prompt-actions">
+                <button class="btn-copy" type="button" onclick="copyThesisPrompt('${step.id}')">
+                  <i class="bi bi-clipboard-check"></i> پورا پرامپٹ کاپی کریں
+                </button>
+              </div>
+              <div class="intro-line">${intro}</div>
+              <div class="focus-block">
+                <span class="tag">${escapeHtml(step.tag)}</span>
+              </div>
+              <div class="topic-box">
+                <div class="topic-label-row">
+                  <label for="thesisTopic_${step.id}"><i class="bi bi-pencil-square"></i> مطلوبہ عنوان / موضوع</label>
+                  <button type="button" class="btn-clear-topic" onclick="clearThesisTopic('${step.id}')" title="موضوع صاف کریں">
+                    <i class="bi bi-eraser"></i> صاف کریں
+                  </button>
+                </div>
+                <textarea id="thesisTopic_${step.id}" rows="2" oninput="updateThesisTopic('${step.id}', this.value)" placeholder="اپنا تحقیقی عنوان یہاں لکھیں...">${escapeHtml(state.customTopic)}</textarea>
+                <div class="topic-clear-row">
+                  <button type="button" class="btn-clear-topic" onclick="clearThesisTopic('${step.id}')">
+                    <i class="bi bi-x-circle"></i> موضوع صاف کریں
+                  </button>
+                </div>
+                <div class="hint">یہ عنوان کاپی شدہ پرامپٹ میں شامل ہو جائے گا اور براؤزر میں محفوظ رہے گا۔</div>
+              </div>
+              <div class="master-box">
+                <div class="conds-title">
+                  <i class="bi bi-shield-check"></i> ماسٹر کوالٹی رولز
+                  <span class="master-tag">غلطی روک تھام</span>
+                </div>
+                <ol class="conds-list">
+                  ${master.map(c => `<li>${c}</li>`).join("")}
+                  <li>شکاگو مینوئل اسٹائل کے مطابق فٹ نوٹ اور ببلیوگرافی اردو میں دیں جہاں مطلوب ہو۔</li>
+                  <li>فرضی آرٹیکل، فرضی DOI، یا غیر موجود حوالہ بالکل نہ لکھیں۔</li>
+                </ol>
+              </div>
+              <div class="conds-title"><i class="bi bi-card-checklist"></i> مرحلے کی اصل ہدایات</div>
+              <div class="prompt-body" style="display:block;padding:0.5rem 0 0;background:transparent;font-size:1.05rem;">
+                <div style="white-space:pre-wrap;">${escapeHtml(step.baseTemplate)}</div>
+              </div>
+              <div class="add-cond" style="margin-top:0.9rem">
+                <label><i class="bi bi-plus-circle-fill"></i> اضافی شرط (براؤزر میں محفوظ)</label>
+                <div class="add-row">
+                  <input type="text" id="thesisCond_${step.id}" placeholder="مثال: جواب صرف اردو میں ہو / کم از کم 500 الفاظ...">
+                  <button type="button" onclick="addThesisCondition('${step.id}')">+ شرط شامل کریں</button>
+                </div>
+                <ol class="conds-list" style="margin-top:0.6rem">
+                  ${(state.extraConditions || []).map((ec, ecIdx) => `
+                    <li class="extra-cond">
+                      ${escapeHtml(ec)}
+                      <button type="button" class="remove-cond" onclick="removeThesisCondition('${step.id}',${ecIdx})"><i class="bi bi-x"></i> حذف</button>
+                    </li>
+                  `).join("")}
+                </ol>
+              </div>
+              <div class="prompt-actions bottom">
+                <span class="save-hint"><i class="bi bi-check2-circle"></i> تبدیلیاں محفوظ</span>
+                <button class="btn-copy" type="button" onclick="copyThesisPrompt('${step.id}')">
+                  <i class="bi bi-clipboard-check"></i> پورا پرامپٹ کاپی کریں
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    window.updateThesisTopic = function(stepId, value) {
+      if (!thesisStates[stepId]) thesisStates[stepId] = { customTopic: "", extraConditions: [] };
+      thesisStates[stepId].customTopic = value;
+      schedulePersist();
+    };
+
+    window.clearThesisTopic = function(stepId) {
+      if (!thesisStates[stepId]) thesisStates[stepId] = { customTopic: "", extraConditions: [] };
+      thesisStates[stepId].customTopic = "";
+      const input = document.getElementById("thesisTopic_" + stepId);
+      if (input) { input.value = ""; input.focus(); }
+      schedulePersist();
+    };
+
+    window.addThesisCondition = function(stepId) {
+      const input = document.getElementById("thesisCond_" + stepId);
+      const val = (input && input.value || "").trim();
+      if (!val) return;
+      if (!thesisStates[stepId]) thesisStates[stepId] = { customTopic: "", extraConditions: [] };
+      thesisStates[stepId].extraConditions.push(val);
+      schedulePersist();
+      renderThesisPrompts();
+    };
+
+    window.removeThesisCondition = function(stepId, idx) {
+      if (!thesisStates[stepId]) return;
+      thesisStates[stepId].extraConditions.splice(idx, 1);
+      schedulePersist();
+      renderThesisPrompts();
+    };
+
+    window.copyThesisPrompt = function(stepId) {
+      const step = researchSteps.find(s => s.id === stepId);
+      if (!step) return;
+      const state = thesisStates[stepId] || { customTopic: step.defaultTopic, extraConditions: [] };
+      const intro = getThesisIntro(thesisMode);
+      const master = getMasterQualityRules();
+      const extras = state.extraConditions || [];
+      const allConds = [
+        ...master,
+        "شکاگو مینوئل اسٹائل کے مطابق فٹ نوٹ اور ببلیوگرافی اردو میں دیں جہاں مطلوب ہو۔",
+        "فرضی آرٹیکل، فرضی DOI، یا غیر موجود حوالہ بالکل نہ لکھیں۔",
+        ...extras
+      ];
+      const condText = allConds.map((c, i) => (i + 1) + ". " + c).join("\\n");
+      const full = `${intro}
+
+【تحذیر】: یہ ماسٹر ریسرچ پرامپٹ ہے۔ فرضی حوالہ یا غیر مستند دعویٰ ممنوع ہے۔
+【پلیٹ فارم】: ${getThesisModeBadge()}
+
+【تحقیقی عنوان / موضوع】:
+«${state.customTopic || step.defaultTopic}»
+
+【مرحلہ】:
+${step.title}
+(${step.tag})
+
+【تفصیلی ہدایات】:
+${step.baseTemplate}
+
+【ماسٹر و لازمی شرائط】:
+${condText}`;
+
+      navigator.clipboard.writeText(full).then(() => {
+        const toast = document.getElementById("copyToast");
+        toast.querySelector("span").textContent = "پرامپٹ آپ کے مطلوبہ عنوان اور شرائط سمیت کلپ بورڈ پر کاپی ہو گیا ہے!";
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+      });
+    };
+
+
+    let currentView = "mode";
+
+    window.showView = function(view) {
+      currentView = view;
+      document.querySelectorAll(".app-view").forEach(el => {
+        el.classList.toggle("active", el.getAttribute("data-view") === view);
+      });
+      document.querySelectorAll(".nav-tab, .bottom-tab").forEach(el => {
+        el.classList.toggle("active", el.getAttribute("data-view") === view);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (view === "prompts") renderPrompts();
+      if (view === "categories") renderCategoryCards();
+      if (view === "thesis") {
+        renderThesisSteps();
+        renderThesisPrompts();
+      }
+    };
+
+    document.querySelectorAll(".nav-tab, .bottom-tab").forEach(btn => {
+      btn.addEventListener("click", () => showView(btn.getAttribute("data-view")));
+    });
+
+    initStates();
+    toolCards.forEach(c => {
+      c.classList.toggle("active", c.getAttribute("data-mode") === currentMode);
+    });
+    document.querySelectorAll(".thesis-mode-btn").forEach(btn => {
+      btn.addEventListener("click", () => setThesisMode(btn.getAttribute("data-thesis-mode")));
+    });
+
+    renderCategoryCards();
+    renderPrompts();
+    renderThesisSteps();
+    renderThesisPrompts();
+    syncThesisModeUI();
+    showView("mode");
+  </script>
+</body>
+</html>
