@@ -25,6 +25,12 @@
 
     * { box-sizing: border-box; }
 
+    html {
+      overflow-x: hidden;
+      width: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
+
     body {
       margin: 0;
       font-family: 'IBM Plex Sans Arabic', 'Amiri', sans-serif;
@@ -34,7 +40,11 @@
         radial-gradient(900px 500px at 100% 0%, rgba(26, 107, 60, 0.12), transparent 50%),
         linear-gradient(180deg, #f3efe4 0%, var(--sand) 40%, #eef4f0 100%);
       min-height: 100vh;
+      min-height: 100dvh;
       padding-bottom: 0;
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100%;
     }
 
     .urdu { font-family: 'Noto Nastaliq Urdu', 'Amiri', serif; line-height: 1.9; }
@@ -204,6 +214,51 @@
       .app-bar { display: none; }
       .bottom-tabs { display: none; }
       .wrap { padding: 1.5rem 1.25rem 3rem; }
+    }
+
+    /* Mobile: single page scroller only — no nested box scroll */
+    @media (max-width: 900px) {
+      .wrap,
+      .app-view,
+      .panel,
+      .category-grid,
+      .prompts-list,
+      #view-categories,
+      #view-prompts,
+      #view-thesis {
+        max-height: none !important;
+        overflow: visible !important;
+        height: auto !important;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-box {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .panel {
+        padding: 1.1rem 1rem 1.25rem;
+      }
+
+      .nb-links-panel {
+        position: static;
+        top: auto;
+      }
+
+      .nb-links-grid {
+        overscroll-behavior-x: contain;
+        overscroll-behavior-y: none;
+        scrollbar-width: none;
+      }
+
+      .nb-links-grid::-webkit-scrollbar {
+        display: none;
+        height: 0;
+      }
     }
 
     /* Layout remainder */
@@ -387,6 +442,8 @@
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 0.75rem;
       padding: 0.15rem 0;
+      max-height: none;
+      overflow: visible;
     }
 
     .cat-card {
