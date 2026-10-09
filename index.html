@@ -225,7 +225,8 @@
       .prompts-list,
       #view-categories,
       #view-prompts,
-      #view-thesis {
+      #view-thesis,
+      #view-about {
         max-height: none !important;
         overflow: visible !important;
         height: auto !important;
@@ -1509,6 +1510,142 @@
       font-size: 0.78rem;
     }
 
+    /* تعارف / About */
+    .about-hero {
+      background: linear-gradient(135deg, #0c1f17 0%, #14532d 55%, #1a6b3c 100%);
+      color: #fff;
+      border-radius: calc(var(--radius) + 4px);
+      padding: 1.5rem 1.35rem 1.4rem;
+      margin-bottom: 1rem;
+      border-bottom: 3px solid var(--gold);
+      box-shadow: var(--shadow);
+    }
+
+    .about-hero .about-kicker {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--gold-soft);
+      margin-bottom: 0.45rem;
+    }
+
+    .about-hero h2 {
+      margin: 0 0 0.45rem;
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+      font-size: 1.45rem;
+      line-height: 1.75;
+      font-weight: 700;
+    }
+
+    .about-hero .about-roles {
+      margin: 0;
+      opacity: 0.92;
+      font-size: 0.92rem;
+      line-height: 1.75;
+    }
+
+    .about-body {
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+      font-size: 1.08rem;
+      line-height: 2.05;
+      color: var(--ink);
+    }
+
+    .about-body p {
+      margin: 0 0 1rem;
+    }
+
+    .about-body h3 {
+      margin: 1.35rem 0 0.65rem;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 1.05rem;
+      color: var(--forest);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 0.4rem;
+    }
+
+    .about-contact {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-top: 0.35rem;
+    }
+
+    .about-contact a {
+      color: var(--leaf);
+      font-weight: 700;
+      text-decoration: none;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      word-break: break-word;
+    }
+
+    .about-contact a:hover {
+      color: var(--forest);
+      text-decoration: underline;
+    }
+
+    .about-social {
+      list-style: none;
+      margin: 0.5rem 0 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .about-social a {
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--forest);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 0.75rem;
+      background: var(--mist);
+      border: 1px solid rgba(26, 107, 60, 0.18);
+      border-radius: 12px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .about-social a:hover {
+      background: #e7f3eb;
+      border-color: rgba(26, 107, 60, 0.35);
+    }
+
+    .about-social a i { color: #1877f2; font-size: 1.15rem; }
+
+    .about-note {
+      margin-top: 1.25rem;
+      padding: 0.9rem 1rem;
+      background: linear-gradient(180deg, #fff8e8, #fff);
+      border: 1.5px solid rgba(196, 160, 53, 0.4);
+      border-radius: 14px;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: #5c4a12;
+    }
+
+    .about-note strong {
+      color: #7a5d10;
+    }
+
+    @media (max-width: 900px) {
+      .bottom-tab span { font-size: 0.62rem; }
+      .bottom-tab { padding: 0.4rem 0.1rem; }
+      .about-hero h2 { font-size: 1.25rem; }
+    }
+
     .thesis-mode-block {
       margin-top: 0.95rem;
       padding-top: 0.85rem;
@@ -1644,6 +1781,7 @@
         <button type="button" class="nav-tab" data-view="categories"><i class="bi bi-grid"></i> زمرے</button>
         <button type="button" class="nav-tab" data-view="prompts"><i class="bi bi-journal-text"></i> پرامپٹس</button>
         <button type="button" class="nav-tab" data-view="thesis"><i class="bi bi-mortarboard"></i> مقالہ</button>
+        <button type="button" class="nav-tab" data-view="about"><i class="bi bi-person-badge"></i> تعارف</button>
       </div>
     </div>
   </nav>
@@ -1822,6 +1960,58 @@
       <div id="thesisPromptsList" class="prompts-list"></div>
     </section>
 
+    <!-- View 5: About / تعارف -->
+    <section class="app-view" id="view-about" data-view="about">
+      <div class="about-hero">
+        <div class="about-kicker">تعارف</div>
+        <h2>مفتی محمد عبداللہ وسیم</h2>
+        <p class="about-roles">بانی و مؤسس: ویب ساز ویب سلوشنز (WebSaaz Web Solutions) اور مکتب ٹریک (Maktab Track)</p>
+      </div>
+
+      <div class="panel about-body">
+        <p>گزشتہ کئی سالوں سے شعبۂ آئی ٹی، بالخصوص ویب ڈویلپمنٹ اور سافٹ ویئر ڈیولپمنٹ سے وابستہ ہوں۔ اندرونِ ملک اور بیرونِ ملک مختلف اداروں اور کاروباری ضروریات کے مطابق ویب سائٹس، سافٹ ویئرز اور ڈیجیٹل مینجمنٹ سسٹمز کی تیاری و تنظیم کا تجربہ رکھتا ہوں۔</p>
+
+        <p>گزشتہ پانچ سالوں سے مختلف اداروں میں ویب ڈویلپمنٹ کی تدریس و تربیت کا سلسلہ جاری ہے، جس میں بالخصوص مدارسِ دینیہ کے طلبہ و طالبات شامل ہیں۔ اس کے ساتھ مختلف دارالافتاء میں بھی اپنی خدمات انجام دے رہا ہوں۔ درس و تدریس اور سافٹ ویئر ڈیولپمنٹ کے علاوہ ادارہ جاتی امور کی مینجمنٹ، ریکارڈ کی تنظیم اور آن لائن و آف لائن نظاموں کو مؤثر بنانے کا بھی تجربہ حاصل ہے۔</p>
+
+        <h3><i class="bi bi-lightbulb"></i> تحقیقی پرامپٹ اسٹوڈیو کے قیام کا مقصد</h3>
+
+        <p>موجودہ دور میں مصنوعی ذہانت (AI) علمی و تحقیقی میدان میں تیزی سے استعمال ہو رہی ہے۔ بالخصوص دینی علوم اور مستند علمی مراجع سے استفادے کے دوران یہ نہایت ضروری ہے کہ مصنوعی ذہانت کے استعمال میں حتی الامکان غلطیوں، غیر مستند حوالہ جات اور غیر محقق معلومات سے بچا جائے۔</p>
+
+        <p>اسی ضرورت کو مدنظر رکھتے ہوئے <strong>تحقیقی پرامپٹ اسٹوڈیو</strong> کی بنیاد رکھی ہے، جس کا بنیادی مقصد علمی و تحقیقی کاموں میں مصنوعی ذہانت کے استعمال کو زیادہ منظم، محتاط اور مستند بنانا ہے، تاکہ علماء کرام، محققین اور طلبہ علمی مراجع سے استفادے، حوالہ جات کی تحقیق اور تحقیقی مواد کی جانچ میں اس ٹیکنالوجی سے بہتر انداز میں فائدہ اٹھا سکیں۔</p>
+
+        <p>اس کاوش کے ذریعے کوشش ہے کہ جدید ٹیکنالوجی کو علمی تحقیق کے لیے مفید بنایا جائے، جبکہ مستند مراجع کی مراجعت، حوالہ جات کی تصدیق اور علمی احتیاط کو بنیادی اہمیت حاصل رہے۔</p>
+
+        <h3><i class="bi bi-envelope"></i> رابطہ</h3>
+        <div class="about-contact">
+          <a href="mailto:muftiabdullahwaseem@gmail.com">
+            <i class="bi bi-envelope-fill"></i>
+            muftiabdullahwaseem@gmail.com
+          </a>
+        </div>
+
+        <h3><i class="bi bi-share"></i> سوشل میڈیا روابط</h3>
+        <ul class="about-social">
+          <li>
+            <a href="https://www.facebook.com/maktabtrack" target="_blank" rel="noopener">
+              <i class="bi bi-facebook"></i>
+              مکتب ٹریک (Maktab Track)
+            </a>
+          </li>
+          <li>
+            <a href="https://www.facebook.com/websaazsolutions" target="_blank" rel="noopener">
+              <i class="bi bi-facebook"></i>
+              ویب ساز ویب سلوشنز (WebSaaz Web Solutions)
+            </a>
+          </li>
+        </ul>
+
+        <div class="about-note">
+          <strong>نوٹ:</strong>
+          اس میں NotebookLM کی لنکس پر کام <strong>ڈاکٹر ساجد محمود</strong> صاحب کی کاوش ہے جو قابلِ تحسین ہے۔
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Mobile bottom tabs -->
@@ -1841,6 +2031,10 @@
     <button type="button" class="bottom-tab" data-view="thesis">
       <i class="bi bi-mortarboard"></i>
       <span>مقالہ</span>
+    </button>
+    <button type="button" class="bottom-tab" data-view="about">
+      <i class="bi bi-person-badge"></i>
+      <span>تعارف</span>
     </button>
   </nav>
 
