@@ -386,11 +386,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 0.75rem;
-      max-height: 420px;
-      overflow-y: auto;
-      padding: 0.15rem 0.25rem 0.15rem 0;
-      scrollbar-width: thin;
-      scrollbar-color: var(--leaf) transparent;
+      padding: 0.15rem 0;
     }
 
     .cat-card {
@@ -698,21 +694,21 @@
       color: #fff;
     }
 
-    .topic-clear-row {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 0.45rem;
-    }
-
-    .topic-clear-row .btn-clear-topic {
-      font-size: 0.85rem;
-      padding: 0.45rem 1rem;
-    }
-
     @media (min-width: 901px) {
       .btn-clear-topic {
         font-size: 0.9rem;
         padding: 0.5rem 1.05rem;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .topic-box .topic-label-row {
+        flex-wrap: wrap;
+      }
+
+      .btn-clear-topic {
+        font-size: 0.78rem;
+        padding: 0.35rem 0.7rem;
       }
     }
 
@@ -825,10 +821,13 @@
     .add-row {
       display: flex;
       gap: 0.45rem;
+      flex-wrap: wrap;
+      align-items: stretch;
     }
 
     .add-row input {
-      flex: 1;
+      flex: 1 1 12rem;
+      min-width: 0;
       border: 1px solid var(--line);
       border-radius: 10px;
       padding: 0.55rem 0.75rem;
@@ -851,11 +850,30 @@
       padding: 0.5rem 0.9rem;
       cursor: pointer;
       white-space: nowrap;
+      flex: 0 0 auto;
     }
 
     .add-row button:hover {
       background: var(--leaf);
       color: #fff;
+    }
+
+    @media (max-width: 520px) {
+      .add-row {
+        flex-direction: column;
+      }
+
+      .add-row input {
+        flex: 1 1 auto;
+        width: 100%;
+      }
+
+      .add-row button {
+        width: 100%;
+        justify-content: center;
+        display: inline-flex;
+        align-items: center;
+      }
     }
 
     /* Toast */
@@ -2605,15 +2623,10 @@
                   <div class="topic-label-row">
                     <label for="topicInput_${idx}"><i class="bi bi-pencil-square"></i> مطلوبہ موضوع / سوال</label>
                     <button type="button" class="btn-clear-topic" onclick="clearPromptTopic(${idx})" title="موضوع صاف کریں">
-                      <i class="bi bi-eraser"></i> صاف کریں
+                      <i class="bi bi-eraser"></i> موضوع صاف کریں
                     </button>
                   </div>
                   <textarea id="topicInput_${idx}" rows="2" oninput="updatePromptTopic(${idx}, this.value)" placeholder="اپنا مخصوص سوال یا موضوع یہاں لکھیں...">${escapeHtml(state.customTopic)}</textarea>
-                  <div class="topic-clear-row">
-                    <button type="button" class="btn-clear-topic" onclick="clearPromptTopic(${idx})">
-                      <i class="bi bi-x-circle"></i> موضوع صاف کریں
-                    </button>
-                  </div>
                   <div class="hint">موضوع اور اضافی شرائط براؤزر میں خودکار محفوظ ہوتے ہیں۔</div>
                 </div>
                 <div class="master-box">
@@ -2955,15 +2968,10 @@ ${conditionsFormatted}
                 <div class="topic-label-row">
                   <label for="thesisTopic_${step.id}"><i class="bi bi-pencil-square"></i> مطلوبہ عنوان / موضوع</label>
                   <button type="button" class="btn-clear-topic" onclick="clearThesisTopic('${step.id}')" title="موضوع صاف کریں">
-                    <i class="bi bi-eraser"></i> صاف کریں
+                    <i class="bi bi-eraser"></i> موضوع صاف کریں
                   </button>
                 </div>
                 <textarea id="thesisTopic_${step.id}" rows="2" oninput="updateThesisTopic('${step.id}', this.value)" placeholder="اپنا تحقیقی عنوان یہاں لکھیں...">${escapeHtml(state.customTopic)}</textarea>
-                <div class="topic-clear-row">
-                  <button type="button" class="btn-clear-topic" onclick="clearThesisTopic('${step.id}')">
-                    <i class="bi bi-x-circle"></i> موضوع صاف کریں
-                  </button>
-                </div>
                 <div class="hint">یہ عنوان کاپی شدہ پرامپٹ میں شامل ہو جائے گا اور براؤزر میں محفوظ رہے گا۔</div>
               </div>
               <div class="master-box">
