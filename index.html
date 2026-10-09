@@ -2427,11 +2427,11 @@
       return builtins.concat(customs);
     }
 
-    function ensureState(catId, key, defaultTopic) {
+    function ensureState(catId, key) {
       if (!promptStates[catId]) promptStates[catId] = {};
       if (!promptStates[catId][key]) {
         promptStates[catId][key] = {
-          customTopic: defaultTopic || "",
+          customTopic: "",
           extraConditions: []
         };
       }
@@ -2439,6 +2439,15 @@
         promptStates[catId][key].extraConditions = [];
       }
       return promptStates[catId][key];
+    }
+
+    function resolveSavedTopic(savedTopic, sampleTopic) {
+      if (typeof savedTopic !== "string") return "";
+      const t = savedTopic.trim();
+      if (!t) return "";
+      // Purane sample/default topics ko blank treat karo — user ne khud nahi likha
+      if (sampleTopic && t === String(sampleTopic).trim()) return "";
+      return savedTopic;
     }
 
     function initStates() {
@@ -2454,9 +2463,9 @@
         promptStates[cat.id] = {};
         getMergedPrompts(cat).forEach(p => {
           const saved = savedStates[cat.id] && savedStates[cat.id][p.key];
-          const fallbackTopic = p.isCustom ? (p.defaultTopic || cat.defaultTopic) : cat.defaultTopic;
+          const sampleTopic = p.isCustom ? (p.defaultTopic || cat.defaultTopic) : cat.defaultTopic;
           promptStates[cat.id][p.key] = {
-            customTopic: (saved && typeof saved.customTopic === "string") ? saved.customTopic : fallbackTopic,
+            customTopic: resolveSavedTopic(saved && saved.customTopic, sampleTopic),
             extraConditions: (saved && Array.isArray(saved.extraConditions)) ? saved.extraConditions : []
           };
         });
@@ -2474,7 +2483,7 @@
       researchSteps.forEach(step => {
         const saved = savedThesis[step.id];
         thesisStates[step.id] = {
-          customTopic: (saved && typeof saved.customTopic === "string") ? saved.customTopic : step.defaultTopic,
+          customTopic: resolveSavedTopic(saved && saved.customTopic, step.defaultTopic),
           extraConditions: (saved && Array.isArray(saved.extraConditions)) ? saved.extraConditions : []
         };
       });
@@ -2772,7 +2781,7 @@
 
         const merged = getMergedPrompts(cat);
         promptsList.innerHTML = merged.map((p, idx) => {
-          const state = ensureState(cat.id, p.key, p.isCustom ? p.defaultTopic : cat.defaultTopic);
+          const state = ensureState(cat.id, p.key);
           const isOpen = openPromptIdx === idx;
           const customBadge = p.isCustom ? '<span class="custom-badge"><i class="bi bi-person-fill"></i> کسٹم</span>' : '';
           const delBtn = p.isCustom ? `<button type="button" class="btn-del-custom" onclick="deleteCustomPrompt('${p.customId}')"><i class="bi bi-trash"></i> کسٹم حذف</button>` : '';
@@ -2873,14 +2882,14 @@
     window.updatePromptTopic = function(promptIdx, value) {
       const { cat, p } = getPromptByIndex(promptIdx);
       if (!p) return;
-      ensureState(cat.id, p.key, cat.defaultTopic).customTopic = value;
+      ensureState(cat.id, p.key).customTopic = value;
       schedulePersist();
     };
 
     window.clearPromptTopic = function(promptIdx) {
       const { cat, p } = getPromptByIndex(promptIdx);
       if (!p) return;
-      ensureState(cat.id, p.key, cat.defaultTopic).customTopic = "";
+      ensureState(cat.id, p.key).customTopic = "";
       const input = document.getElementById(`topicInput_${promptIdx}`);
       if (input) {
         input.value = "";
@@ -2895,7 +2904,7 @@
       if (val === "") return;
       const { cat, p } = getPromptByIndex(promptIdx);
       if (!p) return;
-      ensureState(cat.id, p.key, cat.defaultTopic).extraConditions.push(val);
+      ensureState(cat.id, p.key).extraConditions.push(val);
       openDetailFolds.add("conds-" + promptIdx);
       schedulePersist();
       renderPrompts();
@@ -2904,7 +2913,7 @@
     window.removeExtraCondition = function(promptIdx, condIdx) {
       const { cat, p } = getPromptByIndex(promptIdx);
       if (!p) return;
-      ensureState(cat.id, p.key, cat.defaultTopic).extraConditions.splice(condIdx, 1);
+      ensureState(cat.id, p.key).extraConditions.splice(condIdx, 1);
       openDetailFolds.add("conds-" + promptIdx);
       schedulePersist();
       renderPrompts();
@@ -2936,7 +2945,8 @@
         defaultTopic: topic || cat.defaultTopic
       });
       const key = "c_" + id;
-      ensureState(activeCategoryId, key, topic || cat.defaultTopic);
+      ensureState(activeCategoryId, key);
+      if (topic) ensureState(activeCategoryId, key).customTopic = topic;
       schedulePersist();
       document.getElementById("customPromptTitle").value = "";
       document.getElementById("customPromptFocus").value = "";
@@ -2969,7 +2979,7 @@
     window.copyFullPrompt = function(promptIdx) {
       const { cat, p } = getPromptByIndex(promptIdx);
       if (!p) return;
-      const state = ensureState(cat.id, p.key, cat.defaultTopic);
+      const state = ensureState(cat.id, p.key);
       const intro = getIntroText(currentMode);
       const allConditions = getAllConditions(currentMode, cat, state.extraConditions);
       const conditionsFormatted = allConditions.map((c, i) => `${i + 1}. ${c}`).join("\n");
@@ -3137,7 +3147,7 @@ ${conditionsFormatted}
 
       list.innerHTML = steps.map((step, idx) => {
         if (!thesisStates[step.id]) {
-          thesisStates[step.id] = { customTopic: step.defaultTopic, extraConditions: [] };
+          thesisStates[step.id] = { customTopic: "", extraConditions: [] };
         }
         const state = thesisStates[step.id];
         const isOpen = openThesisIdx === idx || (steps.length === 1);
@@ -3257,7 +3267,7 @@ ${conditionsFormatted}
     window.copyThesisPrompt = function(stepId) {
       const step = researchSteps.find(s => s.id === stepId);
       if (!step) return;
-      const state = thesisStates[stepId] || { customTopic: step.defaultTopic, extraConditions: [] };
+      const state = thesisStates[stepId] || { customTopic: "", extraConditions: [] };
       const intro = getThesisIntro(thesisMode);
       const master = getMasterQualityRules();
       const extras = state.extraConditions || [];
@@ -3274,7 +3284,7 @@ ${conditionsFormatted}
 【پلیٹ فارم】: ${getThesisModeBadge()}
 
 【تحقیقی عنوان / موضوع】:
-«${state.customTopic || step.defaultTopic}»
+«${state.customTopic || ""}»
 
 【مرحلہ】:
 ${step.title}
@@ -3320,6 +3330,7 @@ ${condText}`;
     });
 
     initStates();
+    schedulePersist();
     toolCards.forEach(c => {
       c.classList.toggle("active", c.getAttribute("data-mode") === currentMode);
     });
