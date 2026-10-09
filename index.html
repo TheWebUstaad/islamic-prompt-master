@@ -47,7 +47,7 @@
       max-width: 100%;
     }
 
-    .urdu { font-family: 'Noto Nastaliq Urdu', 'Amiri', serif; line-height: 1.9; }
+    .urdu { font-family: 'Noto Nastaliq Urdu', 'Amiri', serif; line-height: 2.65; }
 
     /* App shell */
     .top-nav {
@@ -75,7 +75,7 @@
       font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
       font-size: 1.15rem;
       font-weight: 700;
-      line-height: 1.6;
+      line-height: 2.4;
       white-space: nowrap;
     }
 
@@ -131,7 +131,7 @@
       margin: 0;
       font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
       font-size: 1.25rem;
-      line-height: 1.7;
+      line-height: 2.45;
     }
 
     .app-bar p {
@@ -1483,17 +1483,18 @@
     }
 
     .thesis-banner h2 {
-      margin: 0 0 0.4rem;
+      margin: 0 0 0.55rem;
       font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
       font-size: 1.25rem;
-      line-height: 1.7;
+      line-height: 2.5;
     }
 
     .thesis-banner p {
-      margin: 0 0 0.7rem;
+      margin: 0 0 0.85rem;
       opacity: 0.9;
       font-size: 0.9rem;
-      line-height: 1.7;
+      line-height: 2.35;
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
     }
 
     .thesis-chips {
@@ -1531,29 +1532,30 @@
     }
 
     .about-hero h2 {
-      margin: 0 0 0.45rem;
+      margin: 0 0 0.7rem;
       font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
       font-size: 1.45rem;
-      line-height: 1.75;
+      line-height: 2.5;
       font-weight: 700;
     }
 
     .about-hero .about-roles {
       margin: 0;
       opacity: 0.92;
-      font-size: 0.92rem;
-      line-height: 1.75;
+      font-size: 0.95rem;
+      line-height: 2.4;
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
     }
 
     .about-body {
       font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
-      font-size: 1.08rem;
-      line-height: 2.05;
+      font-size: 1.1rem;
+      line-height: 2.75;
       color: var(--ink);
     }
 
     .about-body p {
-      margin: 0 0 1rem;
+      margin: 0 0 1.35rem;
     }
 
     .about-body h3 {
@@ -1566,6 +1568,74 @@
       gap: 0.4rem;
       border-bottom: 1px solid var(--line);
       padding-bottom: 0.4rem;
+    }
+
+    .about-purpose {
+      margin: 1.5rem 0 1.25rem;
+      padding: 1.15rem 1.1rem 1.05rem;
+      background:
+        linear-gradient(160deg, rgba(196, 160, 53, 0.16), rgba(26, 107, 60, 0.08)),
+        #fffaf0;
+      border: 2px solid rgba(196, 160, 53, 0.55);
+      border-radius: 16px;
+      box-shadow: 0 8px 22px rgba(122, 93, 16, 0.08);
+      position: relative;
+    }
+
+    .about-purpose::before {
+      content: "";
+      position: absolute;
+      inset-inline-start: 0;
+      top: 12px;
+      bottom: 12px;
+      width: 5px;
+      border-radius: 0 6px 6px 0;
+      background: linear-gradient(180deg, var(--gold), var(--leaf));
+    }
+
+    .about-purpose-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.22rem 0.65rem;
+      border-radius: 999px;
+      margin-bottom: 0.55rem;
+    }
+
+    .about-purpose h3 {
+      margin: 0 0 0.85rem;
+      border: none;
+      padding: 0;
+      color: #7a5d10;
+      font-size: 1.12rem;
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+      line-height: 2.5;
+    }
+
+    .about-purpose h3 i {
+      color: var(--leaf);
+      font-size: 1.05rem;
+    }
+
+    .about-purpose p {
+      margin: 0 0 1.1rem;
+      color: #1a2e24;
+    }
+
+    .about-purpose p:last-child {
+      margin-bottom: 0;
+    }
+
+    .about-purpose strong {
+      color: var(--forest);
+      background: rgba(196, 160, 53, 0.22);
+      padding: 0.05rem 0.35rem;
+      border-radius: 6px;
     }
 
     .about-contact {
@@ -1626,13 +1696,13 @@
 
     .about-note {
       margin-top: 1.25rem;
-      padding: 0.9rem 1rem;
+      padding: 0.95rem 1rem;
       background: linear-gradient(180deg, #fff8e8, #fff);
       border: 1.5px solid rgba(196, 160, 53, 0.4);
       border-radius: 14px;
-      font-family: 'IBM Plex Sans Arabic', sans-serif;
-      font-size: 0.92rem;
-      line-height: 1.75;
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+      font-size: 1.02rem;
+      line-height: 2.55;
       color: #5c4a12;
     }
 
@@ -1973,13 +2043,16 @@
 
         <p>گزشتہ پانچ سالوں سے مختلف اداروں میں ویب ڈویلپمنٹ کی تدریس و تربیت کا سلسلہ جاری ہے، جس میں بالخصوص مدارسِ دینیہ کے طلبہ و طالبات شامل ہیں۔ اس کے ساتھ مختلف دارالافتاء میں بھی اپنی خدمات انجام دے رہا ہوں۔ درس و تدریس اور سافٹ ویئر ڈیولپمنٹ کے علاوہ ادارہ جاتی امور کی مینجمنٹ، ریکارڈ کی تنظیم اور آن لائن و آف لائن نظاموں کو مؤثر بنانے کا بھی تجربہ حاصل ہے۔</p>
 
-        <h3><i class="bi bi-lightbulb"></i> تحقیقی پرامپٹ اسٹوڈیو کے قیام کا مقصد</h3>
+        <div class="about-purpose">
+          <span class="about-purpose-badge"><i class="bi bi-star-fill"></i> اہم بات</span>
+          <h3><i class="bi bi-lightbulb-fill"></i> تحقیقی پرامپٹ اسٹوڈیو کے قیام کا مقصد</h3>
 
-        <p>موجودہ دور میں مصنوعی ذہانت (AI) علمی و تحقیقی میدان میں تیزی سے استعمال ہو رہی ہے۔ بالخصوص دینی علوم اور مستند علمی مراجع سے استفادے کے دوران یہ نہایت ضروری ہے کہ مصنوعی ذہانت کے استعمال میں حتی الامکان غلطیوں، غیر مستند حوالہ جات اور غیر محقق معلومات سے بچا جائے۔</p>
+          <p>موجودہ دور میں مصنوعی ذہانت (AI) علمی و تحقیقی میدان میں تیزی سے استعمال ہو رہی ہے۔ بالخصوص دینی علوم اور مستند علمی مراجع سے استفادے کے دوران یہ نہایت ضروری ہے کہ مصنوعی ذہانت کے استعمال میں حتی الامکان غلطیوں، غیر مستند حوالہ جات اور غیر محقق معلومات سے بچا جائے۔</p>
 
-        <p>اسی ضرورت کو مدنظر رکھتے ہوئے <strong>تحقیقی پرامپٹ اسٹوڈیو</strong> کی بنیاد رکھی ہے، جس کا بنیادی مقصد علمی و تحقیقی کاموں میں مصنوعی ذہانت کے استعمال کو زیادہ منظم، محتاط اور مستند بنانا ہے، تاکہ علماء کرام، محققین اور طلبہ علمی مراجع سے استفادے، حوالہ جات کی تحقیق اور تحقیقی مواد کی جانچ میں اس ٹیکنالوجی سے بہتر انداز میں فائدہ اٹھا سکیں۔</p>
+          <p>اسی ضرورت کو مدنظر رکھتے ہوئے <strong>تحقیقی پرامپٹ اسٹوڈیو</strong> کی بنیاد رکھی ہے، جس کا بنیادی مقصد علمی و تحقیقی کاموں میں مصنوعی ذہانت کے استعمال کو زیادہ منظم، محتاط اور مستند بنانا ہے، تاکہ علماء کرام، محققین اور طلبہ علمی مراجع سے استفادے، حوالہ جات کی تحقیق اور تحقیقی مواد کی جانچ میں اس ٹیکنالوجی سے بہتر انداز میں فائدہ اٹھا سکیں۔</p>
 
-        <p>اس کاوش کے ذریعے کوشش ہے کہ جدید ٹیکنالوجی کو علمی تحقیق کے لیے مفید بنایا جائے، جبکہ مستند مراجع کی مراجعت، حوالہ جات کی تصدیق اور علمی احتیاط کو بنیادی اہمیت حاصل رہے۔</p>
+          <p>اس کاوش کے ذریعے کوشش ہے کہ جدید ٹیکنالوجی کو علمی تحقیق کے لیے مفید بنایا جائے، جبکہ مستند مراجع کی مراجعت، حوالہ جات کی تصدیق اور علمی احتیاط کو بنیادی اہمیت حاصل رہے۔</p>
+        </div>
 
         <h3><i class="bi bi-envelope"></i> رابطہ</h3>
         <div class="about-contact">
