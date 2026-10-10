@@ -260,7 +260,8 @@
       #view-categories,
       #view-prompts,
       #view-thesis,
-      #view-about {
+      #view-about,
+      #view-guides {
         max-height: none !important;
         overflow: visible !important;
         height: auto !important;
@@ -1745,9 +1746,348 @@
     }
 
     @media (max-width: 900px) {
-      .bottom-tab span { font-size: 0.62rem; }
-      .bottom-tab { padding: 0.4rem 0.1rem; }
+      .bottom-tab span { font-size: 0.58rem; }
+      .bottom-tab { padding: 0.35rem 0.05rem; }
+      .bottom-tab i { font-size: 1.05rem; }
       .about-hero h2 { font-size: 1.25rem; }
+    }
+
+    /* ہدایات / Guides */
+    .guide-how {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.65rem;
+      margin: 0.85rem 0 0.25rem;
+    }
+
+    .guide-how-step {
+      background: var(--mist);
+      border: 1px solid rgba(26, 107, 60, 0.18);
+      border-radius: 14px;
+      padding: 0.85rem 0.75rem;
+      text-align: center;
+    }
+
+    .guide-how-step .ghs-num {
+      width: 1.85rem;
+      height: 1.85rem;
+      margin: 0 auto 0.45rem;
+      border-radius: 50%;
+      background: var(--forest);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+    }
+
+    .guide-how-step h4 {
+      margin: 0 0 0.25rem;
+      font-size: 0.92rem;
+      color: var(--forest);
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+    }
+
+    .guide-how-step p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.55;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+    }
+
+    .guide-tabs {
+      display: flex;
+      gap: 0.4rem;
+      margin: 1rem 0 0.85rem;
+      padding: 0.3rem;
+      background: var(--mist);
+      border-radius: 14px;
+      border: 1px solid var(--line);
+    }
+
+    .guide-tab {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.7rem 0.4rem;
+      border-radius: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+      min-width: 0;
+    }
+
+    .guide-tab.active {
+      background: #fff;
+      color: var(--forest);
+      box-shadow: 0 4px 14px rgba(20, 83, 45, 0.12);
+    }
+
+    .guide-panel { display: none; }
+    .guide-panel.active { display: block; }
+
+    .guide-acc {
+      background: #fff;
+      border: 1.5px solid var(--line);
+      border-radius: 16px;
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(12, 31, 23, 0.05);
+    }
+
+    .guide-acc-top {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      border: none;
+      background: linear-gradient(90deg, rgba(20,83,45,0.08), transparent);
+      padding: 0.85rem 0.9rem;
+      cursor: pointer;
+      text-align: right;
+      font: inherit;
+      color: inherit;
+    }
+
+    .guide-acc-top:hover {
+      background: linear-gradient(90deg, rgba(20,83,45,0.12), transparent);
+    }
+
+    .guide-acc-top h3 {
+      margin: 0;
+      flex: 1;
+      min-width: 0;
+      font-size: 1rem;
+      color: var(--forest);
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+      line-height: 2.2;
+      font-weight: 700;
+    }
+
+    .guide-acc-top .method-badge {
+      flex-shrink: 0;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.22rem 0.55rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .guide-acc.open .guide-acc-top {
+      background: linear-gradient(90deg, rgba(20,83,45,0.14), transparent);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .guide-acc.open .guide-acc-top .acc-chevron {
+      transform: rotate(180deg);
+      background: var(--leaf);
+      color: #fff;
+    }
+
+    .guide-acc-body {
+      display: none;
+      padding: 0.85rem 0.95rem 1rem;
+    }
+
+    .guide-acc.open .guide-acc-body {
+      display: block;
+    }
+
+    .pdf-card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .pdf-card-actions a {
+      border: 1.5px solid var(--leaf);
+      background: #fff;
+      color: var(--leaf);
+      font: inherit;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 999px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex: 1 1 auto;
+      justify-content: center;
+      min-width: 120px;
+    }
+
+    .pdf-card-actions a.primary {
+      background: var(--leaf);
+      color: #fff;
+    }
+
+    .pdf-frame-wrap {
+      background: #f3f0e8;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .pdf-frame-wrap iframe {
+      width: 100%;
+      height: 480px;
+      border: none;
+      display: block;
+      background: #fff;
+    }
+
+    .pdf-mobile-hint {
+      display: none;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0 0 0.5rem;
+      padding: 0.65rem 0.75rem;
+      background: var(--mist);
+      border-radius: 10px;
+    }
+
+    .guide-method-body {
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+      font-size: 1.02rem;
+      line-height: 2.55;
+      color: var(--ink);
+    }
+
+    .guide-method-body .gm-step {
+      margin: 0.85rem 0 0.3rem;
+      padding: 0.4rem 0.7rem;
+      background: var(--mist);
+      border-radius: 10px;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--forest);
+      line-height: 1.55;
+    }
+
+    .guide-method-body .gm-step:first-child {
+      margin-top: 0;
+    }
+
+    .guide-method-body ol {
+      margin: 0.3rem 0 0.65rem;
+      padding-inline-start: 1.3rem;
+    }
+
+    .guide-method-body li {
+      margin-bottom: 0.3rem;
+    }
+
+    .guide-method-body a {
+      color: var(--leaf);
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .guide-method-body .gm-note {
+      margin: 0.55rem 0;
+      padding: 0.6rem 0.75rem;
+      background: linear-gradient(180deg, #fff8e8, #fff);
+      border: 1px solid rgba(196, 160, 53, 0.4);
+      border-radius: 12px;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: #5c4a12;
+    }
+
+    .guide-method-body code {
+      font-family: Consolas, monospace;
+      background: var(--mist);
+      padding: 0.1rem 0.35rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      direction: ltr;
+      display: inline-block;
+      max-width: 100%;
+      word-break: break-all;
+    }
+
+    .guide-method-body p {
+      margin: 0.35rem 0;
+    }
+
+    @media (max-width: 900px) {
+      .guide-how {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+      }
+
+      .guide-how-step {
+        padding: 0.7rem 0.55rem;
+      }
+
+      .guide-how-step h4 { font-size: 0.85rem; }
+      .guide-how-step p { font-size: 0.72rem; line-height: 1.45; }
+
+      .guide-tab {
+        font-size: 0.8rem;
+        padding: 0.65rem 0.3rem;
+        flex-direction: column;
+        gap: 0.15rem;
+      }
+
+      .guide-tab i { font-size: 1.1rem; }
+
+      .guide-acc-top {
+        padding: 0.75rem 0.7rem;
+        gap: 0.4rem;
+      }
+
+      .guide-acc-top h3 {
+        font-size: 0.92rem;
+        line-height: 2.1;
+      }
+
+      .guide-acc-body {
+        padding: 0.7rem 0.7rem 0.9rem;
+      }
+
+      .guide-method-body {
+        font-size: 0.98rem;
+        line-height: 2.45;
+      }
+
+      /* Mobile: PDF iframe hide — native open/download better */
+      .pdf-frame-wrap { display: none; }
+      .pdf-mobile-hint { display: block; }
+
+      #view-guides .panel {
+        padding: 1rem 0.85rem 1.1rem;
+      }
+
+      #view-guides .step-head h2 {
+        font-size: 1.05rem;
+        line-height: 1.7;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .guide-how { grid-template-columns: 1fr; }
     }
 
     .thesis-mode-block {
@@ -1885,6 +2225,7 @@
         <button type="button" class="nav-tab" data-view="categories"><i class="bi bi-grid"></i> زمرے</button>
         <button type="button" class="nav-tab" data-view="prompts"><i class="bi bi-journal-text"></i> پرامپٹس</button>
         <button type="button" class="nav-tab" data-view="thesis"><i class="bi bi-mortarboard"></i> مقالہ</button>
+        <button type="button" class="nav-tab" data-view="guides"><i class="bi bi-book"></i> ہدایات</button>
         <button type="button" class="nav-tab" data-view="about"><i class="bi bi-person-badge"></i> تعارف</button>
       </div>
     </div>
@@ -2119,6 +2460,229 @@
       </div>
     </section>
 
+    <!-- View: ہدایات / Guides -->
+    <section class="app-view" id="view-guides" data-view="guides">
+      <div class="panel" style="margin-bottom:1rem">
+        <div class="step-head">
+          <div class="step-num"><i class="bi bi-book" style="font-size:0.95rem"></i></div>
+          <div>
+            <h2>ہدایات — سافٹ ویئر کیسے کام کرتا ہے؟</h2>
+            <p>چار آسان مراحل میں پرامپٹ تیار کریں اور کاپی کریں</p>
+          </div>
+        </div>
+
+        <div class="guide-how">
+          <div class="guide-how-step">
+            <div class="ghs-num">1</div>
+            <h4>موڈ چنیں</h4>
+            <p>NotebookLM، ChatGPT+شاملہ، یا Claude MCP</p>
+          </div>
+          <div class="guide-how-step">
+            <div class="ghs-num">2</div>
+            <h4>زمرہ منتخب کریں</h4>
+            <p>قرآن، حدیث، فقہ وغیرہ میں سے موضوع کا شعبہ</p>
+          </div>
+          <div class="guide-how-step">
+            <div class="ghs-num">3</div>
+            <h4>پرامپٹ کھولیں</h4>
+            <p>اپنا سوال لکھیں، شرائط دیکھیں یا شامل کریں</p>
+          </div>
+          <div class="guide-how-step">
+            <div class="ghs-num">4</div>
+            <h4>کاپی کریں</h4>
+            <p>پورا پرامپٹ کاپی کر کے اپنے AI ٹول میں چلایں</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="step-head" style="margin-bottom:0.5rem">
+          <div class="step-num">+</div>
+          <div>
+            <h2>شاملہ کنکشن — ٹیوٹوریل</h2>
+            <p>عکسی PDF یا لکھا ہوا طریقہ کار منتخب کریں</p>
+          </div>
+        </div>
+
+        <div class="guide-tabs" role="tablist">
+          <button type="button" class="guide-tab active" data-guide-tab="visual" role="tab" aria-selected="true">
+            <i class="bi bi-file-earmark-pdf"></i> ٹیوٹوریل عکسی
+          </button>
+          <button type="button" class="guide-tab" data-guide-tab="unicode" role="tab" aria-selected="false">
+            <i class="bi bi-fonts"></i> یونیکوڈ
+          </button>
+        </div>
+
+        <!-- عکسی PDFs — accordion: ek waqt mein ek -->
+        <div class="guide-panel active" id="guidePanelVisual" role="tabpanel">
+          <div class="guide-acc" data-acc-group="visual" data-pdf="guide-shamela-chatgpt.pdf#view=FitH">
+            <button type="button" class="guide-acc-top" onclick="toggleGuideAcc(this)" aria-expanded="false">
+              <span class="method-badge">PDF 1</span>
+              <h3>شاملہ لنک + ChatGPT</h3>
+              <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+            </button>
+            <div class="guide-acc-body">
+              <p class="pdf-mobile-hint"><i class="bi bi-phone"></i> موبائل پر PDF براؤزر میں کھولیں یا ڈاؤن لوڈ کریں۔</p>
+              <div class="pdf-card-actions">
+                <a class="primary" href="guide-shamela-chatgpt.pdf" target="_blank" rel="noopener">
+                  <i class="bi bi-box-arrow-up-left"></i> PDF کھولیں
+                </a>
+                <a href="guide-shamela-chatgpt.pdf" download>
+                  <i class="bi bi-download"></i> ڈاؤن لوڈ
+                </a>
+              </div>
+              <div class="pdf-frame-wrap">
+                <iframe data-src="guide-shamela-chatgpt.pdf#view=FitH" title="شاملہ لنک ChatGPT PDF"></iframe>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-acc" data-acc-group="visual" data-pdf="guide-claude-mcp.pdf#view=FitH">
+            <button type="button" class="guide-acc-top" onclick="toggleGuideAcc(this)" aria-expanded="false">
+              <span class="method-badge">PDF 2</span>
+              <h3>شاملہ + Claude Desktop</h3>
+              <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+            </button>
+            <div class="guide-acc-body">
+              <p class="pdf-mobile-hint"><i class="bi bi-phone"></i> موبائل پر PDF براؤزر میں کھولیں یا ڈاؤن لوڈ کریں۔</p>
+              <div class="pdf-card-actions">
+                <a class="primary" href="guide-claude-mcp.pdf" target="_blank" rel="noopener">
+                  <i class="bi bi-box-arrow-up-left"></i> PDF کھولیں
+                </a>
+                <a href="guide-claude-mcp.pdf" download>
+                  <i class="bi bi-download"></i> ڈاؤن لوڈ
+                </a>
+              </div>
+              <div class="pdf-frame-wrap">
+                <iframe data-src="guide-claude-mcp.pdf#view=FitH" title="Claude MCP PDF"></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- یونیکوڈ طریقہ کار — accordion -->
+        <div class="guide-panel" id="guidePanelUnicode" role="tabpanel">
+          <div class="guide-acc" data-acc-group="unicode">
+            <button type="button" class="guide-acc-top" onclick="toggleGuideAcc(this)" aria-expanded="false">
+              <span class="method-badge">طریقہ 1</span>
+              <h3>شاملہ لنک کو ChatGPT کے ساتھ منسلک کرنا</h3>
+              <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+            </button>
+            <div class="guide-acc-body">
+              <div class="guide-method-body">
+                <div class="gm-step">مرحلہ 1: شاملہ لنک پر اکاؤنٹ بنائیں</div>
+                <ol>
+                  <li>ویب سائٹ کھولیں: <a href="https://shamela.link/" target="_blank" rel="noopener">https://shamela.link/</a></li>
+                  <li>اپنا نام، ای میل اور پاس ورڈ درج کرکے اکاؤنٹ بنائیں۔</li>
+                  <li>اپنے ای میل ان باکس میں شاملہ لنک کی طرف سے موصول ہونے والا تصدیقی پیغام کھولیں۔</li>
+                  <li>Verify email پر کلک کرکے اپنے اکاؤنٹ کی تصدیق کریں۔</li>
+                  <li>اب اپنے اکاؤنٹ میں لاگ اِن ہوجائیں۔</li>
+                </ol>
+
+                <div class="gm-step">مرحلہ 2: ChatGPT میں Developer Mode فعال کریں</div>
+                <ol>
+                  <li>ChatGPT کھولیں اور اپنی پروفائل پر کلک کریں۔</li>
+                  <li>Settings میں جائیں۔</li>
+                  <li>Plugins کے حصے میں داخل ہوں۔</li>
+                  <li>اگر Developer Mode کا اختیار دستیاب ہو تو اسے فعال کریں۔</li>
+                </ol>
+                <div class="gm-note"><strong>نوٹ:</strong> یہ سہولت ہر اکاؤنٹ یا ورژن میں دستیاب ہونا ضروری نہیں۔</div>
+
+                <div class="gm-step">مرحلہ 3: نیا MCP کنیکٹر بنائیں</div>
+                <ol>
+                  <li>Plugins کے صفحے پر واپس جائیں۔</li>
+                  <li>اوپر موجود پلس (+) کے نشان پر کلک کریں۔</li>
+                  <li>Create app یا نیا MCP کنیکٹر بنانے کا اختیار منتخب کریں۔</li>
+                  <li>کنیکٹر کی تفصیلات درج کریں:
+                    <br>نام: <strong>مکتبہ شاملہ</strong>
+                    <br>سرور ایڈریس: <code>https://shamela.link/mcp</code>
+                  </li>
+                </ol>
+
+                <div class="gm-step">مرحلہ 4: کنکشن کی اجازت دیں</div>
+                <ol>
+                  <li>Authentication میں OAuth منتخب کریں، اگر یہی طریقہ دستیاب ہو۔</li>
+                  <li>حفاظتی تنبیہ پڑھ کر تصدیقی خانہ منتخب کریں۔</li>
+                  <li>Create پر کلک کریں۔</li>
+                  <li>اگر شاملہ لنک کا لاگ اِن صفحہ کھلے تو اپنے اکاؤنٹ میں داخل ہوں۔</li>
+                  <li>اجازت طلب کیے جانے پر تفصیلات دیکھ کر Allow پر کلک کریں۔</li>
+                </ol>
+
+                <div class="gm-step">مرحلہ 5: کنکشن کی جانچ کریں</div>
+                <ol>
+                  <li>ChatGPT میں Plugins یا Apps کے حصے میں مکتبہ شاملہ کا کنیکٹر دیکھیں۔ اگر اس کے ٹولز لوڈ ہوجائیں تو کنکشن قائم ہونے کی علامت ہے۔</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-acc" data-acc-group="unicode">
+            <button type="button" class="guide-acc-top" onclick="toggleGuideAcc(this)" aria-expanded="false">
+              <span class="method-badge">طریقہ 2</span>
+              <h3>مکتبہ شاملہ سافٹ ویئر کو Claude Desktop سے منسلک کرنا</h3>
+              <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+            </button>
+            <div class="guide-acc-body">
+              <div class="guide-method-body">
+                <div class="gm-step">مرحلہ 1: مکتبہ شاملہ سافٹ ویئر ڈاؤن لوڈ کریں</div>
+                <ol>
+                  <li>مکتبہ شاملہ کی ویب سائٹ کھولیں: <a href="https://shamela.ws/" target="_blank" rel="noopener">https://shamela.ws/</a></li>
+                  <li>وہاں سے مکتبہ شاملہ کا دستیاب سافٹ ویئر ڈاؤن لوڈ کریں۔</li>
+                  <li>اپنے کمپیوٹر میں اسے انسٹال کریں یا ZIP فائل کی صورت میں ہو تو Extract کریں۔</li>
+                  <li>سافٹ ویئر کھول کر تصدیق کریں کہ کتب کا ڈیٹا موجود ہے اور درست طور پر کام کر رہا ہے۔</li>
+                </ol>
+
+                <div class="gm-step">مرحلہ 2: مکتبہ شاملہ کے ڈیٹا فولڈر کا راستہ معلوم کریں</div>
+                <p>مکتبہ شاملہ کے اس فولڈر کا راستہ معلوم کریں جہاں کتب کا ڈیٹا محفوظ ہے۔ مثال کے طور پر:</p>
+                <p><code>F:\shamela4</code></p>
+                <div class="gm-note">یہ صرف ایک فرضی مثال ہے؛ آپ اپنے کمپیوٹر میں موجود اصل فولڈر کا راستہ استعمال کریں۔</div>
+
+                <div class="gm-step">مرحلہ 3: Claude Desktop App انسٹال کریں</div>
+                <ol>
+                  <li>یہ لنک کھولیں: <a href="https://claude.ai/download" target="_blank" rel="noopener">https://claude.ai/download</a></li>
+                  <li>Windows کے لیے Claude Desktop App ڈاؤن لوڈ کریں۔</li>
+                  <li>سافٹ ویئر انسٹال کریں اور کھولیں۔</li>
+                  <li>اپنے اکاؤنٹ سے سائن اِن کریں۔</li>
+                </ol>
+
+                <div class="gm-step">مرحلہ 4: مکتبہ شاملہ کی MCP فائل حاصل کریں</div>
+                <ol>
+                  <li>مکتبہ شاملہ کے سافٹ ویئر اور اس کے ساتھ فراہم کردہ MCP کی تنصیب یا انضمام کی ہدایات دیکھیں۔</li>
+                  <li>MCP فائل کو اپنے کمپیوٹر میں محفوظ کریں۔</li>
+                  <li>اگر سافٹ ویئر کے ساتھ MCP فائل فراہم نہیں کی گئی تو اسے الگ سے حاصل کرنا ہوگا؛ اس کا نام یا ڈاؤن لوڈ لنک تصدیق کے بغیر فرض نہیں کرنا چاہیے۔</li>
+                </ol>
+
+                <div class="gm-step">مرحلہ 5: MCP فائل کو Claude Desktop میں انسٹال کریں</div>
+                <ol>
+                  <li>Claude Desktop کھولیں۔</li>
+                  <li>Settings میں جائیں۔</li>
+                  <li>Extensions منتخب کریں۔</li>
+                  <li>Advanced settings کھولیں۔</li>
+                  <li>Install extension پر کلک کریں۔</li>
+                  <li>مکتبہ شاملہ کے MCP کی متعلقہ فائل منتخب کرکے انسٹال کریں۔</li>
+                </ol>
+
+                <div class="gm-step">مرحلہ 6: مکتبہ شاملہ کے ڈیٹا فولڈر سے منسلک کریں</div>
+                <ol>
+                  <li>Claude Desktop میں Settings → Extensions کھولیں۔</li>
+                  <li>مکتبہ شاملہ کی Extension کے سامنے Configure پر کلک کریں۔</li>
+                  <li>Directory path کے سامنے Browse منتخب کریں۔</li>
+                  <li>مکتبہ شاملہ کے سافٹ ویئر کا اصل ڈیٹا فولڈر منتخب کریں۔</li>
+                  <li>اگر Extension میں کتب یا فائلوں کے راستے کے لیے الگ خانہ موجود ہو تو اسے بھی متعلقہ راستے کے مطابق پُر کریں۔</li>
+                  <li>Save پر کلک کریں۔</li>
+                </ol>
+
+                <div class="gm-step">مرحلہ 7: کنکشن کی جانچ کریں</div>
+                <ol>
+                  <li>Claude Desktop میں نئی گفتگو کھولیں اور مکتبہ شاملہ کی کسی کتاب سے عبارت تلاش کرنے کو کہیں۔ تصدیق کریں کہ وہ مقامی کتب کے ڈیٹا سے نتائج حاصل کر رہا ہے۔</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Mobile bottom tabs -->
@@ -2138,6 +2702,10 @@
     <button type="button" class="bottom-tab" data-view="thesis">
       <i class="bi bi-mortarboard"></i>
       <span>مقالہ</span>
+    </button>
+    <button type="button" class="bottom-tab" data-view="guides">
+      <i class="bi bi-book"></i>
+      <span>ہدایات</span>
     </button>
     <button type="button" class="bottom-tab" data-view="about">
       <i class="bi bi-person-badge"></i>
@@ -3609,6 +4177,67 @@ ${condText}`;
 
     let currentView = "mode";
 
+    function unloadGuidePdf(acc) {
+      const frame = acc.querySelector("iframe");
+      if (frame && frame.getAttribute("src")) frame.removeAttribute("src");
+    }
+
+    function loadGuidePdf(acc) {
+      const frame = acc.querySelector("iframe");
+      if (!frame) return;
+      const src = frame.getAttribute("data-src") || acc.getAttribute("data-pdf");
+      if (src && !frame.getAttribute("src")) frame.setAttribute("src", src);
+    }
+
+    window.toggleGuideAcc = function(btn) {
+      const acc = btn.closest(".guide-acc");
+      if (!acc) return;
+      const group = acc.getAttribute("data-acc-group");
+      const willOpen = !acc.classList.contains("open");
+
+      // Same group: pehle sab band
+      document.querySelectorAll('.guide-acc[data-acc-group="' + group + '"]').forEach(el => {
+        el.classList.remove("open");
+        const top = el.querySelector(".guide-acc-top");
+        if (top) top.setAttribute("aria-expanded", "false");
+        unloadGuidePdf(el);
+      });
+
+      if (willOpen) {
+        acc.classList.add("open");
+        btn.setAttribute("aria-expanded", "true");
+        loadGuidePdf(acc);
+      }
+    };
+
+    function bindGuideTabs() {
+      document.querySelectorAll(".guide-tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+          const key = tab.getAttribute("data-guide-tab");
+          document.querySelectorAll(".guide-tab").forEach(t => {
+            const on = t === tab;
+            t.classList.toggle("active", on);
+            t.setAttribute("aria-selected", on ? "true" : "false");
+          });
+          const visual = document.getElementById("guidePanelVisual");
+          const unicode = document.getElementById("guidePanelUnicode");
+          if (visual) visual.classList.toggle("active", key === "visual");
+          if (unicode) unicode.classList.toggle("active", key === "unicode");
+
+          // Tab switch par accordion band rakho
+          const panel = key === "visual" ? visual : unicode;
+          if (panel) {
+            panel.querySelectorAll(".guide-acc").forEach(el => {
+              el.classList.remove("open");
+              const top = el.querySelector(".guide-acc-top");
+              if (top) top.setAttribute("aria-expanded", "false");
+              unloadGuidePdf(el);
+            });
+          }
+        });
+      });
+    }
+
     window.showView = function(view) {
       currentView = view;
       document.querySelectorAll(".app-view").forEach(el => {
@@ -3629,6 +4258,7 @@ ${condText}`;
     document.querySelectorAll(".nav-tab, .bottom-tab").forEach(btn => {
       btn.addEventListener("click", () => showView(btn.getAttribute("data-view")));
     });
+    bindGuideTabs();
 
     initStates();
     schedulePersist();
