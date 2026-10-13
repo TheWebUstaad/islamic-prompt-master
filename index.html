@@ -261,7 +261,8 @@
       #view-prompts,
       #view-thesis,
       #view-about,
-      #view-guides {
+      #view-guides,
+      #view-fatwa {
         max-height: none !important;
         overflow: visible !important;
         height: auto !important;
@@ -1367,79 +1368,135 @@
       color: #fff;
     }
 
-    .custom-prompt-panel {
-      background: var(--paper);
-      border: 1.5px dashed rgba(26, 107, 60, 0.35);
-      border-radius: 16px;
-      padding: 0;
-      margin-bottom: 1rem;
-      box-shadow: var(--shadow);
-      overflow: hidden;
+    .custom-save-block {
+      margin-top: 1.35rem;
+      margin-bottom: 0.5rem;
     }
 
-    .custom-prompt-toggle {
+    .custom-save-section-title {
+      margin: 0 0 0.65rem;
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 2.4;
+      color: var(--forest);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.15rem 0.25rem;
+    }
+
+    .custom-save-block.fatwa-tone .custom-save-section-title {
+      color: #7a5d10;
+    }
+
+    .custom-save-acc {
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(12, 31, 23, 0.06);
+    }
+
+    .custom-save-block.prompts-tone .custom-save-acc {
+      border: 2px solid rgba(26, 107, 60, 0.35);
+      background: linear-gradient(180deg, #eef7f1, #fff);
+    }
+
+    .custom-save-block.fatwa-tone .custom-save-acc {
+      border: 2px solid rgba(196, 160, 53, 0.55);
+      background: linear-gradient(180deg, #fff8e8, #fffef8);
+    }
+
+    .custom-save-acc-top {
       width: 100%;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
+      gap: 0.55rem;
       border: none;
       background: transparent;
       cursor: pointer;
-      padding: 0.95rem 1.1rem;
+      padding: 0.85rem 1rem;
       text-align: right;
       font: inherit;
+      color: inherit;
+    }
+
+    .custom-save-block.prompts-tone .custom-save-acc-top {
       color: var(--forest);
     }
 
-    .custom-prompt-toggle:hover {
-      background: rgba(26, 107, 60, 0.05);
+    .custom-save-block.fatwa-tone .custom-save-acc-top {
+      color: #7a5d10;
     }
 
-    .custom-prompt-toggle h4 {
-      margin: 0;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      color: var(--forest);
+    .custom-save-acc-top:hover {
+      background: rgba(12, 31, 23, 0.04);
     }
 
-    .custom-prompt-toggle .acc-chevron {
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      background: var(--mist);
-      color: var(--forest);
-      display: grid;
-      place-items: center;
+    .custom-save-acc-top .csa-label {
+      flex: 1;
+      min-width: 0;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .custom-save-acc-top .csa-hint {
       flex-shrink: 0;
-      transition: transform 0.25s ease, background 0.2s;
-      font-size: 0.95rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      opacity: 0.75;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
     }
 
-    .custom-prompt-panel.open .custom-prompt-toggle .acc-chevron {
+    .custom-save-acc.open .custom-save-acc-top .csa-hint {
+      display: none;
+    }
+
+    .custom-save-acc-top .acc-chevron {
+      width: 1.7rem;
+      height: 1.7rem;
+      font-size: 0.85rem;
+      background: rgba(26, 107, 60, 0.12);
+      color: var(--forest);
+    }
+
+    .custom-save-block.fatwa-tone .custom-save-acc-top .acc-chevron {
+      background: rgba(196, 160, 53, 0.25);
+      color: #7a5d10;
+    }
+
+    .custom-save-acc.open .custom-save-acc-top .acc-chevron {
       transform: rotate(180deg);
       background: var(--leaf);
       color: #fff;
     }
 
-    .custom-prompt-body {
+    .custom-save-block.fatwa-tone .custom-save-acc.open .custom-save-acc-top .acc-chevron {
+      background: var(--gold);
+      color: var(--ink);
+    }
+
+    .custom-save-acc-body {
       display: none;
-      padding: 0 1.1rem 1.15rem;
+      padding: 0 1rem 1.05rem;
       border-top: 1px solid var(--line);
     }
 
-    .custom-prompt-panel.open .custom-prompt-body {
+    .custom-save-acc.open .custom-save-acc-body {
       display: block;
-      padding-top: 0.9rem;
+      padding-top: 0.85rem;
     }
 
-    .custom-prompt-panel .sub {
-      margin: 0 0 0.85rem;
+    .custom-save-acc-body .sub {
+      margin: 0 0 0.75rem;
       color: var(--muted);
-      font-size: 0.88rem;
+      font-size: 0.85rem;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      line-height: 1.65;
     }
+
+    /* legacy alias for older markup refs */
+    .custom-prompt-panel { margin-top: 1.25rem; }
 
     .custom-form {
       display: grid;
@@ -2090,6 +2147,181 @@
       .guide-how { grid-template-columns: 1fr; }
     }
 
+    /* دار الافتاء MCP */
+    .fatwa-hero {
+      background: linear-gradient(135deg, #0c1f17 0%, #14532d 55%, #1a6b3c 100%);
+      color: #fff;
+      border-radius: calc(var(--radius) + 4px);
+      padding: 1.35rem 1.2rem 1.25rem;
+      margin-bottom: 1rem;
+      border-bottom: 3px solid var(--gold);
+      box-shadow: var(--shadow);
+    }
+
+    .fatwa-hero .fh-badge {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.28rem 0.7rem;
+      border-radius: 999px;
+      margin-bottom: 0.55rem;
+    }
+
+    .fatwa-hero h2 {
+      margin: 0 0 0.45rem;
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+      font-size: 1.3rem;
+      line-height: 2.45;
+    }
+
+    .fatwa-hero p {
+      margin: 0 0 0.75rem;
+      opacity: 0.92;
+      font-size: 0.92rem;
+      line-height: 1.75;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+    }
+
+    .fatwa-hero .fh-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: center;
+    }
+
+    .fatwa-hero .fh-url {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 999px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.78rem;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      direction: ltr;
+      word-break: break-all;
+    }
+
+    .fatwa-hero .fh-url code {
+      color: var(--gold-soft);
+      font-size: 0.78rem;
+    }
+
+    .fatwa-hero a.fh-link {
+      text-decoration: none;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 999px;
+      padding: 0.35rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+    }
+
+    .fatwa-filters {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+
+    @media (min-width: 700px) {
+      .fatwa-filters { grid-template-columns: 1fr 1fr; }
+    }
+
+    .fatwa-filters label {
+      display: block;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--forest);
+      margin-bottom: 0.35rem;
+    }
+
+    .fatwa-filters select {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 0.7rem 0.85rem;
+      font: inherit;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.9rem;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .fatwa-filters select:focus {
+      outline: none;
+      border-color: var(--leaf);
+      box-shadow: 0 0 0 3px rgba(26, 107, 60, 0.15);
+    }
+
+    .fatwa-info-box {
+      background: linear-gradient(160deg, rgba(196, 160, 53, 0.12), rgba(26, 107, 60, 0.06));
+      border: 1.5px solid rgba(196, 160, 53, 0.4);
+      border-radius: 14px;
+      padding: 0.9rem 1rem;
+      margin-bottom: 1rem;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: #3d4f45;
+    }
+
+    .fatwa-info-box strong { color: var(--forest); }
+
+    .fatwa-warn {
+      margin-top: 0.75rem;
+      padding: 0.75rem 0.9rem;
+      background: #fff8e8;
+      border: 1px solid rgba(196, 160, 53, 0.45);
+      border-radius: 12px;
+      font-size: 0.85rem;
+      line-height: 1.65;
+      color: #5c4a12;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+    }
+
+    .fatwa-topics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.85rem;
+    }
+
+    .fatwa-topic-btn {
+      border: 1.5px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      font: inherit;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .fatwa-topic-btn.active {
+      background: var(--forest);
+      border-color: var(--forest);
+      color: #fff;
+    }
+
+    .fatwa-topic-btn:hover:not(.active) {
+      border-color: rgba(26, 107, 60, 0.4);
+      color: var(--forest);
+    }
+
+    @media (max-width: 900px) {
+      .fatwa-hero h2 { font-size: 1.15rem; }
+      .bottom-tab span { font-size: 0.55rem; }
+      .fatwa-topic-btn { font-size: 0.75rem; padding: 0.4rem 0.6rem; }
+    }
+
     .thesis-mode-block {
       margin-top: 0.95rem;
       padding-top: 0.85rem;
@@ -2225,6 +2457,7 @@
         <button type="button" class="nav-tab" data-view="categories"><i class="bi bi-grid"></i> زمرے</button>
         <button type="button" class="nav-tab" data-view="prompts"><i class="bi bi-journal-text"></i> پرامپٹس</button>
         <button type="button" class="nav-tab" data-view="thesis"><i class="bi bi-mortarboard"></i> مقالہ</button>
+        <button type="button" class="nav-tab" data-view="fatwa"><i class="bi bi-building"></i> دار الافتاء</button>
         <button type="button" class="nav-tab" data-view="guides"><i class="bi bi-book"></i> ہدایات</button>
         <button type="button" class="nav-tab" data-view="about"><i class="bi bi-person-badge"></i> تعارف</button>
       </div>
@@ -2325,27 +2558,32 @@
           <div class="nb-links-grid" id="notebookLinksGrid" role="list" aria-label="اس زمرے کے NotebookLM لنکس"></div>
         </div>
       </div>
-      <div class="custom-prompt-panel" id="customPromptPanel">
-        <button type="button" class="custom-prompt-toggle" onclick="toggleCustomPromptPanel()" aria-expanded="false">
-          <h4><i class="bi bi-plus-square-dotted"></i> اس زمرے میں اپنا کسٹم پرامپٹ محفوظ کریں</h4>
-          <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
-        </button>
-        <div class="custom-prompt-body">
-          <p class="sub">عنوان، تحقیقی رخ، اور ڈیفالٹ موضوع لکھیں — براؤزر میں محفوظ رہے گا (اگلی بار بھی دستیاب)</p>
-          <div class="custom-form">
-            <input type="text" id="customPromptTitle" placeholder="پرامپٹ کا عنوان... مثلاً: معاصر مالیاتی مسائل کا حنفی حل">
-            <input type="text" id="customPromptFocus" placeholder="تحقیقی رخ / ہدف...">
-            <textarea id="customPromptTopic" rows="2" placeholder="ڈیفالٹ موضوع / سوال (اختیاری)"></textarea>
-            <div class="row-actions">
-              <button type="button" class="btn-save-custom" onclick="addCustomPrompt()">
-                <i class="bi bi-save2"></i> کسٹم پرامپٹ محفوظ کریں
-              </button>
-              <span class="save-hint"><i class="bi bi-hdd"></i> شرائط اور موضوعات بھی براؤزر میں خودکار محفوظ ہوتے ہیں</span>
+      <div id="promptsList" class="prompts-list"></div>
+
+      <div class="custom-save-block prompts-tone" id="customPromptPanel">
+        <h3 class="custom-save-section-title"><i class="bi bi-journal-plus"></i> اپنا خود کا پرامپٹ محفوظ کریں</h3>
+        <div class="custom-save-acc">
+          <button type="button" class="custom-save-acc-top" onclick="toggleCustomSaveAcc(this)" aria-expanded="false">
+            <span class="csa-label"><i class="bi bi-plus-circle"></i> نیا پرامپٹ بنانے کا فارم</span>
+            <span class="csa-hint">کلک کر کے کھولیں</span>
+            <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+          </button>
+          <div class="custom-save-acc-body">
+            <p class="sub">اس زمرے کے لیے عنوان اور تحقیقی رخ لکھ کر محفوظ کریں — اوپر والی فہرست میں نظر آئے گا۔</p>
+            <div class="custom-form">
+              <input type="text" id="customPromptTitle" placeholder="پرامپٹ کا عنوان... مثلاً: معاصر مالیاتی مسائل کا حنفی حل">
+              <input type="text" id="customPromptFocus" placeholder="تحقیقی رخ / ہدف...">
+              <textarea id="customPromptTopic" rows="2" placeholder="ڈیفالٹ موضوع / سوال (اختیاری)"></textarea>
+              <div class="row-actions">
+                <button type="button" class="btn-save-custom" onclick="addCustomPrompt()">
+                  <i class="bi bi-save2"></i> محفوظ کریں
+                </button>
+                <span class="save-hint"><i class="bi bi-hdd"></i> صرف اس زمرے میں محفوظ ہوگا</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div id="promptsList" class="prompts-list"></div>
     </section>
 
 
@@ -2679,6 +2917,155 @@
               </div>
             </div>
           </div>
+
+          <div class="guide-acc" data-acc-group="unicode">
+            <button type="button" class="guide-acc-top" onclick="toggleGuideAcc(this)" aria-expanded="false">
+              <span class="method-badge">طریقہ 3</span>
+              <h3>🧠 دار الافتاء ڈاٹ انفو MCP سرور — ChatGPT سے منسلک کرنا</h3>
+              <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+            </button>
+            <div class="guide-acc-body">
+              <div class="guide-method-body">
+                <p>دار الافتاء ڈاٹ انفو نے AI ماڈلز کے لیے معیاری Model Context Protocol (MCP) سرور فراہم کیا ہے۔ سرور یو آر ایل:</p>
+                <p><code>https://www.darulifta.info/mcp/fatwa</code></p>
+
+                <div class="gm-step">مرحلہ 1: ChatGPT کی Settings کھولیں</div>
+                <ol>
+                  <li>ChatGPT میں نیچے بائیں جانب اپنے Profile پر کلک کریں۔</li>
+                  <li>پھر Settings پر جائیں۔</li>
+                </ol>
+
+                <div class="gm-step">مرحلہ 2: Developer Mode فعال کریں</div>
+                <ol>
+                  <li>Settings میں Security and login کھولیں۔</li>
+                  <li>وہاں Developer mode کا آپشن تلاش کریں۔</li>
+                  <li>اسے ON کریں۔</li>
+                  <li>اگر وارننگ آئے تو اسے سمجھ کر قبول کریں۔</li>
+                </ol>
+
+                <div class="gm-step">مرحلہ 3: Plugins سیکشن کھولیں</div>
+                <ol>
+                  <li>Settings بند کرکے بائیں جانب Plugins پر جائیں۔</li>
+                  <li>اوپر دائیں جانب موجود + بٹن پر کلک کریں۔</li>
+                </ol>
+
+                <div class="gm-step">مرحلہ 4: نیا MCP Server شامل کریں</div>
+                <ol>
+                  <li>New Plugin کی ونڈو میں یہ تفصیلات درج کریں:
+                    <br>Name: <strong>Darulifta.info Search</strong>
+                    <br>Connection: <strong>Server URL</strong>
+                    <br>Server URL: <code>https://www.darulifta.info/mcp/fatwa</code>
+                    <br>Authentication: <strong>No Auth</strong>
+                  </li>
+                  <li>I understand and want to continue کو چیک کریں۔</li>
+                  <li>Create پر کلک کریں۔</li>
+                </ol>
+
+                <div class="gm-step">مرحلہ 5: MCP Server استعمال کریں</div>
+                <ol>
+                  <li>نیا Chat شروع کریں۔</li>
+                  <li>میسج باکس کے + بٹن پر کلک کریں، پھر tools کی فہرست میں <strong>Darulifta.info Search</strong> منتخب کریں۔</li>
+                  <li>اب شرعی سوال لکھیں، مثلاً: «جشن آزادی منانا کیسا ہے؟»</li>
+                </ol>
+
+                <div class="gm-note">
+                  <strong>مختصر طریقہ:</strong>
+                  Profile → Settings → Security and login → Developer mode ON → Plugins → + → New Plugin → Server URL → MCP URL درج کریں → No Auth → Continue → Create → New Chat → + → Darulifta.info Search
+                </div>
+
+                <div class="gm-note">
+                  <strong>⚠️ اہم:</strong>
+                  MCP Server کا مقصد AI کو متعلقہ فتاویٰ میں تلاش اور اصل مواد تک رسائی دینا ہے۔ AI کی اپنی تشریح یا خلاصے میں غلطی ممکن ہے، اس لیے حتمی شرعی حکم کے لیے مستند مفتی سے رجوع کرنا چاہیے۔
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- View: دار الافتاء ڈاٹ انفو — صرف فتاویٰ پرامپٹس -->
+    <section class="app-view" id="view-fatwa" data-view="fatwa">
+      <div class="fatwa-hero">
+        <div class="fh-badge">مستند فتاویٰ پرامپٹس</div>
+        <h2>دار الافتاء ڈاٹ انفو</h2>
+        <p>darulifta.info — نماز، روزہ، زکوٰۃ، حج، نکاح، تجارت و عصری مسائل کے خصوصی پرامپٹس</p>
+        <div class="fh-meta">
+          <a class="fh-link" href="https://darulifta.info" target="_blank" rel="noopener">
+            <i class="bi bi-box-arrow-up-right"></i> darulifta.info
+          </a>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:1rem">
+        <div class="step-head">
+          <div class="step-num">1</div>
+          <div>
+            <h2>دار الافتاء منتخب کریں</h2>
+            <p>سبھی ادارے یا کوئی مخصوص دار الافتاء چنیں</p>
+          </div>
+        </div>
+        <div class="fatwa-filters" style="grid-template-columns:1fr">
+          <div>
+            <label for="institutionSelect"><i class="bi bi-buildings"></i> دار الافتاء</label>
+            <select id="institutionSelect">
+              <option value="تمام معتبر دار الافتاء">تمام شامل دار الافتاء</option>
+              <option value="دار الافتاء دار العلوم دیوبند">دار الافتاء دار العلوم دیوبند (34,692)</option>
+              <option value="دار الافتاء والقضاء جامعہ بنوریہ کراچی">جامعہ بنوریہ کراچی (16,935)</option>
+              <option value="دار الافتاء الاخلاص کراچی">دار الافتاء الاخلاص کراچی (12,608)</option>
+              <option value="دار الافتاء جامعۃ الرشید کراچی">جامعۃ الرشید کراچی (9,766)</option>
+              <option value="دار الافتاء جامعہ عثمانیہ پشاور">جامعہ عثمانیہ پشاور (6,219)</option>
+              <option value="دار الافتاء جامعہ فاروقیہ کراچی">جامعہ فاروقیہ کراچی (2,704)</option>
+              <option value="دار الافتاء دار العلوم کراچی">دار العلوم کراچی (1,035)</option>
+              <option value="دار الافتاء جامعہ اشرفیہ لاہور">جامعہ اشرفیہ لاہور (983)</option>
+              <option value="دار الافتاء دار العلوم (وقف) دیوبند">دار العلوم (وقف) دیوبند (825)</option>
+              <option value="دار الافتاء صادق آباد">دار الافتاء صادق آباد (91)</option>
+              <option value="دار الافتاء خیر المدارس ملتان">خیر المدارس ملتان (56)</option>
+              <option value="دار الافتاء اشرف المدارس کراچی">اشرف المدارس کراچی (32)</option>
+              <option value="دارالافتاء جامعہ دارالعلوم یاسین القرآن کراچی">یاسین القرآن کراچی (28)</option>
+              <option value="دار الافتاء جامعہ حقانیہ اکوڑہ خٹک">حقانیہ اکوڑہ خٹک (6)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="step-head" style="margin-top:1.15rem;margin-bottom:0.35rem">
+          <div class="step-num">2</div>
+          <div>
+            <h2>فقہی موضوع / باب چنیں</h2>
+            <p>نماز، روزہ، زکوٰۃ وغیرہ — متعلقہ پرامپٹس نیچے آئیں گے</p>
+          </div>
+        </div>
+        <div class="fatwa-topics" id="fatwaTopicTabs" role="tablist" aria-label="فقہی موضوعات"></div>
+      </div>
+
+      <div class="prompts-bar">
+        <h3 class="urdu"><span id="fatwaActiveName">عام تلاش</span></h3>
+        <span class="mode-chip" id="fatwaModeBadge">پرامپٹس</span>
+      </div>
+      <div id="fatwaPromptsList" class="prompts-list"></div>
+
+      <div class="custom-save-block fatwa-tone" id="fatwaCustomPanel">
+        <h3 class="custom-save-section-title"><i class="bi bi-journal-plus"></i> اپنا خود کا فتویٰ پرامپٹ محفوظ کریں</h3>
+        <div class="custom-save-acc">
+          <button type="button" class="custom-save-acc-top" onclick="toggleCustomSaveAcc(this)" aria-expanded="false">
+            <span class="csa-label"><i class="bi bi-plus-circle"></i> نیا فتویٰ پرامپٹ بنانے کا فارم</span>
+            <span class="csa-hint">کلک کر کے کھولیں</span>
+            <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+          </button>
+          <div class="custom-save-acc-body">
+            <p class="sub">موجودہ موضوع (عام تلاش / نماز وغیرہ) میں اپنا پرامپٹ شامل کریں — براؤزر میں محفوظ رہے گا۔</p>
+            <div class="custom-form">
+              <input type="text" id="fatwaCustomTitle" placeholder="پرامپٹ کا عنوان... مثلاً: فتویٰ نمبر سے تلاش">
+              <input type="text" id="fatwaCustomFocus" placeholder="تحقیقی رخ / ہدف...">
+              <textarea id="fatwaCustomBody" rows="3" placeholder="پرامپٹ کا متن... «[TOPIC]» لکھیں جہاں سوال آئے"></textarea>
+              <div class="row-actions">
+                <button type="button" class="btn-save-custom" onclick="addFatwaCustomPrompt()">
+                  <i class="bi bi-save2"></i> محفوظ کریں
+                </button>
+                <span class="save-hint"><i class="bi bi-hdd"></i> موجودہ موضوع میں شامل ہوگا</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -2702,6 +3089,10 @@
     <button type="button" class="bottom-tab" data-view="thesis">
       <i class="bi bi-mortarboard"></i>
       <span>مقالہ</span>
+    </button>
+    <button type="button" class="bottom-tab" data-view="fatwa">
+      <i class="bi bi-building"></i>
+      <span>دار الافتاء</span>
     </button>
     <button type="button" class="bottom-tab" data-view="guides">
       <i class="bi bi-book"></i>
@@ -3213,6 +3604,9 @@
     let thesisMode = "notebooklm";
     let promptStates = {};
     let customPrompts = {};
+    let fatwaCustomPrompts = {};
+    let activeFatwaTopic = "general";
+    let currentView = "mode";
     let toastTimer = null;
     let saveTimer = null;
 
@@ -3223,8 +3617,13 @@
       category: "alturath_category_v1",
       thesisStates: "alturath_thesis_states_v1",
       thesisStep: "alturath_thesis_step_v1",
-      thesisMode: "alturath_thesis_mode_v1"
+      thesisMode: "alturath_thesis_mode_v1",
+      view: "alturath_view_v1",
+      fatwaTopic: "alturath_fatwa_topic_v1",
+      fatwaCustoms: "alturath_fatwa_customs_v1"
     };
+
+    const VALID_VIEWS = ["mode", "categories", "prompts", "thesis", "fatwa", "guides", "about"];
 
     function parseCategoryName(fullName) {
       const emojiMatch = fullName.match(/^(\S+)\s+/);
@@ -3254,11 +3653,14 @@
       saveJSON(STORAGE_KEYS.states, promptStates);
       saveJSON(STORAGE_KEYS.customs, customPrompts);
       saveJSON(STORAGE_KEYS.thesisStates, thesisStates);
+      saveJSON(STORAGE_KEYS.fatwaCustoms, fatwaCustomPrompts);
       try {
         localStorage.setItem(STORAGE_KEYS.mode, currentMode);
         localStorage.setItem(STORAGE_KEYS.category, activeCategoryId);
         localStorage.setItem(STORAGE_KEYS.thesisStep, activeThesisStepId);
         localStorage.setItem(STORAGE_KEYS.thesisMode, thesisMode);
+        localStorage.setItem(STORAGE_KEYS.view, currentView);
+        localStorage.setItem(STORAGE_KEYS.fatwaTopic, activeFatwaTopic);
       } catch (e) {}
       // lightweight cookie mirror for mode/category (compat)
       try {
@@ -3788,12 +4190,11 @@
       renderPrompts();
     };
 
-    window.toggleCustomPromptPanel = function() {
-      const panel = document.getElementById("customPromptPanel");
-      if (!panel) return;
-      const open = panel.classList.toggle("open");
-      const btn = panel.querySelector(".custom-prompt-toggle");
-      if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+    window.toggleCustomSaveAcc = function(btn) {
+      const acc = btn.closest(".custom-save-acc");
+      if (!acc) return;
+      const open = acc.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
     };
 
     window.addCustomPrompt = function() {
@@ -4175,7 +4576,918 @@ ${condText}`;
     };
 
 
-    let currentView = "mode";
+    /* ========== دار الافتاء ڈاٹ انفو — موضوعاتی فتاویٰ پرامپٹس ========== */
+    const fatwaTopics = [
+      { id: "general", label: "عام تلاش", icon: "🔍" },
+      { id: "taharah", label: "طہارت", icon: "💧" },
+      { id: "salah", label: "نماز", icon: "🕌" },
+      { id: "sawm", label: "روزہ", icon: "🌙" },
+      { id: "zakat", label: "زکوٰۃ", icon: "💰" },
+      { id: "hajj", label: "حج و عمرہ", icon: "🕋" },
+      { id: "nikah", label: "نکاح و طلاق", icon: "💍" },
+      { id: "tijarah", label: "تجارت", icon: "🏪" },
+      { id: "mirath", label: "وراثت", icon: "📜" },
+      { id: "contemporary", label: "عصری مسائل", icon: "📱" }
+    ];
+
+    const fatwaPromptsData = [
+      /* —— عام تلاش —— */
+      {
+        id: "single_fatwa_search", topic: "general",
+        title: "بنیادی فتویٰ سرچ مع نمبر و ماخذ",
+        tag: "تلاشِ فتویٰ",
+        focus: "darulifta.info سے سوال سے متعلق مستند فتاویٰ مع ادارہ اور فتویٰ نمبر",
+        baseTemplate: `دار الافتاء ڈاٹ انفو (darulifta.info) سے درج ذیل سوال پر مستند فتاویٰ تلاش کریں:
+
+مطلوبہ فقہی مسئلہ:
+«[TOPIC]»
+
+مطلوبہ تفصیلات:
+1. سب سے معتمد اور مطابقت رکھنے والے فتاویٰ کا متن/خلاصہ پیش کریں۔
+2. ہر فتویٰ کے ساتھ دار الافتاء کا نام، فتویٰ نمبر، اور سوال و جواب کا خلاصہ درج کریں۔
+3. فتویٰ میں ذکر کردہ کتبِ فقہ (شامی، ہدایہ، ہندیہ وغیرہ) کی اصل عربی عبارات مع حوالہ نقل کریں۔
+4. اگر لنک یا تاریخ دستیاب ہو تو فراہم کریں۔`
+      },
+      {
+        id: "comparative_fatwa_analysis", topic: "general",
+        title: "مختلف دار الافتاؤں کا تقابلی مطالعہ",
+        tag: "تقابلِ فتاویٰ",
+        focus: "دیوبند، بنوریہ، الرشید وغیرہ کے فتاویٰ میں اتفاق و اختلاف",
+        baseTemplate: `darulifta.info سے درج ذیل مسئلے پر مختلف دار الافتاؤں کے فتاویٰ کا تقابلی جائزہ تیار کریں:
+
+موضوع:
+«[TOPIC]»
+
+مطلوبہ ڈھانچہ:
+1. دار العلوم دیوبند کا مؤقف مع فتویٰ نمبر۔
+2. جامعۃ الرشید / دار العلوم کراچی کا مؤقف۔
+3. جامعہ بنوریہ یا دیگر اداروں کا نقطۂ نظر۔
+4. نقاطِ اتفاق اور نقاطِ اختلاف مع فقہی علت۔
+5. تقابلی جدول: ادارہ، فتویٰ نمبر، حکم، بنیادی دلیل۔`
+      },
+      {
+        id: "jurisprudential_texts_extraction", topic: "general",
+        title: "فتاویٰ سے فقہی نصوص و حوالہ جات",
+        tag: "تخریجِ جزئیات",
+        focus: "شامی، ہندیہ، مبسوط وغیرہ کی عبارات کا استخراج",
+        baseTemplate: `درج ذیل مسئلے پر darulifta.info کے فتاویٰ میں درج بنیادی کتبِ فقہ کے حوالے اور عربی جزئیات الگ کر کے دیں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. کن کتب (رد المحتار، عالمگیری، ہدایہ وغیرہ) سے استدلال ہوا؟
+2. عربی نصوص مکمل نقل کریں۔
+3. کتاب، باب، جلد، صفحہ درج کریں۔
+4. ادارہ اور فتویٰ نمبر ساتھ لکھیں۔`
+      },
+      {
+        id: "comprehensive_topic_indexing", topic: "general",
+        title: "موضوعاتی انڈیکس و شماریاتی رپورٹ",
+        tag: "انڈیکس",
+        focus: "موضوع پر کل فتاویٰ، اداروں کی تقسیم اور خلاصہ",
+        baseTemplate: `darulifta.info پر درج ذیل موضوع کے تمام فتاویٰ کی انڈیکسنگ اور رپورٹ بنائیں:
+
+مطلوبہ عنوان:
+«[TOPIC]»
+
+1. کن اداروں کے کتنے فتاویٰ؟
+2. کثرتِ فتاویٰ کس ادارے سے؟
+3. سب سے زیادہ دہرائے جانے والے 3–5 سوالات اور متفقہ خلاصہ۔
+4. لسٹ: ادارہ، عنوان، فتویٰ نمبر، بنیادی حکم۔`
+      },
+      {
+        id: "fatwa_number_lookup", topic: "general",
+        title: "فتویٰ نمبر سے تلاش و تصدیق",
+        tag: "تلاش · نمبر",
+        focus: "معلوم فتویٰ نمبر سے اصل متن، ادارہ اور متعلقہ حوالہ جات",
+        baseTemplate: `darulifta.info پر درج ذیل فتویٰ نمبر / حوالہ تلاش کر کے مکمل تفصیل دیں:
+
+مطلوبہ فتویٰ نمبر یا شناخت:
+«[TOPIC]»
+
+1. جاری کنندہ دار الافتاء کا نام۔
+2. اصل سوال اور جواب کا خلاصہ یا متن۔
+3. فتویٰ میں مذکور فقہی حوالہ جات۔
+4. اگر لنک دستیاب ہو تو فراہم کریں۔
+5. اگر نمبر نہ ملے تو قریبی مشابہ فتاویٰ تجویز کریں۔`
+      },
+      {
+        id: "fatwa_keyword_cluster", topic: "general",
+        title: "کلیدی الفاظ سے متعلقہ فتاویٰ کا مجموعہ",
+        tag: "تلاش · کی ورڈ",
+        focus: "ایک موضوع کے متعدد زاویوں پر فتاویٰ اکٹھا کرنا",
+        baseTemplate: `darulifta.info سے درج ذیل کلیدی موضوع/الفاظ پر متعلقہ فتاویٰ اکٹھے کریں:
+
+موضوع / کی ورڈز:
+«[TOPIC]»
+
+1. کم از کم 5–10 متعلقہ فتاویٰ کی فہرست (ادارہ + نمبر + مختصر حکم)۔
+2. سب سے اہم 3 فتاویٰ کا تفصیلی خلاصہ۔
+3. مشترک نقاط اور اختلافی نکات۔
+4. عملی نتیجہ ایک پیراگراف میں۔`
+      },
+      {
+        id: "fatwa_urdu_arabic_refs", topic: "general",
+        title: "اردو فتویٰ + عربی عبارات کی جوڑی",
+        tag: "تلاش · نصوص",
+        focus: "فتویٰ کا اردو خلاصہ کے ساتھ کتبِ فقہ کی عربی عبارت",
+        baseTemplate: `darulifta.info سے درج ذیل مسئلے پر فتاویٰ تلاش کریں اور عربی نصوص الگ نمایاں کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+ہر منتخب فتویٰ کے لیے:
+1. ادارہ + فتویٰ نمبر۔
+2. اردو میں حکم کا خلاصہ۔
+3. فتویٰ میں آئی ہوئی عربی عبارات «...» میں مکمل۔
+4. کتاب، جلد، صفحہ اگر مذکور ہو۔`
+      },
+      {
+        id: "fatwa_step_by_step_answer", topic: "general",
+        title: "مرحلہ وار عملی جواب (عام آدمی کے لیے)",
+        tag: "تلاش · عملی",
+        focus: "فتاویٰ کی روشنی میں آسان مرحلہ وار رہنمائی",
+        baseTemplate: `darulifta.info کے مستند فتاویٰ کی بنیاد پر درج ذیل مسئلے کا مرحلہ وار عملی جواب دیں:
+
+مسئلہ:
+«[TOPIC]»
+
+شکل:
+1. مختصر حکم (ایک جملہ)۔
+2. تفصیل 3–5 آسان مراحل میں۔
+3. جن فتاویٰ پر انحصار ہے ان کے ادارہ + نمبر۔
+4. احتیاطی نوٹ۔
+5. فرضی یا خود ساختہ فتویٰ بالکل نہ لکھیں۔`
+      },
+      {
+        id: "fatwa_conflict_resolve", topic: "general",
+        title: "ظاہری تضاد والے فتاویٰ میں تطبیق",
+        tag: "تلاش · تطبیق",
+        focus: "دو مختلف فتاویٰ میں فرق کی وجہ اور جمع/ترجیح",
+        baseTemplate: `darulifta.info سے درج ذیل موضوع پر ایسے فتاویٰ تلاش کریں جو بظاہر مختلف حکم دیتے ہوں، پھر تطبیق کریں:
+
+موضوع:
+«[TOPIC]»
+
+1. مختلف مؤقف والے فتاویٰ (ادارہ + نمبر + حکم)۔
+2. اختلاف کی فقہی وجہ۔
+3. ممکنہ تطبیق یا راجح قول مع دلیل۔
+4. احتیاط کا پہلو۔`
+      },
+
+      /* —— طہارت —— */
+      {
+        id: "taharah_wudu_masail", topic: "taharah",
+        title: "وضو کے مسائل — نواقض و شرائط",
+        tag: "طہارت · وضو",
+        focus: "وضو کے فرائض، سنن، نواقض اور عصری مسائل (کریم، نیل پالش وغیرہ)",
+        baseTemplate: `darulifta.info سے طہارت/وضو کے درج ذیل مسئلے پر فتاویٰ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+مطلوب:
+1. وضو کے فرائض/شرائط یا نواقض سے متعلق مستند فتاویٰ مع نمبر۔
+2. اگر مسئلہ عصری ہو (مثلاً کریم، میک اپ، زخم کی پٹی) تو صریح حکم اور دلیل۔
+3. کتبِ فقہ کی عبارات مع حوالہ۔
+4. مختلف دار الافتاؤں میں اختلاف ہو تو واضح کریں۔`
+      },
+      {
+        id: "taharah_ghusl_hayd", topic: "taharah",
+        title: "غسل، حیض و نفاس کے احکام",
+        tag: "طہارت · غسل",
+        focus: "غسلِ جنابت، حیض، استحاضہ، نفاس سے متعلق فتاویٰ",
+        baseTemplate: `darulifta.info سے غسل/حیض/نفاس کے مسئلے پر فتاویٰ نکالیں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. حکمِ شرعی مع فتویٰ نمبر اور ادارہ۔
+2. نماز، روزہ، قرآن چھونے وغیرہ پر اثر واضح کریں۔
+3. فقہی جزئیات اور حوالہ جات۔
+4. مشابہ فتاویٰ کی مختصر فہرست۔`
+      },
+      {
+        id: "taharah_najasaat", topic: "taharah",
+        title: "نجاسات اور پاک کرنے کے طریقے",
+        tag: "طہارت · نجاست",
+        focus: "نجاستِ غلیظہ/خفیفہ، کپڑے، برتن، فرش کی تطہیر",
+        baseTemplate: `darulifta.info سے نجاست/تطہیر کے مسئلے پر فتاویٰ دیں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. نجاست کی نوعیت اور حکم۔
+2. پاک کرنے کا شرعی طریقہ۔
+3. متعلقہ فتاویٰ نمبرز۔
+4. عصری اشیاء (واشنگ مشین، ٹشو وغیرہ) کا ذکر ہو تو واضح کریں۔`
+      },
+
+      /* —— نماز —— */
+      {
+        id: "salah_faraid_arkan", topic: "salah",
+        title: "نماز کے فرائض، ارکان و واجبات",
+        tag: "نماز · ارکان",
+        focus: "فرائضِ نماز، واجبات، سنن، مکروہات کی فتاویٰ سے توضیح",
+        baseTemplate: `darulifta.info سے نماز کے ارکان/واجبات سے متعلق مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. فرض، واجب یا سنت ہونے کی تصریح مع فتویٰ۔
+2. چھوٹ جانے یا غلطی پر سجدۂ سہو/اعادہ کا حکم۔
+3. فقہی دلائل مع حوالہ۔
+4. ادارہ اور فتویٰ نمبر۔`
+      },
+      {
+        id: "salah_times_qada", topic: "salah",
+        title: "اوقاتِ نماز، قضا اور جمع بین الصلاتین",
+        tag: "نماز · اوقات",
+        focus: "اوقات، قضا نمازیں، سفر میں قصر و جمع",
+        baseTemplate: `darulifta.info سے اوقاتِ نماز / قضا / قصر کے مسئلے پر فتاویٰ دیں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. شرعی حکم مع دلائل۔
+2. سفر، بیماری، یا دیر ہو جانے کی صورتیں۔
+3. متعلقہ فتاویٰ نمبرز اور ادارے۔
+4. عملی طریقہ کار اگر فتویٰ میں مذکور ہو۔`
+      },
+      {
+        id: "salah_jamaat_jumua", topic: "salah",
+        title: "جماعت، جمعہ، عیدین و تراویح",
+        tag: "نماز · جماعت",
+        focus: "جمعہ، عید، تراویح، امامت، صفوف کے مسائل",
+        baseTemplate: `darulifta.info سے جماعت/جمعہ/عید/تراویح کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. حکمِ شرعی اور شرائط۔
+2. خواتین، مسافر، یا خاص حالات کا حکم۔
+3. فتاویٰ مع نمبر۔
+4. اختلافِ اقوال ہو تو موازنہ۔`
+      },
+      {
+        id: "salah_modern", topic: "salah",
+        title: "نماز کے عصری مسائل (موبائل، تصویر، آفس)",
+        tag: "نماز · عصری",
+        focus: "موبائل پر اذان، تصویر والی جگہ، آفس میں نماز، ٹائم زون",
+        baseTemplate: `darulifta.info سے نماز کے عصری/جدید مسئلے پر فتاویٰ نکالیں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. مفتیانِ کرام کا مؤقف مع فتویٰ نمبر۔
+2. دلیل اور فقہی بنیاد۔
+3. متبادل حل اگر فتویٰ میں ہو۔
+4. متعدد اداروں کے اقوال کا خلاصہ۔`
+      },
+
+      /* —— روزہ —— */
+      {
+        id: "sawm_faraid_mufsidaat", topic: "sawm",
+        title: "روزہ کے فرائض اور مفسدات",
+        tag: "روزہ · مفسدات",
+        focus: "کیا چیز روزہ توڑتی ہے — کھانا، دھواں، انجکشن وغیرہ",
+        baseTemplate: `darulifta.info سے روزہ کے مفسدات/شرائط کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. روزہ ٹوٹتا ہے یا نہیں؟ — صریح حکم۔
+2. قضا، کفارہ، یا صرف قضا؟
+3. فتاویٰ نمبرز اور فقہی حوالہ جات۔
+4. مشابہ جزئیات کا ذکر۔`
+      },
+      {
+        id: "sawm_ramadan_itikaf", topic: "sawm",
+        title: "رمضان، اعتکاف اور تراویح سے وابستہ",
+        tag: "روزہ · رمضان",
+        focus: "رؤیتِ ہلال، اعتکاف، سحری و افطاری کے مسائل",
+        baseTemplate: `darulifta.info سے رمضان/اعتکاف متعلقہ مسئلہ پر فتاویٰ دیں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. شرعی حکم مع ادارہ اور نمبر۔
+2. شرائط اور مکروہات۔
+3. عصری پہلو (مثلاً کیمرہ سے رؤیت) ہو تو واضح کریں۔
+4. دلائل مع حوالہ۔`
+      },
+      {
+        id: "sawm_excuses_fidya", topic: "sawm",
+        title: "اعذار، قضا اور فدیہ",
+        tag: "روزہ · فدیہ",
+        focus: "بیماری، حمل، رضاعت، بڑھاپا — قضا یا فدیہ",
+        baseTemplate: `darulifta.info سے روزہ کے عذر/قضا/فدیہ کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. قضا واجب ہے یا فدیہ یا دونوں؟
+2. مقدارِ فدیہ اگر ہو۔
+3. متعلقہ فتاویٰ مع نمبر۔
+4. طبی/عصری اعذار پر مفتیان کا مؤقف۔`
+      },
+
+      /* —— زکوٰۃ —— */
+      {
+        id: "zakat_nisab_amwal", topic: "zakat",
+        title: "نصاب، سونا چاندی اور نقدی کی زکوٰۃ",
+        tag: "زکوٰۃ · نصاب",
+        focus: "نصاب، سالِ حول، سونا/چاندی/کرنسی کی زکوٰۃ",
+        baseTemplate: `darulifta.info سے زکوٰۃِ نقدین/سونا کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. نصاب اور شرحِ زکوٰۃ۔
+2. حول کا حکم۔
+3. فتاویٰ مع نمبر اور حساب کی مثال اگر ہو۔
+4. قرض، زیوراتِ استعمال وغیرہ کا حکم۔`
+      },
+      {
+        id: "zakat_tijarah_shares", topic: "zakat",
+        title: "تجارتی مال، شیئرز اور کاروباری زکوٰۃ",
+        tag: "زکوٰۃ · تجارت",
+        focus: "مالِ تجارت، اسٹاک، شیئرز، پارٹنرشپ کی زکوٰۃ",
+        baseTemplate: `darulifta.info سے تجارتی زکوٰۃ کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. زکوٰۃ واجب ہے یا نہیں اور کیسے حساب ہو؟
+2. شیئرز/کمپنی/پارٹنر کی صورت۔
+3. فتاویٰ نمبرز۔
+4. فقہی بنیاد مع حوالہ۔`
+      },
+      {
+        id: "zakat_mustahiq_modern", topic: "zakat",
+        title: "مستحقین اور عصری ادائیگی (بینک، آن لائن)",
+        tag: "زکوٰۃ · مصارف",
+        focus: "مصارفِ زکوٰۃ، بینک ٹرانسفر، اداروں کو زکوٰۃ",
+        baseTemplate: `darulifta.info سے مصارفِ زکوٰۃ / ادائیگی کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. کون مستحق ہے؟
+2. بینک/آن لائن/ادارے کو دینا جائز ہے؟
+3. فتاویٰ مع نمبر۔
+4. شرائط اور احتیاطیں۔`
+      },
+
+      /* —— حج و عمرہ —— */
+      {
+        id: "hajj_wajib_shuroot", topic: "hajj",
+        title: "حج کی فرضیت، شرائط اور نیابت",
+        tag: "حج · فرضیت",
+        focus: "کب حج فرض ہے، قرض، نیابتِ حج",
+        baseTemplate: `darulifta.info سے حج کی فرضیت/نیابت کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. فرضیت کی شرائط۔
+2. نیابت یا تاخیر کا حکم۔
+3. فتاویٰ مع نمبر۔
+4. دلائل۔`
+      },
+      {
+        id: "hajj_manasik_mistakes", topic: "hajj",
+        title: "مناسک، احرام اور غلطیوں کے احکام",
+        tag: "حج · مناسک",
+        focus: "احرام، طواف، سعی، رمی — خلل اور دم",
+        baseTemplate: `darulifta.info سے مناسکِ حج/عمرہ کی غلطی کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. کیا ہوا اور شرعی نتیجہ (اعادہ، دم، صدقہ)۔
+2. فتاویٰ مع نمبر۔
+3. عملی رہنمائی۔
+4. فقہی حوالہ جات۔`
+      },
+      {
+        id: "hajj_women_modern", topic: "hajj",
+        title: "خواتین، محرم اور عصری حج/عمرہ پیکجز",
+        tag: "حج · عصری",
+        focus: "محرم، حیض میں طواف، پیکج کنٹریکٹ کے مسائل",
+        baseTemplate: `darulifta.info سے حج/عمرہ کے عصری یا خواتین سے متعلق مسئلے پر فتاویٰ دیں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. حکمِ شرعی۔
+2. شرائط اور متبادل۔
+3. فتاویٰ نمبرز۔
+4. اختلاف ہو تو موازنہ۔`
+      },
+
+      /* —— نکاح و طلاق —— */
+      {
+        id: "nikah_shuroot_wali", topic: "nikah",
+        title: "نکاح کی شرائط، ولی اور گواہ",
+        tag: "نکاح · شرائط",
+        focus: "ارکانِ نکاح، ولی، گواہ، مہر",
+        baseTemplate: `darulifta.info سے نکاح کی شرائط کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. نکاح درست ہے یا نہیں؟
+2. ولی/گواہ/مہر کا حکم۔
+3. فتاویٰ مع نمبر۔
+4. اگر فساد ہو تو حل (تجدیدِ نکاح وغیرہ)۔`
+      },
+      {
+        id: "talaq_types_idda", topic: "nikah",
+        title: "طلاق، خلع اور عدت",
+        tag: "طلاق · عدت",
+        focus: "طلاقِ رجعی/بائن، ثلاثہ، خلع، عدت",
+        baseTemplate: `darulifta.info سے طلاق/خلع/عدت کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. طلاق واقع ہوئی یا نہیں اور کون سی قسم؟
+2. عدت اور رجوع کا حکم۔
+3. فتاویٰ مع نمبر اور دلائل۔
+4. احتیاطی نوٹ اگر مفتی نے لکھا ہو۔`
+      },
+      {
+        id: "nikah_modern", topic: "nikah",
+        title: "عصری نکاح (آن لائن، بین المذاہب، پولگیمی)",
+        tag: "نکاح · عصری",
+        focus: "ویڈیو نکاح، غیر مسلم سے نکاح، دوسری شادی",
+        baseTemplate: `darulifta.info سے نکاح کے عصری مسئلے پر فتاویٰ نکالیں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. جواز/عدمِ جواز مع شرائط۔
+2. متعدد اداروں کے اقوال۔
+3. فتویٰ نمبرز۔
+4. عملی رہنمائی۔`
+      },
+
+      /* —— تجارت —— */
+      {
+        id: "tijarah_riba_bank", topic: "tijarah",
+        title: "سود، بینک اور اسلامی فنانس",
+        tag: "تجارت · ربا",
+        focus: "بینک سود، مرابحہ، مضاربہ، انشورنس",
+        baseTemplate: `darulifta.info سے سود/بینکنگ/اسلامی فنانس کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. حکمِ شرعی (حرام، جائز مشروط، مکروہ)۔
+2. متبادل شرعی صورتیں۔
+3. فتاویٰ مع نمبر۔
+4. دلائل اور حوالہ جات۔`
+      },
+      {
+        id: "tijarah_bay_shuroot", topic: "tijarah",
+        title: "بیع، قبضہ اور آن لائن خریداری",
+        tag: "تجارت · بیع",
+        focus: "بیع الصرف، قسطوں پر خرید، ای کامرس، ڈراپ شپنگ",
+        baseTemplate: `darulifta.info سے بیع/آن لائن تجارت کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. عقد درست ہے؟ قبضہ/شرط کا حکم؟
+2. فتاویٰ مع نمبر۔
+3. ممنوع صورتیں اور متبادل۔
+4. فقہی جزئیات۔`
+      },
+      {
+        id: "tijarah_partnership", topic: "tijarah",
+        title: "شراکت، نقصان اور تنازعات",
+        tag: "تجارت · شراکت",
+        focus: "شراکت داری، منافع و نقصان، فسخِ معاملہ",
+        baseTemplate: `darulifta.info سے کاروباری شراکت/تنازع کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. شرعی تقسیمِ منافع/نقصان۔
+2. ثالثی یا فتاویٰ قضاء کے نظائر۔
+3. فتویٰ نمبرز۔
+4. عملی تصفیے کی ہدایات۔`
+      },
+
+      /* —— وراثت —— */
+      {
+        id: "mirath_shares", topic: "mirath",
+        title: "حصصِ میراث اور ذووالفروض",
+        tag: "وراثت · حصص",
+        focus: "وارثین کے حصے، عصبات، مسائلِ عول و رد",
+        baseTemplate: `darulifta.info سے میراث کے حصص کا مسئلہ حل/تلاش کریں:
+
+مسئلہ / ورثاء کی تفصیل:
+«[TOPIC]»
+
+1. ہر وارث کا شرعی حصہ۔
+2. حساب کے مراحل۔
+3. مستند فتاویٰ یا نظائر مع نمبر۔
+4. اگر پیچیدگی ہو تو واضح نوٹ۔`
+      },
+      {
+        id: "mirath_wasiyyah_hibah", topic: "mirath",
+        title: "وصیت، ہبہ اور ترکہ کی تقسیم",
+        tag: "وراثت · وصیت",
+        focus: "وصیتِ ثلث، ہبہ در حیات، نام نہاد وراثت",
+        baseTemplate: `darulifta.info سے وصیت/ہبہ/ترکہ کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. وصیت یا ہبہ نافذ ہے؟
+2. وراثت پر اثر۔
+3. فتاویٰ مع نمبر۔
+4. دلائل۔`
+      },
+
+      /* —— عصری مسائل —— */
+      {
+        id: "cont_crypto_insurance", topic: "contemporary",
+        title: "کرپٹو، انشورنس اور ڈیجیٹل crore",
+        tag: "عصری · مالیات",
+        focus: "بٹ کوائن، تکافل، لائف انشورنس، فاریکس",
+        baseTemplate: `darulifta.info سے عصری مالی مسئلے پر فتاویٰ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. جواز/عدمِ جواز مع شرائط۔
+2. مختلف دار الافتاؤں کے اقوال کا خلاصہ۔
+3. فتویٰ نمبرز۔
+4. متبادل شرعی حل۔`
+      },
+      {
+        id: "cont_medical_social", topic: "contemporary",
+        title: "طبی و سماجی عصری مسائل",
+        tag: "عصری · طب",
+        focus: "آئی وی ایف، اعضاء کی پیوند کاری، ویکسین، سوشل میڈیا",
+        baseTemplate: `darulifta.info سے طبی/سماجی عصری مسئلے پر فتاویٰ دیں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. شرعی حکم مع دلائل۔
+2. شرائط اور حدود۔
+3. فتاویٰ مع نمبر اور ادارہ۔
+4. احتیاطی ہدایات۔`
+      },
+      {
+        id: "cont_media_images", topic: "contemporary",
+        title: "تصویر، ویڈیو اور سوشل میڈیا",
+        tag: "عصری · میڈیا",
+        focus: "تصویر کشی، یوٹیوب، اشتہارات، گیمز",
+        baseTemplate: `darulifta.info سے تصویر/میڈیا/سوشل میڈیا کا مسئلہ تلاش کریں:
+
+مسئلہ:
+«[TOPIC]»
+
+1. حکمِ شرعی۔
+2. استثنائات اور شرائط۔
+3. فتاویٰ نمبرز۔
+4. متعدد اقوال کا موازنہ اگر ہو۔`
+      },
+      {
+        id: "court_panchayat_disputes", topic: "contemporary",
+        title: "تنازعات، ثالثی اور دار القضاء",
+        tag: "قضاء · تنازع",
+        focus: "خاندانی/مالی تنازعات کے فتاویٰ قضاء",
+        baseTemplate: `darulifta.info سے نزاعی/معاملاتی مسئلے کے سابقہ فتاویٰ اور ثالثی فیصلے تلاش کریں:
+
+مسئلہ و نزاع:
+«[TOPIC]»
+
+1. ملتے جلتے فتاویٰ قضاء۔
+2. فریقین کے حقوق اور ثالثی کے اصول۔
+3. فتویٰ نمبرز اور ادارے۔
+4. شرعی تصفیے کی رہنمائی۔`
+      }
+    ];
+
+    let selectedInstitution = "تمام معتبر دار الافتاء";
+    let openFatwaIdx = null;
+    const fatwaStates = {};
+    function ensureFatwaState(id) {
+      if (!fatwaStates[id]) fatwaStates[id] = { customTopic: "", extraConditions: [] };
+      return fatwaStates[id];
+    }
+    fatwaPromptsData.forEach(p => ensureFatwaState(p.id));
+
+    function getFatwaIntro(institution) {
+      const instPhrase = institution === "تمام معتبر دار الافتاء"
+        ? "دار الافتاء ڈاٹ انفو (darulifta.info) پر موجود تمام معتبر دار الافتاؤں"
+        : `دار الافتاء ڈاٹ انفو پر موجود ادارہ «${institution}»`;
+      return `بطورِ محققِ فقہ و فتاویٰ، ${instPhrase} کے مستند فتاویٰ کی روشنی میں درج ذیل مسئلے کی دقیق تحقیق اور فتاویٰ کے ریکارڈ پیش کریں:`;
+    }
+
+    function getFatwaConditions(institution) {
+      const conds = [
+        "صرف اور صرف دار الافتاء ڈاٹ انفو (darulifta.info) پر موجود معتبر فتاویٰ کے ریکارڈ سے جواب تیار کیا جائے، اپنی طرف سے کوئی خود ساختہ فتویٰ نہ دیا جائے۔",
+        "ہر فتوے کے ساتھ جاری کنندہ دار الافتاء کا نام اور فتویٰ نمبر صراحتاً درج ہو۔",
+        "فتویٰ میں ذکر کردہ فقہی متون و شروح (شامی، عالمگیری، ہدایہ وغیرہ) کے اصل عربی اقتباسات مع حوالہ ہو بہو نقل کیے جائیں۔"
+      ];
+      if (institution !== "تمام معتبر دار الافتاء") {
+        conds.push(`ترجیحاً «${institution}» کے جاری کردہ فتاویٰ کو اولیت دی جائے اور اسی ادارے کے فتاویٰ نمبرز کو نمایاں کیا جائے۔`);
+      }
+      return conds;
+    }
+
+    function getActiveFatwaTopicMeta() {
+      return fatwaTopics.find(t => t.id === activeFatwaTopic) || fatwaTopics[0];
+    }
+
+    function getFatwaCustomsForTopic(topicId) {
+      const list = Array.isArray(fatwaCustomPrompts[topicId]) ? fatwaCustomPrompts[topicId] : [];
+      return list.map(p => ({
+        id: p.id,
+        topic: topicId,
+        title: p.title,
+        tag: "کسٹم",
+        focus: p.focus,
+        baseTemplate: p.baseTemplate || `darulifta.info سے درج ذیل مسئلے پر فتاویٰ تلاش کریں:\n\n«[TOPIC]»`,
+        isCustom: true
+      }));
+    }
+
+    function getFilteredFatwaPrompts() {
+      const builtins = fatwaPromptsData.filter(p => p.topic === activeFatwaTopic);
+      return builtins.concat(getFatwaCustomsForTopic(activeFatwaTopic));
+    }
+
+    function renderFatwaTopicTabs() {
+      const wrap = document.getElementById("fatwaTopicTabs");
+      if (!wrap) return;
+      wrap.innerHTML = fatwaTopics.map(t => {
+        const count = fatwaPromptsData.filter(p => p.topic === t.id).length
+          + (Array.isArray(fatwaCustomPrompts[t.id]) ? fatwaCustomPrompts[t.id].length : 0);
+        return `<button type="button" class="fatwa-topic-btn ${t.id === activeFatwaTopic ? "active" : ""}" data-fatwa-topic="${t.id}">
+          ${t.icon} ${t.label} (${count})
+        </button>`;
+      }).join("");
+      wrap.querySelectorAll(".fatwa-topic-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeFatwaTopic = btn.getAttribute("data-fatwa-topic");
+          try { localStorage.setItem(STORAGE_KEYS.fatwaTopic, activeFatwaTopic); } catch (e) {}
+          openFatwaIdx = null;
+          renderFatwaTopicTabs();
+          renderFatwaPrompts();
+        });
+      });
+    }
+
+    function renderFatwaPrompts() {
+      const list = document.getElementById("fatwaPromptsList");
+      const nameEl = document.getElementById("fatwaActiveName");
+      const badge = document.getElementById("fatwaModeBadge");
+      if (!list) return;
+
+      const topicMeta = getActiveFatwaTopicMeta();
+      const filtered = getFilteredFatwaPrompts();
+
+      if (nameEl) {
+        const inst = selectedInstitution === "تمام معتبر دار الافتاء" ? "تمام ادارے" : selectedInstitution;
+        nameEl.textContent = `${topicMeta.icon} ${topicMeta.label} — ${inst}`;
+      }
+      if (badge) badge.textContent = filtered.length + " پرامپٹس";
+
+      const intro = getFatwaIntro(selectedInstitution);
+      const defaultConds = getFatwaConditions(selectedInstitution);
+
+      if (!filtered.length) {
+        list.innerHTML = `<div class="empty-search" style="display:block">اس موضوع پر ابھی پرامپٹ نہیں</div>`;
+        return;
+      }
+
+      list.innerHTML = filtered.map((p, idx) => {
+        const state = ensureFatwaState(p.id);
+        const isOpen = openFatwaIdx === idx;
+        const bodyPreview = p.baseTemplate.replace("[TOPIC]", state.customTopic || "…");
+        const customBadge = p.isCustom ? '<span class="custom-badge"><i class="bi bi-person-fill"></i> کسٹم</span>' : '';
+        const delBtn = p.isCustom
+          ? `<button type="button" class="btn-del-custom" onclick="deleteFatwaCustomPrompt('${p.id}')"><i class="bi bi-trash"></i> حذف</button>`
+          : '';
+        return `
+          <article class="prompt-card ${isOpen ? "open" : ""}" data-fatwa-idx="${idx}">
+            <button type="button" class="prompt-top" onclick="toggleFatwaPrompt(${idx})" aria-expanded="${isOpen ? "true" : "false"}">
+              <h4><i class="bi bi-file-earmark-check"></i> ${escapeHtml(p.title)}${customBadge}</h4>
+              <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+            </button>
+            <div class="prompt-body">
+              <div class="prompt-actions">
+                <button class="btn-copy" type="button" onclick="copyFatwaPrompt('${p.id}')">
+                  <i class="bi bi-clipboard-check"></i> مکمل پرامپٹ کاپی کریں
+                </button>
+                ${delBtn}
+              </div>
+              <div class="intro-line">${intro}</div>
+              <div class="focus-block">
+                <span class="tag">${escapeHtml(p.tag)}</span>
+                <div><strong>${escapeHtml(p.focus)}</strong></div>
+              </div>
+              <div class="topic-box">
+                <div class="topic-label-row">
+                  <label for="fatwaTopic_${p.id}"><i class="bi bi-pencil-square"></i> مطلوبہ فقہی مسئلہ / سوال</label>
+                  <button type="button" class="btn-clear-topic" onclick="clearFatwaTopic('${p.id}')">
+                    <i class="bi bi-eraser"></i> موضوع صاف کریں
+                  </button>
+                </div>
+                <textarea id="fatwaTopic_${p.id}" rows="2" oninput="updateFatwaTopic('${p.id}', this.value)" placeholder="اپنا شرعی مسئلہ یا سوال یہاں درج کریں...">${escapeHtml(state.customTopic)}</textarea>
+                <div class="hint">آپ کا سوال کاپی شدہ پرامپٹ میں شامل ہو جائے گا۔</div>
+              </div>
+              <div class="detail-fold ${openDetailFolds.has("fatwa-body-" + p.id) ? "open" : ""}" data-fold-id="fatwa-body-${p.id}">
+                <button type="button" class="detail-fold-btn" onclick="toggleDetailFold(this)" aria-expanded="${openDetailFolds.has("fatwa-body-" + p.id) ? "true" : "false"}">
+                  <span class="detail-fold-label"><i class="bi bi-card-text"></i> متنِ پرامپٹ</span>
+                  <span class="detail-fold-meta">کلک کر کے دیکھیں</span>
+                  <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+                </button>
+                <div class="detail-fold-body">
+                  <div style="white-space:pre-wrap;font-family:'Amiri',serif;font-size:1.05rem;line-height:2;">${escapeHtml(bodyPreview)}</div>
+                </div>
+              </div>
+              <div class="detail-fold ${openDetailFolds.has("fatwa-conds-" + p.id) ? "open" : ""}" data-fold-id="fatwa-conds-${p.id}">
+                <button type="button" class="detail-fold-btn" onclick="toggleDetailFold(this)" aria-expanded="${openDetailFolds.has("fatwa-conds-" + p.id) ? "true" : "false"}">
+                  <span class="detail-fold-label"><i class="bi bi-shield-check"></i> لازمی فقہی شرائط</span>
+                  <span class="detail-fold-meta">کلک کر کے دیکھیں</span>
+                  <span class="acc-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+                </button>
+                <div class="detail-fold-body">
+                  <ol class="conds-list">
+                    ${defaultConds.map(c => `<li>${c}</li>`).join("")}
+                    ${state.extraConditions.map((ec, ecIdx) => `
+                      <li class="extra-cond">
+                        ${escapeHtml(ec)}
+                        <button type="button" class="remove-cond" onclick="removeFatwaCondition('${p.id}',${ecIdx})"><i class="bi bi-x"></i> حذف</button>
+                      </li>
+                    `).join("")}
+                  </ol>
+                </div>
+              </div>
+              <div class="add-cond">
+                <label><i class="bi bi-plus-circle-fill"></i> اضافی شرط (اختیاری)</label>
+                <div class="add-row">
+                  <input type="text" id="fatwaCond_${p.id}" placeholder="مثال: صرف دیوبند کا فتویٰ ہو / جواب مختصر ہو...">
+                  <button type="button" onclick="addFatwaCondition('${p.id}')">+ شرط شامل کریں</button>
+                </div>
+              </div>
+              <div class="prompt-actions bottom">
+                <button class="btn-copy" type="button" onclick="copyFatwaPrompt('${p.id}')">
+                  <i class="bi bi-clipboard-check"></i> مکمل پرامپٹ کاپی کریں
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    window.toggleFatwaPrompt = function(idx) {
+      openFatwaIdx = openFatwaIdx === idx ? null : idx;
+      document.querySelectorAll("#fatwaPromptsList .prompt-card").forEach(card => {
+        const cardIdx = Number(card.getAttribute("data-fatwa-idx"));
+        const isOpen = cardIdx === openFatwaIdx;
+        card.classList.toggle("open", isOpen);
+        const btn = card.querySelector(".prompt-top");
+        if (btn) btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+    };
+
+    window.updateFatwaTopic = function(id, val) {
+      ensureFatwaState(id).customTopic = val;
+    };
+
+    window.clearFatwaTopic = function(id) {
+      ensureFatwaState(id).customTopic = "";
+      const input = document.getElementById("fatwaTopic_" + id);
+      if (input) { input.value = ""; input.focus(); }
+    };
+
+    window.addFatwaCondition = function(id) {
+      const input = document.getElementById("fatwaCond_" + id);
+      const val = (input && input.value || "").trim();
+      if (!val) return;
+      ensureFatwaState(id).extraConditions.push(val);
+      openDetailFolds.add("fatwa-conds-" + id);
+      renderFatwaPrompts();
+    };
+
+    window.removeFatwaCondition = function(id, idx) {
+      ensureFatwaState(id).extraConditions.splice(idx, 1);
+      openDetailFolds.add("fatwa-conds-" + id);
+      renderFatwaPrompts();
+    };
+
+    window.addFatwaCustomPrompt = function() {
+      const title = (document.getElementById("fatwaCustomTitle").value || "").trim();
+      const focus = (document.getElementById("fatwaCustomFocus").value || "").trim();
+      const body = (document.getElementById("fatwaCustomBody").value || "").trim();
+      if (!title || !focus) {
+        alert("عنوان اور تحقیقی رخ دونوں لازم ہیں!");
+        return;
+      }
+      if (!Array.isArray(fatwaCustomPrompts[activeFatwaTopic])) {
+        fatwaCustomPrompts[activeFatwaTopic] = [];
+      }
+      const id = "fc_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 7);
+      fatwaCustomPrompts[activeFatwaTopic].push({
+        id,
+        title,
+        focus,
+        baseTemplate: body || `دار الافتاء ڈاٹ انفو (darulifta.info) سے درج ذیل مسئلے پر مستند فتاویٰ تلاش کریں:\n\nمطلوبہ مسئلہ:\n«[TOPIC]»\n\nہر فتویٰ کے ساتھ ادارہ کا نام اور فتویٰ نمبر درج کریں۔`
+      });
+      ensureFatwaState(id);
+      schedulePersist();
+      document.getElementById("fatwaCustomTitle").value = "";
+      document.getElementById("fatwaCustomFocus").value = "";
+      document.getElementById("fatwaCustomBody").value = "";
+      openFatwaIdx = getFilteredFatwaPrompts().length - 1;
+      renderFatwaTopicTabs();
+      renderFatwaPrompts();
+      const toast = document.getElementById("copyToast");
+      toast.querySelector("span").textContent = "آپ کا فتویٰ پرامپٹ محفوظ ہو گیا!";
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+        toast.querySelector("span").textContent = "مکمل پرامپٹ تمام شرائط سمیت کلپ بورڈ پر کاپی ہو گیا ہے!";
+      }, 2200);
+    };
+
+    window.deleteFatwaCustomPrompt = function(customId) {
+      if (!confirm("یہ کسٹم فتویٰ پرامپٹ حذف کریں؟")) return;
+      Object.keys(fatwaCustomPrompts).forEach(topic => {
+        fatwaCustomPrompts[topic] = (fatwaCustomPrompts[topic] || []).filter(p => p.id !== customId);
+      });
+      schedulePersist();
+      openFatwaIdx = null;
+      renderFatwaTopicTabs();
+      renderFatwaPrompts();
+    };
+
+    window.copyFatwaPrompt = function(id) {
+      const p = getFilteredFatwaPrompts().find(item => item.id === id)
+        || fatwaPromptsData.find(item => item.id === id);
+      if (!p) return;
+      const state = ensureFatwaState(id);
+      const intro = getFatwaIntro(selectedInstitution);
+      const defaultConds = getFatwaConditions(selectedInstitution);
+      const allConditions = [...defaultConds, ...state.extraConditions];
+      const conditionsFormatted = allConditions.map((c, i) => (i + 1) + ". " + c).join("\n");
+      const dynamicTemplate = p.baseTemplate.replace("[TOPIC]", state.customTopic || "");
+      const fullPromptText = `${intro}
+
+【المسئلہ / مطلوبہ شرعی سوال】:
+«${state.customTopic || ""}»
+
+【تفصیلات و ہدایاتِ پرامپٹ】:
+${dynamicTemplate}
+
+【لازمی تحقیقی شرائط】:
+${conditionsFormatted}`;
+
+      navigator.clipboard.writeText(fullPromptText).then(() => {
+        const toast = document.getElementById("copyToast");
+        toast.querySelector("span").textContent = "فتویٰ ریسرچ پرامپٹ تمام شرائط و دار الافتاء کے نام سمیت کاپی ہو گیا ہے!";
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.remove("show");
+          toast.querySelector("span").textContent = "مکمل پرامپٹ تمام شرائط سمیت کلپ بورڈ پر کاپی ہو گیا ہے!";
+        }, 2200);
+      });
+    };
+
+    function initFatwaUI() {
+      const savedFatwaCustoms = loadJSON(STORAGE_KEYS.fatwaCustoms, {}) || {};
+      fatwaCustomPrompts = savedFatwaCustoms;
+      Object.keys(fatwaCustomPrompts).forEach(topic => {
+        (fatwaCustomPrompts[topic] || []).forEach(p => ensureFatwaState(p.id));
+      });
+      const savedTopic = localStorage.getItem(STORAGE_KEYS.fatwaTopic);
+      if (savedTopic && fatwaTopics.some(t => t.id === savedTopic)) {
+        activeFatwaTopic = savedTopic;
+      }
+      const instSelect = document.getElementById("institutionSelect");
+      if (instSelect) {
+        instSelect.addEventListener("change", (e) => {
+          selectedInstitution = e.target.value;
+          openFatwaIdx = null;
+          renderFatwaPrompts();
+        });
+      }
+      renderFatwaTopicTabs();
+      renderFatwaPrompts();
+    }
 
     function unloadGuidePdf(acc) {
       const frame = acc.querySelector("iframe");
@@ -4238,20 +5550,27 @@ ${condText}`;
       });
     }
 
-    window.showView = function(view) {
+    window.showView = function(view, opts) {
+      if (!VALID_VIEWS.includes(view)) view = "mode";
       currentView = view;
+      try { localStorage.setItem(STORAGE_KEYS.view, view); } catch (e) {}
       document.querySelectorAll(".app-view").forEach(el => {
         el.classList.toggle("active", el.getAttribute("data-view") === view);
       });
       document.querySelectorAll(".nav-tab, .bottom-tab").forEach(el => {
         el.classList.toggle("active", el.getAttribute("data-view") === view);
       });
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const skipScroll = opts && opts.skipScroll;
+      if (!skipScroll) window.scrollTo({ top: 0, behavior: "smooth" });
       if (view === "prompts") renderPrompts();
       if (view === "categories") renderCategoryCards();
       if (view === "thesis") {
         renderThesisSteps();
         renderThesisPrompts();
+      }
+      if (view === "fatwa") {
+        renderFatwaTopicTabs();
+        renderFatwaPrompts();
       }
     };
 
@@ -4274,7 +5593,9 @@ ${condText}`;
     renderThesisSteps();
     renderThesisPrompts();
     syncThesisModeUI();
-    showView("mode");
+    initFatwaUI();
+    const savedView = localStorage.getItem(STORAGE_KEYS.view);
+    showView(VALID_VIEWS.includes(savedView) ? savedView : "mode", { skipScroll: true });
   </script>
 </body>
 </html>
